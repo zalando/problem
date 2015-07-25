@@ -1,0 +1,15 @@
+language: java
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+script: mvn clean verify
+
+after_success:
+  - mvn coveralls:report
+
+notifications:
+  email:
+    on_failure: change
