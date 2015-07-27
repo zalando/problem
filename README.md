@@ -1,17 +1,17 @@
 # Null Problemo
 
-[![Build Status](https://img.shields.io/travis/zalando/null-problemo.svg)](https://travis-ci.org/zalando/null-problemo)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/null-problemo.svg)](https://coveralls.io/r/zalando/null-problemo)
-[![Release](https://img.shields.io/github/release/zalando/null-problemo.svg)](https://github.com/zalando/null-problemo/releases)
-[![Maven Central](https://img.shields.io/maven-central/v/org.zalando/null-problemo.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/null-problemo)
+[![Build Status](https://img.shields.io/travis/zalando/problem.svg)](https://travis-ci.org/zalando/problem)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/problem.svg)](https://coveralls.io/r/zalando/problem)
+[![Release](https://img.shields.io/github/release/zalando/problem.svg)](https://github.com/zalando/problem/releases)
+[![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
 
 ## Dependency
 
 ```xml
 <dependency>
     <groupId>org.zalando</groupId>
-    <artifactId>null-problemo</artifactId>
-    <version>${null-problemo.version}</version>
+    <artifactId>problem</artifactId>
+    <version>${problem.version}</version>
 </dependency>
 ```
 
