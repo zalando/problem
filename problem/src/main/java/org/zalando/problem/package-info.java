@@ -21,4 +21,5 @@ package org.zalando.problem;
  * ​⁣
  */
 
+// TODO @Nullable vs. Optional
 import javax.annotation.ParametersAreNonnullByDefault;

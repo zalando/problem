@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Jackson-datatype-Problem
+ * Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -22,25 +22,24 @@ package org.zalando.problem;
 
 import org.junit.Test;
 
-import javax.ws.rs.core.Response.Status;
-
-import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-public final class GenericProblemTest {
-
-    @Test
-    public void shouldCreateGenericDefaultProblem() {
-        final Problem problem = GenericProblem.valueOf(Problem::create, Status.NOT_FOUND);
-
-        assertThat(problem, instanceOf(DefaultProblem.class));
-    }
+public final class ThrowableProblemTest {
 
     @Test
-    public void shouldCreateGenericThrowableProblem() {
-        final Problem problem = GenericProblem.valueOf(ThrowableProblem::create, Status.NOT_FOUND);
-
-        assertThat(problem, instanceOf(ThrowableProblem.class));
+    public void shouldBeAbleToThrowAndCatchThrowableProblem() {
+        try {
+            throw new InsufficientFundsProblem(10, -20);
+        } catch (InsufficientFundsProblem problem) {
+            assertThat(problem, hasFeature("balance", InsufficientFundsProblem::getBalance, equalTo(10)));
+        } catch (OutOfStockProblem problem) {
+            fail("Should not have been out-of-stock");
+        } catch (ThrowableProblem problem) {
+            fail("Should not have been unspecific problem");
+        }
     }
 
 }

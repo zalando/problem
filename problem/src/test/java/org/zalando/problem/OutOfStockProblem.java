@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Problem
+ * Jackson-datatype-Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -20,60 +20,39 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
 
-@Immutable
-final class DefaultThrowableProblem extends ThrowableProblem {
+public final class OutOfStockProblem extends ThrowableProblem {
 
-    private final URI type;
-    private final String title;
-    private final StatusType status;
+    static final String TYPE_VALUE = "http://example.org/out-of-stock";
+    static final URI TYPE = URI.create(TYPE_VALUE);
+
     private final Optional<String> detail;
-    private final Optional<URI> instance;
 
-    DefaultThrowableProblem(final URI type,
-                   final String title,
-                   final StatusType status,
-                   final Optional<String> detail,
-                   final Optional<URI> instance) {
-        this.title = title;
-        this.status = status;
-        this.type = type;
-        this.detail = detail;
-        this.instance = instance;
+    public OutOfStockProblem(final String detail) {
+        this.detail = Optional.of(detail);
     }
 
     @Override
     public URI getType() {
-        return type;
+        return TYPE;
     }
 
     @Override
     public String getTitle() {
-        return title;
+        return "Insufficient Funds";
     }
 
     @Override
     public StatusType getStatus() {
-        return status;
+        return MoreStatus.UNPROCESSABLE_ENTITY;
     }
 
     @Override
     public Optional<String> getDetail() {
         return detail;
-    }
-
-    @Override
-    public Optional<URI> getInstance() {
-        return instance;
-    }
-
-    @Override
-    public String toString() {
-        return type.toString(); // TODO more detail
     }
 
 }

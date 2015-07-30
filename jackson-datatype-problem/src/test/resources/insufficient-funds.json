@@ -1,0 +1,7 @@
+{
+  "type": "http://example.org/insufficient-funds",
+  "title": "Insufficient Funds",
+  "status": 422,
+  "balance": 10,
+  "debit": -20
+}

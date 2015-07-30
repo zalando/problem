@@ -150,7 +150,7 @@ public enum MoreStatus implements StatusType {
     private final Family family;
     private final String reasonPhrase;
 
-    private MoreStatus(final int statusCode, final String reasonPhrase) {
+    MoreStatus(final int statusCode, final String reasonPhrase) {
         this.statusCode = statusCode;
         this.family = Family.familyOf(statusCode);
         this.reasonPhrase = reasonPhrase;

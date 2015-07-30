@@ -1,0 +1,6 @@
+{
+  "type": "http://example.org/out-of-stock",
+  "title": "Out of Stock",
+  "status": 422,
+  "detail": "Product ABC"
+}

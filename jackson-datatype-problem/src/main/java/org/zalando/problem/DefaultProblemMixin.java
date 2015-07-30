@@ -20,12 +20,23 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "type",
-        defaultImpl = DefaultProblem.class,
-        visible = true)
-interface DefaultProblemMixIn extends Problem {
+import javax.ws.rs.core.Response.StatusType;
+import java.net.URI;
+import java.util.Optional;
+
+abstract class DefaultProblemMixIn extends DefaultProblem {
+
+    @JsonCreator
+    DefaultProblemMixIn(
+            @JsonProperty("type") final URI type,
+            @JsonProperty("title") final String title,
+            @JsonProperty("status") final StatusType status,
+            @JsonProperty("detail") final Optional<String> detail,
+            @JsonProperty("instance") final Optional<URI> instance) {
+        super(type, title, status, detail, instance);
+    }
+
 }

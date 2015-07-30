@@ -46,7 +46,9 @@ public final class ProblemModule extends SimpleModule {
         super(ProblemModule.class.getSimpleName(),
                 mavenVersionFor(ProblemModule.class.getClassLoader(), "org.zalando", "jackson-datatype-problem"));
 
-        setMixInAnnotation(Problem.class, DefaultProblemMixIn.class);
+        setMixInAnnotation(Problem.class, ProblemMixIn.class);
+        setMixInAnnotation(ThrowableProblem.class, ThrowableProblemMixin.class);
+        setMixInAnnotation(DefaultProblem.class, DefaultProblemMixIn.class);
 
         addSerializer(StatusType.class, new StatusTypeSerializer());
         addDeserializer(StatusType.class, new StatusTypeDeserializer(buildIndex(types)));

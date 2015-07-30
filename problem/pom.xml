@@ -14,7 +14,6 @@
         <maven>3.0.4</maven>
     </prerequisites>
 
-    <groupId>org.zalando</groupId>
     <artifactId>problem</artifactId>
 
     <name>Problem</name>

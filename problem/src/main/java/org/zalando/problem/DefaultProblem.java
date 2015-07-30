@@ -26,7 +26,8 @@ import java.net.URI;
 import java.util.Optional;
 
 @Immutable
-final class DefaultProblem implements Problem {
+// not immutable to be used as a base for MixIns
+class DefaultProblem extends ThrowableProblem {
 
     private final URI type;
     private final String title;
@@ -34,11 +35,13 @@ final class DefaultProblem implements Problem {
     private final Optional<String> detail;
     private final Optional<URI> instance;
 
+    // TODO @JsonCreator in MixIn
     DefaultProblem(final URI type,
                    final String title,
                    final StatusType status,
                    final Optional<String> detail,
                    final Optional<URI> instance) {
+        // TODO null checks?
         this.title = title;
         this.status = status;
         this.type = type;
@@ -71,6 +74,7 @@ final class DefaultProblem implements Problem {
         return instance;
     }
 
+    // TODO move to ThrowableProblem?
     @Override
     public String toString() {
         return type.toString(); // TODO more detail

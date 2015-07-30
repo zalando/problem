@@ -20,37 +20,43 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
+import java.net.URI;
 
-enum CustomStatus implements StatusType {
+public final class InsufficientFundsProblem extends ThrowableProblem {
 
-    @SuppressWarnings("unused")
-    OK(200, "OK");
+    static final String TYPE_VALUE = "http://example.org/insufficient-funds";
+    static final URI TYPE = URI.create(TYPE_VALUE);
 
-    private final int statusCode;
-    private final Family family;
-    private final String reasonPhrase;
+    private final int balance;
+    private final int debit;
 
-    CustomStatus(int statusCode, String reasonPhrase) {
-        this.statusCode = statusCode;
-        this.family = Family.familyOf(statusCode);
-        this.reasonPhrase = reasonPhrase;
+    public InsufficientFundsProblem(final int balance, final int debit) {
+        this.balance = balance;
+        this.debit = debit;
     }
 
     @Override
-    public int getStatusCode() {
-        return statusCode;
+    public URI getType() {
+        return TYPE;
     }
 
     @Override
-    public Family getFamily() {
-        return family;
+    public String getTitle() {
+        return "Insufficient Funds";
     }
 
     @Override
-    public String getReasonPhrase() {
-        return reasonPhrase;
+    public StatusType getStatus() {
+        return MoreStatus.UNPROCESSABLE_ENTITY;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public int getDebit() {
+        return debit;
     }
 
 }

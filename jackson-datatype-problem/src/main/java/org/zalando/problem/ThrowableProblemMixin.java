@@ -20,12 +20,25 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "type",
-        defaultImpl = DefaultThrowableProblem.class,
-        visible = true)
-interface ThrowableProblemMixIn extends Problem {
+@JsonIgnoreProperties(ignoreUnknown = true) // TODO is this really what we want?
+interface ThrowableProblemMixin {
+
+    @JsonIgnore
+    String getMessage();
+
+    @JsonIgnore
+    String getLocalizedMessage();
+
+    @JsonIgnore
+    Throwable getCause();
+
+    @JsonIgnore
+    StackTraceElement[] getStackTrace();
+
+    @JsonIgnore
+    Throwable[] getSuppressed();
+
 }

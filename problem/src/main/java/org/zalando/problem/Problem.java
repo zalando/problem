@@ -25,8 +25,11 @@ import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
 
-// TODO all @Nullable or Optional<..> to be compliant with the spec?
+/**
+ * @see <a href="https://tools.ietf.org/html/draft-nottingham-http-problem-07">Problem Details for HTTP APIs</a>
+ */
 @Immutable
+// TODO document that type, title and status are *NOT* optional, in contrast to the spec
 public interface Problem {
 
     URI getType();
@@ -43,34 +46,43 @@ public interface Problem {
         return Optional.empty();
     }
 
+    static ProblemBuilder builder(final URI type) {
+        return new ProblemBuilder(type);
+    }
+
+    // TODO javadoc
+    static Problem create(final StatusType status) {
+        final URI base = URI.create("http://httpstatus.es/");
+        return builder(base.resolve(String.valueOf(status.getStatusCode())))
+                .withTitle(status.getReasonPhrase())
+                .withStatus(status)
+                .build();
+    }
+
+    // TODO javadoc
+    static Problem create(final StatusType status, final String detail) {
+        final URI base = URI.create("http://httpstatus.es/");
+        return builder(base.resolve(String.valueOf(status.getStatusCode())))
+                .withTitle(status.getReasonPhrase())
+                .withStatus(status)
+                .withDetail(detail)
+                .build();
+    }
+
+    // TODO javadoc
     static Problem create(final URI type, final String title, final StatusType status) {
-        return new DefaultProblem(
-                type,
-                title,
-                status,
-                Optional.empty(),
-                Optional.empty()
-        );
+        return builder(type)
+                .withTitle(title)
+                .withStatus(status)
+                .build();
     }
 
+    // TODO javadoc
     static Problem create(final URI type, final String title, final StatusType status, final String detail) {
-        return new DefaultProblem(
-                type,
-                title,
-                status,
-                Optional.of(detail),
-                Optional.empty()
-        );
+        return builder(type)
+                .withTitle(title)
+                .withStatus(status)
+                .withDetail(detail)
+                .build();
     }
-
-    static Problem create(final URI type, final String title, final StatusType status, final String detail, final URI instance) {
-        return new DefaultProblem(
-                type,
-                title,
-                status,
-                Optional.of(detail),
-                Optional.of(instance)
-        );
-    }
-
 }

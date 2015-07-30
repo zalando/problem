@@ -21,42 +21,10 @@ package org.zalando.problem;
  */
 
 import javax.annotation.concurrent.Immutable;
-import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.Optional;
 
-// TODO would RuntimeException be preferable?
 @Immutable
-public abstract class ThrowableProblem extends Throwable implements Problem {
+public abstract class ThrowableProblem extends RuntimeException implements Problem {
 
-    public static Problem create(final URI type, final String title, final Response.StatusType status) {
-        return new DefaultThrowableProblem(
-                type,
-                title,
-                status,
-                Optional.empty(),
-                Optional.empty()
-        );
-    }
-
-    public static Problem create(final URI type, final String title, final Response.StatusType status, final String detail) {
-        return new DefaultThrowableProblem(
-                type,
-                title,
-                status,
-                Optional.of(detail),
-                Optional.empty()
-        );
-    }
-
-    public static Problem create(final URI type, final String title, final Response.StatusType status, final String detail, final URI instance) {
-        return new DefaultThrowableProblem(
-                type,
-                title,
-                status,
-                Optional.of(detail),
-                Optional.of(instance)
-        );
-    }
+    // TODO toString?!
 
 }
