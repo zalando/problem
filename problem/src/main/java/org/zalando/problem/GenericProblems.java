@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Jackson-datatype-Problem
+ * Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -20,25 +20,19 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.StatusType;
+import java.net.URI;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-interface ThrowableProblemMixin {
+final class GenericProblems {
 
-    @JsonIgnore
-    String getMessage();
+    private static final URI BASE = URI.create("http://httpstatus.es/");
 
-    @JsonIgnore
-    String getLocalizedMessage();
-
-    @JsonIgnore
-    Throwable getCause();
-
-    @JsonIgnore
-    StackTraceElement[] getStackTrace();
-
-    @JsonIgnore
-    Throwable[] getSuppressed();
+    static ProblemBuilder create(final StatusType status) {
+        return Problem.builder()
+                .withType(BASE.resolve(String.valueOf(status.getStatusCode())))
+                .withTitle(status.getReasonPhrase())
+                .withStatus(status);
+    }
 
 }

@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
 
-// TODO does this class really carry its own weight?
 public final class ProblemBuilder {
 
     private URI type;
@@ -35,8 +34,9 @@ public final class ProblemBuilder {
     private Optional<String> detail = Optional.empty();
     private Optional<URI> instance = Optional.empty();
 
-    public ProblemBuilder(final URI type) {
+    public ProblemBuilder withType(final URI type) {
         this.type = type;
+        return this;
     }
 
     public ProblemBuilder withTitle(@Nullable String title) {

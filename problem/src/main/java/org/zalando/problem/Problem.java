@@ -46,44 +46,18 @@ public interface Problem {
         return Optional.empty();
     }
 
-    static ProblemBuilder builder(final URI type) {
-        return new ProblemBuilder(type);
+    static ProblemBuilder builder() {
+        return new ProblemBuilder();
     }
 
     // TODO javadoc
     static Problem create(final StatusType status) {
-        final URI base = URI.create("http://httpstatus.es/");
-        return builder(base.resolve(String.valueOf(status.getStatusCode())))
-                .withTitle(status.getReasonPhrase())
-                .withStatus(status)
-                .build();
+        return GenericProblems.create(status).build();
     }
 
-    // TODO de-duplicate code
     // TODO javadoc
     static Problem create(final StatusType status, final String detail) {
-        final URI base = URI.create("http://httpstatus.es/");
-        return builder(base.resolve(String.valueOf(status.getStatusCode())))
-                .withTitle(status.getReasonPhrase())
-                .withStatus(status)
-                .withDetail(detail)
-                .build();
+        return GenericProblems.create(status).withDetail(detail).build();
     }
 
-    // TODO javadoc
-    static Problem create(final URI type, final String title, final StatusType status) {
-        return builder(type)
-                .withTitle(title)
-                .withStatus(status)
-                .build();
-    }
-
-    // TODO javadoc
-    static Problem create(final URI type, final String title, final StatusType status, final String detail) {
-        return builder(type)
-                .withTitle(title)
-                .withStatus(status)
-                .withDetail(detail)
-                .build();
-    }
 }

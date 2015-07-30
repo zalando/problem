@@ -36,13 +36,11 @@ public final class ProblemModule extends SimpleModule {
     }
 
     /**
-     * TODO only allow Enum & StatusType, but allow for different enum types
-     *
      * @param types
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
     @SafeVarargs
-    public ProblemModule(final Class<? extends StatusType>... types) throws IllegalArgumentException {
+    public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types) throws IllegalArgumentException {
         super(ProblemModule.class.getSimpleName(),
                 mavenVersionFor(ProblemModule.class.getClassLoader(), "org.zalando", "jackson-datatype-problem"));
 
@@ -55,11 +53,11 @@ public final class ProblemModule extends SimpleModule {
     }
 
     @SafeVarargs
-    private final ImmutableMap<Integer, StatusType> buildIndex(final Class<? extends StatusType>... types) {
+    private final <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(final Class<? extends E>... types) {
         final Builder<Integer, StatusType> builder = ImmutableMap.builder();
 
-        for (final Class<? extends StatusType> type : types) {
-            for (final StatusType status : type.getEnumConstants()) {
+        for (final Class<? extends E> type : types) {
+            for (final E status : type.getEnumConstants()) {
                 builder.put(status.getStatusCode(), status);
             }
         }

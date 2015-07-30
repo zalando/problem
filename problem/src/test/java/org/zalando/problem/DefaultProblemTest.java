@@ -79,7 +79,8 @@ public final class DefaultProblemTest {
 
     @Test
     public void shouldRenderDetailAndInstance() {
-        final ThrowableProblem problem = Problem.builder(URI.create("http://httpstatus.es/404"))
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://httpstatus.es/404"))
                 .withTitle("Not Found")
                 .withStatus(NOT_FOUND)
                 .withDetail("Order 123")

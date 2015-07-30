@@ -1,5 +1,4 @@
-@ParametersAreNonnullByDefault
-package org.zalando.problem;
+@ParametersAreNonnullByDefault package org.zalando.problem;
 
 /*
  * ⁣​
@@ -21,5 +20,4 @@ package org.zalando.problem;
  * ​⁣
  */
 
-// TODO @Nullable vs. Optional
 import javax.annotation.ParametersAreNonnullByDefault;

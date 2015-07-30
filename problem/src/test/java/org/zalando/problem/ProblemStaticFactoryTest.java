@@ -23,7 +23,6 @@ package org.zalando.problem;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
-import java.net.URI;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -50,27 +49,6 @@ public final class ProblemStaticFactoryTest {
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Not Found")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(Status.NOT_FOUND)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Order 123"))));
-    }
-
-    @Test
-    public void shouldCreateProblem() {
-        final URI type = URI.create("https://example.org/out-of-stock");
-        final Problem problem = Problem.create(type, "Out of Stock", MoreStatus.UNPROCESSABLE_ENTITY);
-
-        assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
-        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
-    }
-
-    @Test
-    public void shouldCreateProblemWithDetail() {
-        final URI type = URI.create("https://example.org/out-of-stock");
-        final Problem problem = Problem.create(type, "Out of Stock", MoreStatus.UNPROCESSABLE_ENTITY, "Product ABC");
-
-        assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
-        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Product ABC"))));
     }
 
 }
