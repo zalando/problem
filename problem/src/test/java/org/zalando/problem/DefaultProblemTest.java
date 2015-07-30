@@ -22,7 +22,6 @@ package org.zalando.problem;
 
 import org.junit.Test;
 
-import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static java.util.Optional.empty;

@@ -20,7 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,6 @@ import com.google.common.io.Resources;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
