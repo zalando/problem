@@ -58,8 +58,8 @@ public final class ProblemModule extends SimpleModule {
     private final ImmutableMap<Integer, StatusType> buildIndex(final Class<? extends StatusType>... types) {
         final Builder<Integer, StatusType> builder = ImmutableMap.builder();
 
-        for (Class<? extends StatusType> type : types) {
-            for (StatusType status : type.getEnumConstants()) {
+        for (final Class<? extends StatusType> type : types) {
+            for (final StatusType status : type.getEnumConstants()) {
                 builder.put(status.getStatusCode(), status);
             }
         }

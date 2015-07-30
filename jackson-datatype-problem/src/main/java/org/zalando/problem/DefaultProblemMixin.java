@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
 
-abstract class DefaultProblemMixIn extends DefaultProblem {
+abstract class DefaultProblemMixIn {
 
     @JsonCreator
     DefaultProblemMixIn(
@@ -36,7 +36,8 @@ abstract class DefaultProblemMixIn extends DefaultProblem {
             @JsonProperty("status") final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,
             @JsonProperty("instance") final Optional<URI> instance) {
-        super(type, title, status, detail, instance);
+        // this is just here to see whether "our" constructor matches the real one
+        throw new DefaultProblem(type, title, status, detail, instance);
     }
 
 }

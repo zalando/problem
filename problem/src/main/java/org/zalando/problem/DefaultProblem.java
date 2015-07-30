@@ -20,14 +20,16 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.base.MoreObjects;
+
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 @Immutable
-// not immutable to be used as a base for MixIns
-class DefaultProblem extends ThrowableProblem {
+final class DefaultProblem extends ThrowableProblem {
 
     private final URI type;
     private final String title;
@@ -35,18 +37,16 @@ class DefaultProblem extends ThrowableProblem {
     private final Optional<String> detail;
     private final Optional<URI> instance;
 
-    // TODO @JsonCreator in MixIn
     DefaultProblem(final URI type,
                    final String title,
                    final StatusType status,
                    final Optional<String> detail,
                    final Optional<URI> instance) {
-        // TODO null checks?
-        this.title = title;
-        this.status = status;
-        this.type = type;
-        this.detail = detail;
-        this.instance = instance;
+        this.type = Objects.requireNonNull(type, "type must not be null");
+        this.title = Objects.requireNonNull(title, "title must not be null");
+        this.status = Objects.requireNonNull(status, "status must not be null");
+        this.detail = Objects.requireNonNull(detail, "detail must not be null");
+        this.instance = Objects.requireNonNull(instance, "instance must not be null");
     }
 
     @Override
@@ -74,10 +74,28 @@ class DefaultProblem extends ThrowableProblem {
         return instance;
     }
 
-    // TODO move to ThrowableProblem?
+    /**
+     * Specification by example:
+     *
+     * <pre>{@code
+     *   // Returns "http://httpstatus.es/404{}"
+     *   Problem.create(NOT_FOUND).toString();
+     *
+     *   // Returns "http://httpstatus.es/404{Order 123}"
+     *   Problem.create(NOT_FOUND, "Order 123").toString();
+     *
+     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
+     *   Problem.create(NOT_FOOUND, "Order 123", URI.create("https://example.org/").toString();
+     * }</pre>
+     *
+     * @return a string representation of this problem
+     */
     @Override
     public String toString() {
-        return type.toString(); // TODO more detail
+        return MoreObjects.toStringHelper(type.toString())
+                .omitNullValues()
+                .addValue(detail.orElse(null))
+                .add("instance", instance.orElse(null))
+                .toString();
     }
-
 }

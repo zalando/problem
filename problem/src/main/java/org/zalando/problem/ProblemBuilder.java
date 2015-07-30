@@ -32,8 +32,8 @@ public final class ProblemBuilder {
     private String title;
     private StatusType status;
 
-    private Optional<String> detail;
-    private Optional<URI> instance;
+    private Optional<String> detail = Optional.empty();
+    private Optional<URI> instance = Optional.empty();
 
     public ProblemBuilder(final URI type) {
         this.type = type;
@@ -60,7 +60,6 @@ public final class ProblemBuilder {
     }
 
     public ThrowableProblem build() {
-        // TODO fail on null
         return new DefaultProblem(type, title, status, detail, instance);
     }
 

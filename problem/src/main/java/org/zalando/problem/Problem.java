@@ -59,6 +59,7 @@ public interface Problem {
                 .build();
     }
 
+    // TODO de-duplicate code
     // TODO javadoc
     static Problem create(final StatusType status, final String detail) {
         final URI base = URI.create("http://httpstatus.es/");

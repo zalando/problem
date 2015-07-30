@@ -20,9 +20,26 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.annotation.concurrent.Immutable;
+import org.junit.Test;
 
-@Immutable
-public abstract class ThrowableProblem extends RuntimeException implements Problem {
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.stream.Stream;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+public final class MoreStatusCompatibilityTest {
+
+    @Test
+    public void shouldBeDistinctFromStatus() {
+        Stream.of(MoreStatus.values())
+                .map(Response.StatusType::getStatusCode)
+                .forEach(code -> {
+                    final Status status = Status.fromStatusCode(code);
+                    assertThat("Duplicate code: " + code, status, is(nullValue()));
+                });
+    }
 
 }
