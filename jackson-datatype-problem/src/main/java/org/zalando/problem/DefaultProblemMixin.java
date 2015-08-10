@@ -31,8 +31,8 @@ abstract class DefaultProblemMixIn {
 
     @JsonCreator
     DefaultProblemMixIn(
-            @JsonProperty("type") final URI type,
-            @JsonProperty("title") final String title,
+            @JsonProperty("type") final URI type, // TODO default to about:blank?!
+            @JsonProperty("title") final String title, // TODO default to reason phrase of status?
             @JsonProperty("status") final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,
             @JsonProperty("instance") final Optional<URI> instance) {

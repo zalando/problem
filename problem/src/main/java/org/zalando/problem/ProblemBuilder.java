@@ -34,6 +34,13 @@ public final class ProblemBuilder {
     private Optional<String> detail = Optional.empty();
     private Optional<URI> instance = Optional.empty();
 
+    /**
+     * @see Problem#builder()
+     */
+    ProblemBuilder() {
+
+    }
+
     public ProblemBuilder withType(final URI type) {
         this.type = type;
         return this;

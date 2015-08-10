@@ -20,7 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 

@@ -17,7 +17,8 @@
     <artifactId>problem</artifactId>
 
     <name>Problem</name>
-    <description>TODO</description>
+    <!-- TODO description -->
+    <description></description>
     <url>https://github.com/zalando/problem</url>
 
     <organization>

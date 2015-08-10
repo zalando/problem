@@ -23,6 +23,11 @@ package org.zalando.problem;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 
+/**
+ * TODO document purpose of this class
+ *
+ * @see javax.ws.rs.core.Response.Status
+ */
 public enum MoreStatus implements StatusType {
 
     /**

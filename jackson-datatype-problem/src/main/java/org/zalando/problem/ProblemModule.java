@@ -20,6 +20,8 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -27,22 +29,27 @@ import com.google.common.collect.ImmutableMap.Builder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
-import static com.fasterxml.jackson.core.util.VersionUtil.mavenVersionFor;
-
 public final class ProblemModule extends SimpleModule {
 
+    /**
+     * TODO document
+     *
+     * @see Status
+     * @see MoreStatus
+     */
     public ProblemModule() {
         this(Status.class, MoreStatus.class);
     }
 
     /**
+     * TODO document
+     *
      * @param types
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
     @SafeVarargs
     public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types) throws IllegalArgumentException {
-        super(ProblemModule.class.getSimpleName(),
-                mavenVersionFor(ProblemModule.class.getClassLoader(), "org.zalando", "jackson-datatype-problem"));
+        super(ProblemModule.class.getSimpleName(), getVersion());
 
         setMixInAnnotation(Problem.class, ProblemMixIn.class);
         setMixInAnnotation(ThrowableProblem.class, ThrowableProblemMixin.class);
@@ -50,6 +57,11 @@ public final class ProblemModule extends SimpleModule {
 
         addSerializer(StatusType.class, new StatusTypeSerializer());
         addDeserializer(StatusType.class, new StatusTypeDeserializer(buildIndex(types)));
+    }
+
+    @SuppressWarnings("deprecation")
+    private static Version getVersion() {
+        return VersionUtil.mavenVersionFor(ProblemModule.class.getClassLoader(), "org.zalando", "jackson-datatype-problem");
     }
 
     @SafeVarargs
