@@ -31,9 +31,9 @@ abstract class DefaultProblemMixIn {
 
     @JsonCreator
     DefaultProblemMixIn(
-            @JsonProperty("type") final URI type, // TODO default to about:blank?!
-            @JsonProperty("title") final String title, // TODO default to reason phrase of status?
-            @JsonProperty("status") final StatusType status,
+            @JsonProperty(value = "type", defaultValue = "about:blank") final URI type, // TODO test
+            @JsonProperty(value = "title", required = true) final String title,
+            @JsonProperty(value = "status", required = true) final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,
             @JsonProperty("instance") final Optional<URI> instance) {
         // this is just here to see whether "our" constructor matches the real one

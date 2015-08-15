@@ -60,20 +60,15 @@ public final class DefaultProblemTest {
         throw new DefaultProblem(type, "Out of Stock", UNPROCESSABLE_ENTITY, empty(), null);
     }
 
-    /**
-     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
-     *   Problem.create(NOT_FOOUND, "Order 123", URI.create("https://example.org/").toString();
-     */
-
     @Test
     public void shouldRenderEmptyProblem() {
-        final Problem problem = Problem.create(NOT_FOUND);
+        final Problem problem = Problem.valueOf(NOT_FOUND);
         assertThat(problem, hasToString("http://httpstatus.es/404{}"));
     }
 
     @Test
     public void shouldRenderDetail() {
-        final Problem problem = Problem.create(NOT_FOUND, "Order 123");
+        final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123");
         assertThat(problem, hasToString("http://httpstatus.es/404{Order 123}"));
     }
 

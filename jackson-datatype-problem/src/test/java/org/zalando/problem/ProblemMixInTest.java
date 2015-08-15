@@ -48,7 +48,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldSerializeDefaultProblem() throws JsonProcessingException {
-        final Problem problem = Problem.create(Status.NOT_FOUND);
+        final Problem problem = Problem.valueOf(Status.NOT_FOUND);
         final String json = mapper.writeValueAsString(problem);
 
         with(json)
