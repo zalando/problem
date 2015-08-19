@@ -89,7 +89,7 @@ Will produce this:
 
 ```json
 {
-  "type": ""http://example.org/out-of-stock",
+  "type": "http://example.org/out-of-stock",
   "title": "Out of Stock",
   "status": 422,
   "detail": "Item B00027Y5QG is no longer available"
