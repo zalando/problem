@@ -20,32 +20,21 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.annotation.concurrent.Immutable;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
+import org.junit.Test;
 
-@Immutable
-final class UnknownStatus implements Response.StatusType {
+import java.net.URI;
 
-    private final int statusCode;
+import static java.util.Optional.empty;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
-    UnknownStatus(final int statusCode) {
-        this.statusCode = statusCode;
-    }
+public final class DefaultProblemMixInTest {
 
-    @Override
-    public int getStatusCode() {
-        return statusCode;
-    }
+    // just to get 100% code coverage
+    @Test(expected = DefaultProblem.class)
+    public void foo() {
+        new DefaultProblemMixIn(URI.create("http://httpstatus.es/400"), "Bad Request", BAD_REQUEST, empty(), empty()) {
 
-    @Override
-    public Family getFamily() {
-        return Family.OTHER;
-    }
-
-    @Override
-    public String getReasonPhrase() {
-        return "Unknown";
+        };
     }
 
 }

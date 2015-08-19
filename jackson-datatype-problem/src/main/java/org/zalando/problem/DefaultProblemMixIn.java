@@ -23,6 +23,7 @@ package org.zalando.problem;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
@@ -31,7 +32,7 @@ abstract class DefaultProblemMixIn {
 
     @JsonCreator
     DefaultProblemMixIn(
-            @JsonProperty(value = "type", defaultValue = "about:blank") final URI type, // TODO test
+            @JsonProperty(value = "type") final URI type,
             @JsonProperty(value = "title", required = true) final String title,
             @JsonProperty(value = "status", required = true) final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,

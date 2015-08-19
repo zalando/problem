@@ -20,13 +20,15 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 
 /**
- * TODO document purpose of this class
+ * The {@link Status} class in JAX-RS doesn't list of official HTTP status codes. The purpose
+ * of this class is to provide easy access to the missing ones.
  *
- * @see javax.ws.rs.core.Response.Status
+ * @see Status
  */
 public enum MoreStatus implements StatusType {
 

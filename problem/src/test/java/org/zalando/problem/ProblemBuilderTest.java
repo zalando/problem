@@ -52,13 +52,13 @@ public class ProblemBuilderTest {
                 .withType(type)
                 .withTitle("Out of Stock")
                 .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
-                .withDetail("Product ABC")
+                .withDetail("Item B00027Y5QG is no longer available")
                 .build();
 
         assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Product ABC"))));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
     }
 
 }

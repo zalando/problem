@@ -21,13 +21,14 @@ package org.zalando.problem;
  */
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.io.Resources;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status.Family;
+import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public final class ProblemMixInTest {
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Product ABC"))));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
     }
 
     @Test
@@ -80,6 +81,18 @@ public final class ProblemMixInTest {
         final InsufficientFundsProblem insufficientFundsProblem = InsufficientFundsProblem.class.cast(problem);
         assertThat(insufficientFundsProblem, hasFeature("balance", InsufficientFundsProblem::getBalance, equalTo(10)));
         assertThat(insufficientFundsProblem, hasFeature("debit", InsufficientFundsProblem::getDebit, equalTo(-20)));
+    }
+
+    @Test
+    public void shouldDeserializeUnknownStatus() throws IOException {
+        final URL resource = Resources.getResource("unknown.json");
+        final Problem problem = mapper.readValue(resource, Problem.class);
+
+        final StatusType status = problem.getStatus();
+
+        assertThat(status, hasFeature("status code", StatusType::getStatusCode, equalTo(666)));
+        assertThat(status, hasFeature("family", StatusType::getFamily, equalTo(Family.OTHER)));
+        assertThat(status, hasFeature("reason phrase", StatusType::getReasonPhrase, equalTo("Unknown")));
     }
 
 }
