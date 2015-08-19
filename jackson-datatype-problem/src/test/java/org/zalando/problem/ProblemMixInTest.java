@@ -23,6 +23,7 @@ package org.zalando.problem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.io.Resources;
 import org.junit.Test;
 
@@ -39,8 +40,8 @@ import static org.junit.Assert.assertThat;
 public final class ProblemMixInTest {
 
     private final ObjectMapper mapper = new ObjectMapper()
-            .enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY) // for deterministic tests
-            .findAndRegisterModules();
+            .registerModule(new Jdk8Module())
+            .registerModule(new ProblemModule());
 
     public ProblemMixInTest() {
         mapper.registerSubtypes(InsufficientFundsProblem.class);
