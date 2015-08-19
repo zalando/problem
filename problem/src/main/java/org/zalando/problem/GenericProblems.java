@@ -20,12 +20,19 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.annotations.VisibleForTesting;
+
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 
 final class GenericProblems {
 
     private static final URI BASE = URI.create("http://httpstatus.es/");
+
+    @VisibleForTesting
+    GenericProblems() throws Exception {
+        throw new IllegalAccessException();
+    }
 
     static ProblemBuilder create(final StatusType status) {
         return Problem.builder()

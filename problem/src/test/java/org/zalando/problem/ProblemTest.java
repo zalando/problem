@@ -20,26 +20,33 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.stream.Stream;
+import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
-public final class MoreStatusCompatibilityTest {
+public final class ProblemTest {
 
     @Test
-    public void shouldBeDistinctFromStatus() {
-        Stream.of(MoreStatus.values())
-                .map(Response.StatusType::getStatusCode)
-                .forEach(code -> {
-                    final Status status = Status.fromStatusCode(code);
-                    assertThat("Duplicate code: " + code, status, is(nullValue()));
-                });
+    public void shouldUseDefaultDetail() {
+        final Problem problem = new InsufficientFundsProblem(10, -20);
+
+        assertThat(problem, hasFeature("detail", Problem::getDetail, isAbsent()));
+    }
+
+    @Test
+    public void shouldUseDefaultInstance() {
+        final Problem problem = new InsufficientFundsProblem(10, -20);
+
+        assertThat(problem, hasFeature("instance", Problem::getInstance, isAbsent()));
+    }
+
+    private <T> Matcher<Optional<T>> isAbsent() {
+        return hasFeature("present", Optional::isPresent, equalTo(false));
     }
 
 }

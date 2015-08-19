@@ -21,11 +21,11 @@ package org.zalando.problem;
  */
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.google.common.collect.ImmutableMap;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
 
@@ -38,9 +38,10 @@ final class StatusTypeDeserializer extends JsonDeserializer<StatusType> {
     }
 
     @Override
-    public StatusType deserialize(JsonParser json, DeserializationContext context) throws IOException, JsonProcessingException {
+    public StatusType deserialize(final JsonParser json, final DeserializationContext context) throws IOException {
         final int statusCode = json.getIntValue();
-        return index.getOrDefault(statusCode, new UnknownStatus(statusCode));
+        @Nullable final StatusType status = index.get(statusCode);
+        return status == null ? new UnknownStatus(statusCode) : status;
     }
 
 }

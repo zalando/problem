@@ -42,7 +42,7 @@ public final class OutOfStockProblem extends ThrowableProblem {
 
     @Override
     public String getTitle() {
-        return "Insufficient Funds";
+        return "Out of Stock";
     }
 
     @Override
