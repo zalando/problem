@@ -31,7 +31,7 @@ The term problem in this document, in contrast to the [`application/problem+json
 </dependency>
 ```
 
-## Usage
+## Creating problems
 
 There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, yet with slightly more effort:
 
@@ -104,7 +104,6 @@ The highest degree of flexibility and customizability is achieved by implementin
 
 ```java
 @Immutable
-@JsonTypeName(OutOfStockProblem.TYPE_VALUE)
 public final class OutOfStockProblem implements Problem {
 
     static final String TYPE_VALUE = "http://example.org/out-of-stock";
@@ -113,9 +112,8 @@ public final class OutOfStockProblem implements Problem {
     private final Optional<String> detail;
     private final String product;
 
-    @JsonCreator
-    public OutOfStockProblem(final String detail, final String product) {
-        this.detail = Optional.of(detail);
+    public OutOfStockProblem(final String product) {
+        this.detail = Optional.of(format("Item %s is no longer available", product));
         this.product = product;
     }
 
@@ -146,23 +144,72 @@ public final class OutOfStockProblem implements Problem {
 }
 ```
 
-If you're using the supplied Jackson Module: Make sure you register your custom sub types with the ObjectMapper:
-
 ```java
-mapper.registerSubtypes(OutOfStockProblem.class);
+new OutOfStockProblem("B00027Y5QG");
 ```
 
-### Throwing Problems
+Will produce this:
+
+```json
+{
+  "type": "http://example.org/out-of-stock",
+  "title": "Out of Stock",
+  "status": 422,
+  "detail": "Item B00027Y5QG is no longer available",
+  "product": "B00027Y5QG"
+}
+```
+
+### Throwing problems
 
 *Problems* have loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses `RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
 
 ```java
-public final class OutOfStockProblem extends ThrowableProblem {
+public final class OutOfStockProblem extends ThrowableProblem
 ```
 
-## Deserialization
+## Handling problems
 
-`DefaultProblem` (extends ThrowableProblem).
+Reading problems is very specific to the JSON parser in use. This section assumes you're using Jackson, in which case reading/parsing problems usually boils down to this:
+
+```java
+Problem problem = mapper.readValue(.., Problem.class);
+```
+
+If you're using Jackson, please make sure you understand its [Polymorphic Deserialization](http://wiki.fasterxml.com/JacksonPolymorphicDeserialization) feature. The supplied Jackson module makes heavy use of it. Considering you have a custom problem type `OutOfStockProblem`, you'll need to register it as a subtype:
+
+```java
+mapper.registerSubtypes(OutOfStockProblem.class);
+```
+You also need to make sure you assign a `@JsonTypeName` to it and declare a `@JsonCreator`:
+
+```java
+@JsonTypeName(OutOfStockProblem.TYPE_VALUE)
+public final class OutOfStockProblem implements Problem {
+
+    @JsonCreator
+    public OutOfStockProblem(final String product) {
+```
+
+Jackson is now able to deserialize specific problems into their respective types. By default, e.g. if a type is not associated with a class, it will fallback to a `DefaultProblem`. 
+
+### Catching problems
+
+If you read about [Throwing problems](#throwing-problems) already, you should be familiar with `ThrowableProblem`. This can be helpful if you read a problem, as a response from a server, and what to find out what it actually is. Multiple `if` statements with `instanceof` checks could be an option, but usually nicer is this:
+
+```java
+try {
+    throw mapper.readValue(.., ThrowableProblem.class);
+} catch (OutOfStockProblem e) {
+    tellTheCustomerTheProductIsNoLongerAvailable(e.getProduct());
+} catch (InsufficientFundsProblem e) {
+    askCustomerToUseDifferentPaymentMethod(e.getBalance(), e.getDebit());
+} catch (InvalidCouponProblem e) {
+    askCustomerToUseDifferentCoupon(e.getCouponCode());
+} catch (ThrowableProblem e) {
+    tellTheCustomerSomethingWentWrong();
+}
+```
 
 ## License
 
