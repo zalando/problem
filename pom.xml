@@ -15,6 +15,12 @@
     <name>Problem: Parent</name>
     <url>https://github.com/zalando/problem</url>
 
+    <scm>
+        <url>https://github.com/zalando/problem</url>
+        <connection>scm:git:git@github.com:zalando/problem.git</connection>
+        <developerConnection>scm:git:git@github.com:zalando/problem.git</developerConnection>
+    </scm>
+
     <organization>
         <name>Zalando SE</name>
     </organization>
