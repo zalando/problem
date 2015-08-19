@@ -55,7 +55,7 @@ Will produce this:
 
 [httpstatus.es](http://httpstatus.es/) is a convenient little site that has a unique URI for every status code which includes some information about it. A perfect match for our use case.
 
-But you may also have the need to add some little hint, e.g. as a custom title of the problem:
+But you may also have the need to add some little hint, e.g. as a custom detail of the problem:
 
 ```java
 Problem.valueOf(Status.SERVICE_UNAVAILABLE, "Database not reachable");
@@ -80,7 +80,7 @@ Most of the time you'll need to define specific problem types, that are unique t
 Problem.builder()
     .withType(URI.create("http://example.org/out-of-stock"))
     .withTitle("Out of Stock")
-    .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+    .withStatus(UNPROCESSABLE_ENTITY)
     .withDetail("Item B00027Y5QG is no longer available")
     .build();
 ```
@@ -100,16 +100,23 @@ Right now the builder does **not** allow to add custom properties, i.e. others t
 
 ### Custom Problems
 
+The highest degree of flexibility and customizability is achieved by implementing `Problem` directly. This is especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share.
+
 ```java
 @Immutable
+@JsonTypeName(OutOfStockProblem.TYPE_VALUE)
 public final class OutOfStockProblem implements Problem {
 
-    private static final URI TYPE = URI.create("http://example.org/out-of-stock");
+    static final String TYPE_VALUE = "http://example.org/out-of-stock";
+    static final URI TYPE = URI.create(TYPE_VALUE);
 
     private final Optional<String> detail;
+    private final String product;
 
-    public OutOfStockProblem(final String detail) {
+    @JsonCreator
+    public OutOfStockProblem(final String detail, final String product) {
         this.detail = Optional.of(detail);
+        this.product = product;
     }
 
     @Override
@@ -131,12 +138,31 @@ public final class OutOfStockProblem implements Problem {
     public Optional<String> getDetail() {
         return detail;
     }
+    
+    public String getProduct() {
+        return product;
+    }
+
 }
+```
+
+If you're using the supplied Jackson Module: Make sure you register your custom sub types with the ObjectMapper:
+
+```java
+mapper.registerSubtypes(OutOfStockProblem.class);
 ```
 
 ### Throwing Problems
 
+*Problems* have loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses `RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
 
+```java
+public final class OutOfStockProblem extends ThrowableProblem {
+```
+
+## Deserialization
+
+`DefaultProblem` (extends ThrowableProblem).
 
 ## License
 
