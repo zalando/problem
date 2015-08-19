@@ -11,6 +11,10 @@
 It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
 It's decoupled from any JSON library, but contains a separate module for Jackson.
 
+## Note
+
+The term problem in this document, in contrast to the [`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07) spec **requires** the properties `type`, `title` and `status`.
+
 ## Dependency
 
 ```xml
@@ -29,11 +33,17 @@ It's decoupled from any JSON library, but contains a separate module for Jackson
 
 ## Usage
 
+There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, yet with slightly more effort:
+
 ### Generic
+
+There are cases in which an [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is basically enough to convey the necessary information. Everything you need is the status you want to repond with and we will create a problem from it:
 
 ```java
 Problem.valueOf(Status.NOT_FOUND);
 ```
+
+Will produce this:
 
 ```json
 {
@@ -43,9 +53,15 @@ Problem.valueOf(Status.NOT_FOUND);
 }
 ```
 
+[httpstatus.es](http://httpstatus.es/) is a convenient little site that has a unique URI for every status code which includes some information about it. A perfect match for our use case.
+
+But you may also have the need to add some little hint, e.g. as a custom title of the problem:
+
 ```java
 Problem.valueOf(Status.SERVICE_UNAVAILABLE, "Database not reachable");
 ```
+
+Will produce this:
 
 ```json
 {
@@ -58,6 +74,8 @@ Problem.valueOf(Status.SERVICE_UNAVAILABLE, "Database not reachable");
 
 ### Builder
 
+Most of the time you'll need to define specific problem types, that are unique to your application. And you want to construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It ofers a fluent API and allows to construct problem instances without the need to create custom classes:
+
 ```java
 Problem.builder()
     .withType(URI.create("http://example.org/out-of-stock"))
@@ -66,6 +84,19 @@ Problem.builder()
     .withDetail("Item B00027Y5QG is no longer available")
     .build();
 ```
+
+Will produce this:
+
+```json
+{
+  "type": ""http://example.org/out-of-stock",
+  "title": "Out of Stock",
+  "status": 422,
+  "detail": "Item B00027Y5QG is no longer available"
+}
+```
+
+Right now the builder does **not** allow to add custom properties, i.e. others than `type`, `title`, `status`, `detail` and `instance`. This may change in the future.
 
 ### Custom Problems
 
