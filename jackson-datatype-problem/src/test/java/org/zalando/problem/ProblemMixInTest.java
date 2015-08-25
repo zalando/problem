@@ -30,13 +30,20 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
 import static com.jayway.jsonassert.JsonAssert.with;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
+import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public final class ProblemMixInTest {
 
@@ -56,8 +63,25 @@ public final class ProblemMixInTest {
         with(json)
                 .assertThat("$.*", hasSize(3))
                 .assertThat("$.type", hasToString("http://httpstatus.es/404"))
-                .assertThat("$.title", equalTo("Not Found"))
-                .assertThat("$.status", equalTo(404));
+                .assertThat("$.title", is("Not Found"))
+                .assertThat("$.status", is(404));
+    }
+
+    @Test
+    public void shouldSerializeCustomProperties() throws JsonProcessingException {
+        final Problem problem = Problem.builder()
+                .withType(URI.create("http://example.org/out-of-stock"))
+                .withTitle("Out of Stock")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withDetail("Item B00027Y5QG is no longer available")
+                .with("product", "B00027Y5QG")
+                .build();
+
+        final String json = mapper.writeValueAsString(problem);
+
+        with(json)
+                .assertThat("$.*", hasSize(5))
+                .assertThat("$.product", is("B00027Y5QG"));
     }
 
     @Test
@@ -70,7 +94,7 @@ public final class ProblemMixInTest {
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
         assertThat(problem, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("product", "B00027Y5QG")));
     }
