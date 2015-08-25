@@ -20,6 +20,9 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gag.annotation.remark.Hack;
+import com.google.gag.annotation.remark.OhNoYouDidnt;
 import org.junit.Test;
 
 import java.net.URI;
@@ -27,13 +30,23 @@ import java.net.URI;
 import static java.util.Optional.empty;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
-public final class DefaultProblemMixInTest {
+@Hack
+@OhNoYouDidnt
+public final class EnforceCoverageTest {
 
-    // just to get 100% code coverage
     @Test(expected = DefaultProblem.class)
     public void foo() {
         new DefaultProblemMixIn(URI.create("http://httpstatus.es/400"), "Bad Request", BAD_REQUEST, empty(), empty()) {
 
+            @Override
+            void set(final String key, final Object value) {
+
+            }
+
+            @Override
+            public ImmutableMap<String, Object> getParameters() {
+                return null;
+            }
         };
     }
 

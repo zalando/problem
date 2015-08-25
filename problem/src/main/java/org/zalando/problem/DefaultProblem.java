@@ -21,27 +21,33 @@ package org.zalando.problem;
  */
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+import com.google.gag.annotation.remark.Hack;
+import com.google.gag.annotation.remark.OhNoYouDidnt;
 
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-@Immutable
-final class DefaultProblem extends ThrowableProblem {
+@Immutable // TODO kind of a lie until we remove set(String, Object)
+public final class DefaultProblem extends ThrowableProblem {
 
     private final URI type;
     private final String title;
     private final StatusType status;
     private final Optional<String> detail;
     private final Optional<URI> instance;
+    private final Map<String, Object> parameters = new HashMap<>();
 
     DefaultProblem(final URI type,
-                   final String title,
-                   final StatusType status,
-                   final Optional<String> detail,
-                   final Optional<URI> instance) {
+            final String title,
+            final StatusType status,
+            final Optional<String> detail,
+            final Optional<URI> instance) {
         this.type = Objects.requireNonNull(type, "type must not be null");
         this.title = Objects.requireNonNull(title, "title must not be null");
         this.status = Objects.requireNonNull(status, "status must not be null");
@@ -74,28 +80,50 @@ final class DefaultProblem extends ThrowableProblem {
         return instance;
     }
 
+    public ImmutableMap<String, Object> getParameters() {
+        return ImmutableMap.copyOf(parameters);
+    }
+
+    /**
+     * This is required to workaround missing support for {@link com.fasterxml.jackson.annotation.JsonAnySetter} on
+     * constructors annotated with {@link com.fasterxml.jackson.annotation.JsonCreator}.
+     *
+     * @param key   the custom key
+     * @param value the custom value
+     * @see <a href="https://github.com/FasterXML/jackson-databind/issues/562">Jackson Issue 562</a>
+     */
+    @Hack
+    @OhNoYouDidnt
+    void set(final String key, final Object value) {
+        parameters.put(key, value);
+    }
+
     /**
      * Specification by example:
-     *
+     * <p>
      * <pre>{@code
      *   // Returns "http://httpstatus.es/404{}"
      *   Problem.create(NOT_FOUND).toString();
-     *
+     * <p>
      *   // Returns "http://httpstatus.es/404{Order 123}"
      *   Problem.create(NOT_FOUND, "Order 123").toString();
-     *
+     * <p>
      *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
-     *   Problem.create(NOT_FOOUND, "Order 123", URI.create("https://example.org/").toString();
+     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
      * }</pre>
      *
      * @return a string representation of this problem
      */
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(type.toString())
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(type.toString())
                 .omitNullValues()
                 .addValue(detail.orElse(null))
-                .add("instance", instance.orElse(null))
-                .toString();
+                .add("instance", instance.orElse(null));
+
+        parameters.forEach(helper::add);
+
+        return helper.toString();
     }
+
 }

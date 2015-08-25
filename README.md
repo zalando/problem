@@ -105,8 +105,29 @@ Will produce this:
 }
 ```
 
-Right now the builder does **not** allow to add custom properties, i.e. others than `type`, `title`, `status`, `detail` 
-and `instance`. This may change in the future.
+Alternatively you can add custom properties, i.e. others than `type`, `title`, `status`, `detail` and `instance`:
+
+```java
+Problem.builder()
+    .withType(URI.create("http://example.org/out-of-stock"))
+    .withTitle("Out of Stock")
+    .withStatus(UNPROCESSABLE_ENTITY)
+    .withDetail("Item B00027Y5QG is no longer available")
+    .with("product", "B00027Y5QG")
+    .build();
+```
+
+Will produce this:
+
+```json
+{
+  "type": "http://example.org/out-of-stock",
+  "title": "Out of Stock",
+  "status": 422,
+  "detail": "Item B00027Y5QG is no longer available",
+  "product": "B00027Y5QG"
+}
+```
 
 ### Custom Problems
 

@@ -25,7 +25,9 @@ import org.junit.Test;
 import java.net.URI;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.equalTo;
+import static java.util.Optional.empty;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.is;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
@@ -41,9 +43,11 @@ public class ProblemBuilderTest {
                 .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
                 .build();
 
-        assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
-        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
+        assertThat(problem, hasFeature("type", Problem::getType, is(type)));
+        assertThat(problem, hasFeature("title", Problem::getTitle, is("Out of Stock")));
+        assertThat(problem, hasFeature("status", Problem::getStatus, is(MoreStatus.UNPROCESSABLE_ENTITY)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(empty())));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(empty())));
     }
 
     @Test
@@ -55,10 +59,56 @@ public class ProblemBuilderTest {
                 .withDetail("Item B00027Y5QG is no longer available")
                 .build();
 
-        assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
-        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(Optional.of("Item B00027Y5QG is no longer available"))));
+    }
+
+    @Test
+    public void shouldCreateProblemWithInstance() {
+        final Problem problem = Problem.builder()
+                .withType(type)
+                .withTitle("Out of Stock")
+                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .withInstance(URI.create("http://example.com/"))
+                .build();
+
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(Optional.of(URI.create("http://example.com/")))));
+    }
+
+    @Test
+    public void shouldCreateProblemWithParameters() {
+        final DefaultProblem problem = Problem.builder()
+                .withType(type)
+                .withTitle("Out of Stock")
+                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .with("foo", "bar")
+                .build();
+
+        assertThat(problem.getParameters(), hasEntry("foo", "bar"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomType() {
+        Problem.builder().with("type", "foo");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomTitle() {
+        Problem.builder().with("title", "foo");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomStatus() {
+        Problem.builder().with("status", "foo");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomDetail() {
+        Problem.builder().with("detail", "foo");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomInstance() {
+        Problem.builder().with("instance", "foo");
     }
 
 }

@@ -63,12 +63,16 @@ public final class ProblemMixInTest {
     @Test
     public void shouldDeserializeDefaultProblem() throws IOException {
         final URL resource = Resources.getResource("out-of-stock.json");
-        final Problem problem = mapper.readValue(resource, Problem.class);
+        final Problem raw = mapper.readValue(resource, Problem.class);
+
+        assertThat(raw, instanceOf(DefaultProblem.class));
+        final DefaultProblem problem = (DefaultProblem) raw;
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(MoreStatus.UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("product", "B00027Y5QG")));
     }
 
     @Test

@@ -20,8 +20,11 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
@@ -32,7 +35,7 @@ abstract class DefaultProblemMixIn {
 
     @JsonCreator
     DefaultProblemMixIn(
-            @JsonProperty(value = "type") final URI type,
+            @JsonProperty("type") final URI type,
             @JsonProperty(value = "title", required = true) final String title,
             @JsonProperty(value = "status", required = true) final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,
@@ -40,5 +43,11 @@ abstract class DefaultProblemMixIn {
         // this is just here to see whether "our" constructor matches the real one
         throw new DefaultProblem(type, title, status, detail, instance);
     }
+
+    @JsonAnySetter
+    abstract void set(final String key, final Object value);
+
+    @JsonAnyGetter
+    public abstract ImmutableMap<String, Object> getParameters();
 
 }

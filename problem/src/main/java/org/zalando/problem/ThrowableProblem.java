@@ -25,4 +25,6 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem {
 
+    // TODO support ThrowableProblem getCause();
+
 }
