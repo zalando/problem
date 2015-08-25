@@ -7,13 +7,16 @@
 [![Release](https://img.shields.io/github/release/zalando/problem.svg)](https://github.com/zalando/problem/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
 
-*Problem* is a library that implements [`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07).
+*Problem* is a library that implements 
+[`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07).
 It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
 It's decoupled from any JSON library, but contains a separate module for Jackson.
 
 ## Note
 
-The term problem in this document, in contrast to the [`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07) spec **requires** the properties `type`, `title` and `status`.
+The term problem in this document, in contrast to the 
+[`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07) spec **requires** the 
+properties `type`, `title` and `status`.
 
 ## Dependency
 
@@ -33,11 +36,14 @@ The term problem in this document, in contrast to the [`application/problem+json
 
 ## Creating problems
 
-There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, yet with slightly more effort:
+There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, 
+yet with slightly more effort:
 
 ### Generic
 
-There are cases in which an [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is basically enough to convey the necessary information. Everything you need is the status you want to repond with and we will create a problem from it:
+There are cases in which an [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is basically 
+enough to convey the necessary information. Everything you need is the status you want to respond with and we will 
+create a problem from it:
 
 ```java
 Problem.valueOf(Status.NOT_FOUND);
@@ -53,7 +59,8 @@ Will produce this:
 }
 ```
 
-[httpstatus.es](http://httpstatus.es/) is a convenient little site that has a unique URI for every status code which includes some information about it. A perfect match for our use case.
+[httpstatus.es](http://httpstatus.es/) is a convenient little site that has a unique URI for every status code which 
+includes some information about it. A perfect match for our use case.
 
 But you may also have the need to add some little hint, e.g. as a custom detail of the problem:
 
@@ -74,7 +81,9 @@ Will produce this:
 
 ### Builder
 
-Most of the time you'll need to define specific problem types, that are unique to your application. And you want to construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It ofers a fluent API and allows to construct problem instances without the need to create custom classes:
+Most of the time you'll need to define specific problem types, that are unique to your application. And you want to 
+construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It ofers a fluent API 
+and allows to construct problem instances without the need to create custom classes:
 
 ```java
 Problem.builder()
@@ -96,11 +105,13 @@ Will produce this:
 }
 ```
 
-Right now the builder does **not** allow to add custom properties, i.e. others than `type`, `title`, `status`, `detail` and `instance`. This may change in the future.
+Right now the builder does **not** allow to add custom properties, i.e. others than `type`, `title`, `status`, `detail` 
+and `instance`. This may change in the future.
 
 ### Custom Problems
 
-The highest degree of flexibility and customizability is achieved by implementing `Problem` directly. This is especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share.
+The highest degree of flexibility and customizability is achieved by implementing `Problem` directly. This is 
+especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share.
 
 ```java
 @Immutable
@@ -162,7 +173,10 @@ Will produce this:
 
 ### Throwing problems
 
-*Problems* have loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses `RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
+*Problems* have loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one 
+into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses 
+`RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default 
+implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
 
 ```java
 public final class OutOfStockProblem extends ThrowableProblem
@@ -170,13 +184,17 @@ public final class OutOfStockProblem extends ThrowableProblem
 
 ## Handling problems
 
-Reading problems is very specific to the JSON parser in use. This section assumes you're using Jackson, in which case reading/parsing problems usually boils down to this:
+Reading problems is very specific to the JSON parser in use. This section assumes you're using Jackson, in which case 
+reading/parsing problems usually boils down to this:
 
 ```java
 Problem problem = mapper.readValue(.., Problem.class);
 ```
 
-If you're using Jackson, please make sure you understand its [Polymorphic Deserialization](http://wiki.fasterxml.com/JacksonPolymorphicDeserialization) feature. The supplied Jackson module makes heavy use of it. Considering you have a custom problem type `OutOfStockProblem`, you'll need to register it as a subtype:
+If you're using Jackson, please make sure you understand its 
+[Polymorphic Deserialization](http://wiki.fasterxml.com/JacksonPolymorphicDeserialization) feature. The supplied 
+Jackson module makes heavy use of it. Considering you have a custom problem type `OutOfStockProblem`, you'll need to 
+register it as a subtype:
 
 ```java
 mapper.registerSubtypes(OutOfStockProblem.class);
@@ -191,11 +209,14 @@ public final class OutOfStockProblem implements Problem {
     public OutOfStockProblem(final String product) {
 ```
 
-Jackson is now able to deserialize specific problems into their respective types. By default, e.g. if a type is not associated with a class, it will fallback to a `DefaultProblem`. 
+Jackson is now able to deserialize specific problems into their respective types. By default, e.g. if a type is not 
+associated with a class, it will fallback to a `DefaultProblem`. 
 
 ### Catching problems
 
-If you read about [Throwing problems](#throwing-problems) already, you should be familiar with `ThrowableProblem`. This can be helpful if you read a problem, as a response from a server, and what to find out what it actually is. Multiple `if` statements with `instanceof` checks could be an option, but usually nicer is this:
+If you read about [Throwing problems](#throwing-problems) already, you should be familiar with `ThrowableProblem`. 
+This can be helpful if you read a problem, as a response from a server, and what to find out what it actually is. 
+Multiple `if` statements with `instanceof` checks could be an option, but usually nicer is this:
 
 ```java
 try {
