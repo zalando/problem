@@ -21,6 +21,7 @@ package org.zalando.problem;
  */
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
@@ -116,7 +117,7 @@ public final class DefaultProblem extends ThrowableProblem {
      */
     @Override
     public String toString() {
-        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(type.toString())
+        final ToStringHelper helper = MoreObjects.toStringHelper(type.toString())
                 .omitNullValues()
                 .addValue(detail.orElse(null))
                 .add("instance", instance.orElse(null));

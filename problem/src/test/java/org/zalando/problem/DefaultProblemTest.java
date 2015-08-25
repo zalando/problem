@@ -110,7 +110,21 @@ public final class DefaultProblemTest {
                 .withDetail("Order 123")
                 .withInstance(URI.create("https://example.org/"))
                 .build();
+
         assertThat(problem, hasToString("http://httpstatus.es/404{Order 123, instance=https://example.org/}"));
+    }
+
+    @Test
+    public void shouldRenderCustomProperties() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://httpstatus.es/404"))
+                .withTitle("Not Found")
+                .withStatus(NOT_FOUND)
+                .withDetail("Order 123")
+                .with("foo", "bar")
+                .build();
+
+        assertThat(problem, hasToString("http://httpstatus.es/404{Order 123, foo=bar}"));
     }
 
 }
