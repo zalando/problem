@@ -34,6 +34,18 @@ properties `type`, `title` and `status`.
 </dependency>
 ```
 
+## Usage
+
+In case you're using Jackson, make sure you register the module.
+
+```java
+ObjectMapper mapper = mapper;
+
+mapper.registerModule(new ProblemModule());
+// or
+mapper.findAndRegisterModules();
+```
+
 ## Creating problems
 
 There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, 
