@@ -22,9 +22,29 @@ package org.zalando.problem;
 
 import javax.annotation.concurrent.Immutable;
 
+import static com.google.common.base.Preconditions.checkState;
+
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem {
 
-    // TODO support ThrowableProblem getCause();
+    @Deprecated
+    public ThrowableProblem() {
+        
+    }
 
+    public ThrowableProblem(Throwable cause) {
+        super(cause);
+    }
+
+    @Override
+    public ThrowableProblem getCause() {
+        final Throwable cause = super.getCause();
+        if (cause == null) {
+            return null;
+        }
+
+        checkState(cause instanceof ThrowableProblem, "Expected throwable problem cause, but got %s", cause);
+        
+        return (ThrowableProblem) cause;
+    }
 }
