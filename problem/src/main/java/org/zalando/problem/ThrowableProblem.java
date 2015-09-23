@@ -32,7 +32,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
         
     }
 
-    public ThrowableProblem(Throwable cause) {
+    public ThrowableProblem(final ThrowableProblem cause) {
         super(cause);
     }
 
@@ -44,7 +44,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
         }
 
         checkState(cause instanceof ThrowableProblem, "Expected throwable problem cause, but got %s", cause);
-        
         return (ThrowableProblem) cause;
     }
+
 }
