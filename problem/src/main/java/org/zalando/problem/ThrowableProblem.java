@@ -22,14 +22,11 @@ package org.zalando.problem;
 
 import javax.annotation.concurrent.Immutable;
 
-import static com.google.common.base.Preconditions.checkState;
-
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem {
 
-    @Deprecated
     public ThrowableProblem() {
-        
+
     }
 
     public ThrowableProblem(final ThrowableProblem cause) {
@@ -38,13 +35,8 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
     @Override
     public ThrowableProblem getCause() {
-        final Throwable cause = super.getCause();
-        if (cause == null) {
-            return null;
-        }
-
-        checkState(cause instanceof ThrowableProblem, "Expected throwable problem cause, but got %s", cause);
-        return (ThrowableProblem) cause;
+        // cast is safe, since the only way to set this is our constructor
+        return (ThrowableProblem) super.getCause();
     }
 
 }
