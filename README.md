@@ -39,7 +39,7 @@ properties `type`, `title` and `status`.
 In case you're using Jackson, make sure you register the module.
 
 ```java
-ObjectMapper mapper = mapper;
+ObjectMapper mapper = new ObjectMapper();
 
 mapper.registerModule(new ProblemModule());
 // or
@@ -150,8 +150,7 @@ especially convenient if you refer to it in a lot of places, i.e. it makes it ea
 @Immutable
 public final class OutOfStockProblem implements Problem {
 
-    static final String TYPE_VALUE = "http://example.org/out-of-stock";
-    static final URI TYPE = URI.create(TYPE_VALUE);
+    static final URI TYPE = URI.create("http://example.org/out-of-stock");
 
     private final Optional<String> detail;
     private final String product;
@@ -206,7 +205,7 @@ Will produce this:
 
 ### Throwing problems
 
-*Problems* have loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one 
+*Problems* have a loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one 
 into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses 
 `RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default 
 implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
