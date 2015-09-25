@@ -32,7 +32,7 @@ import java.util.Optional;
 public final class ProblemBuilder {
 
     static final ImmutableSet<String> RESERVED_PROPERTIES = ImmutableSet.of(
-            "type", "title", "status", "detail", "instance"
+            "type", "title", "status", "detail", "instance", "cause"
     );
 
     private URI type;
@@ -41,6 +41,7 @@ public final class ProblemBuilder {
 
     private Optional<String> detail = Optional.empty();
     private Optional<URI> instance = Optional.empty();
+    @Nullable private ThrowableProblem cause;
     private final Map<String, Object> parameters = new LinkedHashMap<>();
 
     /**
@@ -74,6 +75,11 @@ public final class ProblemBuilder {
         this.instance = Optional.ofNullable(instance);
         return this;
     }
+    
+    public ProblemBuilder withCause(@Nullable final ThrowableProblem cause) {
+        this.cause = cause;
+        return this;
+    }
 
     /**
      *
@@ -89,9 +95,9 @@ public final class ProblemBuilder {
         parameters.put(key, value);
         return this;
     }
-
+    
     public DefaultProblem build() {
-        final DefaultProblem problem = new DefaultProblem(type, title, status, detail, instance);
+        final DefaultProblem problem = new DefaultProblem(type, title, status, detail, instance, cause);
         parameters.forEach(problem::set);
         return problem;
     }

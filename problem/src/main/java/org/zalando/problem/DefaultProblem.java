@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
@@ -49,6 +50,16 @@ public final class DefaultProblem extends ThrowableProblem {
             final StatusType status,
             final Optional<String> detail,
             final Optional<URI> instance) {
+        this(type, title, status, detail, instance, null);
+    }
+
+    DefaultProblem(final URI type,
+            final String title,
+            final StatusType status,
+            final Optional<String> detail,
+            final Optional<URI> instance,
+            @Nullable final ThrowableProblem cause) {
+        super(cause);
         this.type = Objects.requireNonNull(type, "type must not be null");
         this.title = Objects.requireNonNull(title, "title must not be null");
         this.status = Objects.requireNonNull(status, "status must not be null");

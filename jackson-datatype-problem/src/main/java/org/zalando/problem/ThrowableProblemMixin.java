@@ -22,6 +22,9 @@ package org.zalando.problem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 interface ThrowableProblemMixin {
@@ -32,8 +35,8 @@ interface ThrowableProblemMixin {
     @JsonIgnore
     String getLocalizedMessage();
 
-    @JsonIgnore
-    Throwable getCause();
+    @JsonInclude(NON_NULL)
+    ThrowableProblem getCause();
 
     @JsonIgnore
     StackTraceElement[] getStackTrace();

@@ -36,7 +36,7 @@ public final class EnforceCoverageTest {
 
     @Test(expected = DefaultProblem.class)
     public void foo() {
-        new DefaultProblemMixIn(URI.create("http://httpstatus.es/400"), "Bad Request", BAD_REQUEST, empty(), empty()) {
+        new DefaultProblemMixIn(URI.create("http://httpstatus.es/400"), "Bad Request", BAD_REQUEST, empty(), empty(), null) {
 
             @Override
             void set(final String key, final Object value) {

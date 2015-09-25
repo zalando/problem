@@ -27,9 +27,12 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
+import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public class ProblemBuilderTest {
 
@@ -85,6 +88,27 @@ public class ProblemBuilderTest {
 
         assertThat(problem.getParameters(), hasEntry("foo", "bar"));
     }
+    
+    @Test
+    public void shouldCreateProblemWithCause() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withCause(Problem.builder()
+                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withTitle("Expired Credit Card")
+                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .build())
+                .build();
+        
+        assertThat(problem, hasFeature("cause", ThrowableProblem::getCause, notNullValue()));
+
+        final ThrowableProblem cause = problem.getCause();
+        assertThat(cause, hasFeature("type", Problem::getType, hasToString("http://example.org/expired-credit-card")));
+        assertThat(cause, hasFeature("title", Problem::getTitle, is("Expired Credit Card")));
+        assertThat(cause, hasFeature("status", Problem::getStatus, is(UNPROCESSABLE_ENTITY)));
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowOnCustomType() {
@@ -109,6 +133,11 @@ public class ProblemBuilderTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowOnCustomInstance() {
         Problem.builder().with("instance", "foo");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowOnCustomCause() {
+        Problem.builder().with("cause", "foo");
     }
 
 }

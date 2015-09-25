@@ -41,6 +41,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
@@ -85,6 +86,31 @@ public final class ProblemMixInTest {
     }
 
     @Test
+    public void shouldSerializeProblemCause() throws JsonProcessingException {
+        final Problem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withCause(Problem.builder()
+                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withTitle("Expired Credit Card")
+                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withDetail("Credit card is expired as of 2015-09-16T00:00:00Z")
+                        .with("since", "2015-09-16T00:00:00Z")
+                        .build())
+                .build();
+
+        final String json = mapper.writeValueAsString(problem);
+        
+        with(json)
+                .assertThat("$.cause.type", is("http://example.org/expired-credit-card"))
+                .assertThat("$.cause.title", is("Expired Credit Card"))
+                .assertThat("$.cause.status", is(422))
+                .assertThat("$.cause.detail", is("Credit card is expired as of 2015-09-16T00:00:00Z"))
+                .assertThat("$.cause.since", is("2015-09-16T00:00:00Z"));
+    }
+
+    @Test
     public void shouldDeserializeDefaultProblem() throws IOException {
         final URL resource = Resources.getResource("out-of-stock.json");
         final Problem raw = mapper.readValue(resource, Problem.class);
@@ -121,6 +147,25 @@ public final class ProblemMixInTest {
         assertThat(status, hasFeature("status code", StatusType::getStatusCode, equalTo(666)));
         assertThat(status, hasFeature("family", StatusType::getFamily, equalTo(Family.OTHER)));
         assertThat(status, hasFeature("reason phrase", StatusType::getReasonPhrase, equalTo("Unknown")));
+    }
+
+    @Test
+    public void shouldDeserializeCause() throws IOException {
+        final URL resource = Resources.getResource("cause.json");
+        final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
+
+        final ThrowableProblem cause = problem.getCause();
+
+        assertThat(cause, is(notNullValue()));
+        assertThat(cause, instanceOf(DefaultProblem.class));
+
+        final DefaultProblem c = (DefaultProblem) cause;
+
+        assertThat(cause, hasFeature("type", Problem::getType, hasToString("http://example.org/expired-credit-card")));
+        assertThat(cause, hasFeature("title", Problem::getTitle, equalTo("Expired Credit Card")));
+        assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
+        assertThat(cause, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Credit card is expired as of 2015-09-16T00:00:00Z"))));
+        assertThat(c, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
     }
 
 }
