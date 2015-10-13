@@ -88,7 +88,7 @@ public interface Problem {
      * @return
      * @see <a href="http://httpstatus.es/">http://httpstatus.es/</a>
      */
-    static Problem valueOf(final StatusType status) {
+    static ThrowableProblem valueOf(final StatusType status) {
         return GenericProblems.create(status).build();
     }
 
@@ -99,7 +99,7 @@ public interface Problem {
      * @return
      * @see <a href="http://httpstatus.es/">http://httpstatus.es/</a>
      */
-    static Problem valueOf(final StatusType status, final String detail) {
+    static ThrowableProblem valueOf(final StatusType status, final String detail) {
         return GenericProblems.create(status).withDetail(detail).build();
     }
 
