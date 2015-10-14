@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Problem
+ * Jackson-datatype-Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -20,23 +20,29 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.annotation.concurrent.Immutable;
+import javax.ws.rs.core.Response;
+import java.net.URI;
 
-@Immutable
-public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
+public class OutOfStockException extends BusinessException implements Exceptional {
 
-    public ThrowableProblem() {
-
+    @Override
+    public URI getType() {
+        return URI.create("about:blank");
     }
 
-    public ThrowableProblem(final ThrowableProblem cause) {
-        super(cause);
+    @Override
+    public String getTitle() {
+        return "Out of Stock";
+    }
+
+    @Override
+    public Response.StatusType getStatus() {
+        return MoreStatus.UNPROCESSABLE_ENTITY;
     }
 
     @Override
     public ThrowableProblem getCause() {
-        // cast is safe, since the only way to set this is our constructor
-        return (ThrowableProblem) super.getCause();
+        return null;
     }
 
 }

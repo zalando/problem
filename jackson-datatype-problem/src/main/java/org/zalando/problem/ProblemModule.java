@@ -51,9 +51,9 @@ public final class ProblemModule extends SimpleModule {
     public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types) throws IllegalArgumentException {
         super(ProblemModule.class.getSimpleName(), getVersion());
 
-        setMixInAnnotation(Problem.class, ProblemMixIn.class);
-        setMixInAnnotation(ThrowableProblem.class, ThrowableProblemMixin.class);
+        setMixInAnnotation(Exceptional.class, ExceptionalMixin.class);
         setMixInAnnotation(DefaultProblem.class, DefaultProblemMixIn.class);
+        setMixInAnnotation(Problem.class, ProblemMixIn.class);
 
         addSerializer(StatusType.class, new StatusTypeSerializer());
         addDeserializer(StatusType.class, new StatusTypeDeserializer(buildIndex(types)));

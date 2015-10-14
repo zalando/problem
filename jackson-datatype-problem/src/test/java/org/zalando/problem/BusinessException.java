@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Problem
+ * Jackson-datatype-Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -20,23 +20,5 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import javax.annotation.concurrent.Immutable;
-
-@Immutable
-public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
-
-    public ThrowableProblem() {
-
-    }
-
-    public ThrowableProblem(final ThrowableProblem cause) {
-        super(cause);
-    }
-
-    @Override
-    public ThrowableProblem getCause() {
-        // cast is safe, since the only way to set this is our constructor
-        return (ThrowableProblem) super.getCause();
-    }
-
+public abstract class BusinessException extends Exception {
 }
