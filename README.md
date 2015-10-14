@@ -214,6 +214,14 @@ implementations. Instead of implementing the `Problem` interface, just inherit f
 public final class OutOfStockProblem extends ThrowableProblem
 ```
 
+If you already have an exception class that you want to extend, you should implement the "marker" interface `Exceptional`:
+
+```java
+public final class OutOfStockProblem extends BusinessException implements Exceptional
+```
+
+The Jackson support module will recognize this inteface and deal with the inherited properties from `Throwable` accordingly. Note: This interface only exists, because `Throwable` is a concrete class, rather than an interface.
+
 ## Handling problems
 
 Reading problems is very specific to the JSON parser in use. This section assumes you're using Jackson, in which case 
@@ -262,6 +270,15 @@ try {
 } catch (ThrowableProblem e) {
     tellTheCustomerSomethingWentWrong();
 }
+```
+
+If you used the `Exceptional` interface rather than `ThrowableProblem` you have to adjust your code a little bit:
+
+```java
+try {
+    throw mapper.readValue(.., Exceptional.class).propagate();
+} catch (OutOfStockProblem e) {
+    ...
 ```
 
 ## License
