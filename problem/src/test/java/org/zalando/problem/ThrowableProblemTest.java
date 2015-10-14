@@ -33,19 +33,6 @@ import static org.junit.Assert.fail;
 import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public final class ThrowableProblemTest {
-
-    @Test
-    public void shouldBeAbleToThrowAndCatchThrowableProblem() {
-        try {
-            throw new InsufficientFundsProblem(10, -20);
-        } catch (InsufficientFundsProblem problem) {
-            assertThat(problem, hasFeature("balance", InsufficientFundsProblem::getBalance, equalTo(10)));
-        } catch (OutOfStockProblem problem) {
-            fail("Should not have been out-of-stock");
-        } catch (ThrowableProblem problem) {
-            fail("Should not have been unspecific problem");
-        }
-    }
     
     @Test
     public void shouldReturnThrowableProblemCause() {

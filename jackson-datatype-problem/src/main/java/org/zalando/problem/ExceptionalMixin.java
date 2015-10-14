@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-interface ThrowableProblemMixin {
+interface ExceptionalMixin {
 
     @JsonIgnore
     String getMessage();
