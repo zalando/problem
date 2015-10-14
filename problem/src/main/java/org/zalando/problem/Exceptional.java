@@ -38,8 +38,8 @@ public interface Exceptional extends Problem {
 
     Exceptional getCause();
 
-    default Exception propagate() throws Exception {
-        throw propagateAs(Exception.class);
+    default RuntimeException propagate() throws RuntimeException {
+        throw propagateAs(RuntimeException.class);
     }
 
     default <X extends Throwable> X propagateAs(final Class<X> type) throws X {
