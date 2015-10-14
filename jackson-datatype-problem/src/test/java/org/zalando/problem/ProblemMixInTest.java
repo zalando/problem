@@ -20,6 +20,7 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -117,6 +118,21 @@ public final class ProblemMixInTest {
 
         assertThat(raw, instanceOf(DefaultProblem.class));
         final DefaultProblem problem = (DefaultProblem) raw;
+
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
+        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("product", "B00027Y5QG")));
+    }
+
+    @Test
+    public void shouldDeserializeExceptional() throws IOException {
+        final URL resource = Resources.getResource("out-of-stock.json");
+        final Exceptional exceptional = mapper.readValue(resource, Exceptional.class);
+
+        assertThat(exceptional, instanceOf(DefaultProblem.class));
+        final DefaultProblem problem = (DefaultProblem) exceptional;
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
