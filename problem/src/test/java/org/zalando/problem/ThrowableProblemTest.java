@@ -28,6 +28,7 @@ import java.net.URI;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
@@ -124,6 +125,24 @@ public final class ThrowableProblemTest {
 
         assertThat(stacktrace,
                 containsString("Caused by: http://example.org/expired-credit-card{422, Expired Credit Card}"));
+    }
+
+    @Test
+    public void shouldProcessStackTrace() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withCause(Problem.builder()
+                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withTitle("Expired Credit Card")
+                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .build())
+                .build();
+
+        final String stacktrace = getStackTrace(problem);
+
+        assertThat(stacktrace, not(containsString("org.junit")));
     }
 
     private String getStackTrace(final Throwable throwable) {
