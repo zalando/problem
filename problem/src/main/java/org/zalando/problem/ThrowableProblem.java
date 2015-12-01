@@ -20,11 +20,15 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.base.Joiner;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
+
+    private static final Joiner DELIMITER = Joiner.on(": ").skipNulls();
 
     public ThrowableProblem() {
 
@@ -32,6 +36,11 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
     public ThrowableProblem(@Nullable final ThrowableProblem cause) {
         super(cause);
+    }
+
+    @Override
+    public String getMessage() {
+        return DELIMITER.join(getTitle(), getDetail().orElse(null));
     }
 
     @Override
@@ -44,5 +53,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
     public String toString() {
         return Problem.toString(this);
     }
+
+    // TODO trim stack trace?!
 
 }

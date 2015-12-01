@@ -22,14 +22,17 @@ package org.zalando.problem;
 
 import org.junit.Test;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public final class ThrowableProblemTest {
@@ -59,6 +62,74 @@ public final class ThrowableProblemTest {
                 .build();
         
         assertThat(problem, hasFeature("cause", ThrowableProblem::getCause, nullValue()));
+    }
+
+    @Test
+    public void shouldReturnTitleAsMessage() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .build();
+
+        assertThat(problem, hasFeature("message", Throwable::getMessage, is("Preauthorization Failed")));
+    }
+
+    @Test
+    public void shouldReturnTitleAndDetailAsMessage() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withDetail("CVC invalid")
+                .build();
+
+        assertThat(problem, hasFeature("message", Throwable::getMessage, is("Preauthorization Failed: CVC invalid")));
+    }
+
+    @Test
+    public void shouldReturnCausesMessage() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withCause(Problem.builder()
+                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withTitle("Expired Credit Card")
+                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .build())
+                .build();
+
+        assertThat(problem, hasFeature("cause", Throwable::getCause, is(notNullValue())));
+        assertThat(problem.getCause(), hasFeature("message", Throwable::getMessage, is("Expired Credit Card")));
+    }
+
+    @Test
+    public void shouldPrintStackTrace() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withTitle("Preauthorization Failed")
+                .withStatus(UNPROCESSABLE_ENTITY)
+                .withCause(Problem.builder()
+                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withTitle("Expired Credit Card")
+                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .build())
+                .build();
+
+        final String stacktrace = getStackTrace(problem);
+
+        assertThat(stacktrace,
+                startsWith("http://example.org/preauthorization-failed{422, Preauthorization Failed}"));
+
+        assertThat(stacktrace,
+                containsString("Caused by: http://example.org/expired-credit-card{422, Expired Credit Card}"));
+    }
+
+    private String getStackTrace(final Throwable throwable) {
+        final StringWriter writer = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
     }
 
 }
