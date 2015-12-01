@@ -40,4 +40,9 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
         return (ThrowableProblem) super.getCause();
     }
 
+    @Override
+    public String toString() {
+        return Problem.toString(this);
+    }
+
 }

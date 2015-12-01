@@ -26,9 +26,11 @@ import org.junit.Test;
 import java.net.URI;
 import java.util.Optional;
 
+import static java.util.Collections.emptyMap;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
@@ -48,12 +50,19 @@ public final class ProblemTest {
         assertThat(problem, hasFeature("instance", Problem::getInstance, isAbsent()));
     }
 
+    @Test
+    public void shouldUseDefaultParameters() {
+        final Problem problem = new InsufficientFundsProblem(10, -20);
+
+        assertThat(problem, hasFeature("parameters", Problem::getParameters, is(emptyMap())));
+    }
+
     private <T> Matcher<Optional<T>> isAbsent() {
         return hasFeature("present", Optional::isPresent, equalTo(false));
     }
 
     @Test
-    public void shouldRenderEmptyProble() {
+    public void shouldRenderEmptyProblem() {
         final Problem problem = Problem.valueOf(NOT_FOUND);
         assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found}"));
     }

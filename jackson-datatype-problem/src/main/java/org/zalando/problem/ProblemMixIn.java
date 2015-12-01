@@ -20,9 +20,11 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.collect.ImmutableMap;
 
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
@@ -58,5 +60,9 @@ interface ProblemMixIn extends Problem {
     @JsonInclude(NON_ABSENT)
     @Override
     Optional<URI> getInstance();
+
+    @JsonAnyGetter
+    @Override
+    ImmutableMap<String, Object> getParameters();
 
 }

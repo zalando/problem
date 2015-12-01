@@ -109,9 +109,4 @@ public final class DefaultProblem extends ThrowableProblem {
         parameters.put(key, value);
     }
 
-    @Override
-    public String toString() {
-        return defaultToString();
-    }
-
 }

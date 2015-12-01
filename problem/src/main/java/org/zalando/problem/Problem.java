@@ -91,35 +91,6 @@ public interface Problem {
         return ImmutableMap.of();
     }
 
-    /**
-     * Specification by example:
-     * <p>
-     * <pre>{@code
-     *   // Returns "http://httpstatus.es/404{}"
-     *   Problem.create(NOT_FOUND).toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123}"
-     *   Problem.create(NOT_FOUND, "Order 123").toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
-     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
-     * }</pre>
-     *
-     * @return a string representation of this problem
-     */
-    default String defaultToString() {
-        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(getType().toString())
-                .omitNullValues()
-                .addValue(getStatus().getStatusCode())
-                .addValue(getTitle())
-                .addValue(getDetail().orElse(null))
-                .add("instance", getInstance().orElse(null));
-
-        getParameters().forEach(helper::add);
-
-        return helper.toString();
-    }
-
     static ProblemBuilder builder() {
         return new ProblemBuilder();
     }
@@ -143,6 +114,36 @@ public interface Problem {
      */
     static ThrowableProblem valueOf(final StatusType status, final String detail) {
         return GenericProblems.create(status).withDetail(detail).build();
+    }
+
+    /**
+     * Specification by example:
+     * <p>
+     * <pre>{@code
+     *   // Returns "http://httpstatus.es/404{}"
+     *   Problem.create(NOT_FOUND).toString();
+     * <p>
+     *   // Returns "http://httpstatus.es/404{Order 123}"
+     *   Problem.create(NOT_FOUND, "Order 123").toString();
+     * <p>
+     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
+     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
+     * }</pre>
+     *
+     * @param problem the problem
+     * @return a string representation of the problem
+     */
+    static String toString(final Problem problem) {
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(problem.getType().toString())
+                .omitNullValues()
+                .addValue(problem.getStatus().getStatusCode())
+                .addValue(problem.getTitle())
+                .addValue(problem.getDetail().orElse(null))
+                .add("instance", problem.getInstance().orElse(null));
+
+        problem.getParameters().forEach(helper::add);
+
+        return helper.toString();
     }
 
 }

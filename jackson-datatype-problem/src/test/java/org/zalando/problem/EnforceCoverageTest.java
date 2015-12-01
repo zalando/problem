@@ -20,7 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
 import org.junit.Test;
@@ -43,10 +42,6 @@ public final class EnforceCoverageTest {
 
             }
 
-            @Override
-            public ImmutableMap<String, Object> getParameters() {
-                return null;
-            }
         };
     }
 
