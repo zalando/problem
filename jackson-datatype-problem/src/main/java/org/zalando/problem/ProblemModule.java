@@ -48,7 +48,8 @@ public final class ProblemModule extends SimpleModule {
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
     @SafeVarargs
-    public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types) throws IllegalArgumentException {
+    public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types)
+            throws IllegalArgumentException {
         super(ProblemModule.class.getSimpleName(), getVersion());
 
         setMixInAnnotation(Exceptional.class, ExceptionalMixin.class);
@@ -61,11 +62,13 @@ public final class ProblemModule extends SimpleModule {
 
     @SuppressWarnings("deprecation")
     private static Version getVersion() {
-        return VersionUtil.mavenVersionFor(ProblemModule.class.getClassLoader(), "org.zalando", "jackson-datatype-problem");
+        return VersionUtil.mavenVersionFor(ProblemModule.class.getClassLoader(),
+                "org.zalando", "jackson-datatype-problem");
     }
 
     @SafeVarargs
-    private final <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(final Class<? extends E>... types) {
+    private final <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(
+            final Class<? extends E>... types) {
         final Builder<Integer, StatusType> builder = ImmutableMap.builder();
 
         for (final Class<? extends E> type : types) {
