@@ -20,8 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
@@ -92,6 +90,7 @@ public final class DefaultProblem extends ThrowableProblem {
         return instance;
     }
 
+    @Override
     public ImmutableMap<String, Object> getParameters() {
         return ImmutableMap.copyOf(parameters);
     }
@@ -110,32 +109,9 @@ public final class DefaultProblem extends ThrowableProblem {
         parameters.put(key, value);
     }
 
-    /**
-     * Specification by example:
-     * <p>
-     * <pre>{@code
-     *   // Returns "http://httpstatus.es/404{}"
-     *   Problem.create(NOT_FOUND).toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123}"
-     *   Problem.create(NOT_FOUND, "Order 123").toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
-     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
-     * }</pre>
-     *
-     * @return a string representation of this problem
-     */
     @Override
     public String toString() {
-        final ToStringHelper helper = MoreObjects.toStringHelper(type.toString())
-                .omitNullValues()
-                .addValue(detail.orElse(null))
-                .add("instance", instance.orElse(null));
-
-        parameters.forEach(helper::add);
-
-        return helper.toString();
+        return defaultToString();
     }
 
 }

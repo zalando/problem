@@ -23,9 +23,12 @@ package org.zalando.problem;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Optional;
 
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasToString;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
@@ -47,6 +50,44 @@ public final class ProblemTest {
 
     private <T> Matcher<Optional<T>> isAbsent() {
         return hasFeature("present", Optional::isPresent, equalTo(false));
+    }
+
+    @Test
+    public void shouldRenderEmptyProble() {
+        final Problem problem = Problem.valueOf(NOT_FOUND);
+        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found}"));
+    }
+
+    @Test
+    public void shouldRenderDetail() {
+        final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123");
+        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123}"));
+    }
+
+    @Test
+    public void shouldRenderDetailAndInstance() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://httpstatus.es/404"))
+                .withTitle("Not Found")
+                .withStatus(NOT_FOUND)
+                .withDetail("Order 123")
+                .withInstance(URI.create("https://example.org/"))
+                .build();
+
+        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123, instance=https://example.org/}"));
+    }
+
+    @Test
+    public void shouldRenderCustomProperties() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("http://httpstatus.es/404"))
+                .withTitle("Not Found")
+                .withStatus(NOT_FOUND)
+                .withDetail("Order 123")
+                .with("foo", "bar")
+                .build();
+
+        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123, foo=bar}"));
     }
 
 }

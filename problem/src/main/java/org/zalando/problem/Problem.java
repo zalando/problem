@@ -20,6 +20,9 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
@@ -76,6 +79,45 @@ public interface Problem {
      */
     default Optional<URI> getInstance() {
         return Optional.empty();
+    }
+
+    /**
+     * Optional, additional attributes of the problem. Implementations can choose to ignore this in favor of concrete,
+     * typed fields.
+     *
+     * @return additional parameters
+     */
+    default ImmutableMap<String, Object> getParameters() {
+        return ImmutableMap.of();
+    }
+
+    /**
+     * Specification by example:
+     * <p>
+     * <pre>{@code
+     *   // Returns "http://httpstatus.es/404{}"
+     *   Problem.create(NOT_FOUND).toString();
+     * <p>
+     *   // Returns "http://httpstatus.es/404{Order 123}"
+     *   Problem.create(NOT_FOUND, "Order 123").toString();
+     * <p>
+     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
+     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
+     * }</pre>
+     *
+     * @return a string representation of this problem
+     */
+    default String defaultToString() {
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(getType().toString())
+                .omitNullValues()
+                .addValue(getStatus().getStatusCode())
+                .addValue(getTitle())
+                .addValue(getDetail().orElse(null))
+                .add("instance", getInstance().orElse(null));
+
+        getParameters().forEach(helper::add);
+
+        return helper.toString();
     }
 
     static ProblemBuilder builder() {

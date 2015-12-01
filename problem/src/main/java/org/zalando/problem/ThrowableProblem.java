@@ -20,6 +20,7 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 @Immutable
@@ -29,7 +30,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
     }
 
-    public ThrowableProblem(final ThrowableProblem cause) {
+    public ThrowableProblem(@Nullable final ThrowableProblem cause) {
         super(cause);
     }
 
