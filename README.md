@@ -223,7 +223,7 @@ If you already have an exception class that you want to extend, you should imple
 public final class OutOfStockProblem extends BusinessException implements Exceptional
 ```
 
-The Jackson support module will recognize this inteface and deal with the inherited properties from `Throwable` 
+The Jackson support module will recognize this interface and deal with the inherited properties from `Throwable` 
 accordingly. Note: This interface only exists, because `Throwable` is a concrete class, rather than an interface.
 
 ## Handling problems
