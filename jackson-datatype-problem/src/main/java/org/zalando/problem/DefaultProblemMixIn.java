@@ -48,7 +48,4 @@ abstract class DefaultProblemMixIn {
     @JsonAnySetter
     abstract void set(final String key, final Object value);
 
-    @JsonAnyGetter
-    public abstract ImmutableMap<String, Object> getParameters();
-
 }

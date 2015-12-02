@@ -96,7 +96,7 @@ public final class ProblemBuilder {
         return this;
     }
     
-    public DefaultProblem build() {
+    public ThrowableProblem build() {
         final DefaultProblem problem = new DefaultProblem(type, title, status, detail, instance, cause);
         parameters.forEach(problem::set);
         return problem;

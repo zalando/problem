@@ -20,23 +20,45 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import com.google.common.base.Joiner;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import java.util.Collection;
+
+import static java.util.Arrays.asList;
+import static org.zalando.problem.spi.StackTraceProcessor.COMPOUND;
 
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
 
-    public ThrowableProblem() {
+    private static final Joiner DELIMITER = Joiner.on(": ").skipNulls();
 
+    public ThrowableProblem() {
+        this(null);
     }
 
-    public ThrowableProblem(final ThrowableProblem cause) {
+    public ThrowableProblem(@Nullable final ThrowableProblem cause) {
         super(cause);
+
+        final Collection<StackTraceElement> stackTrace = COMPOUND.process(asList(getStackTrace()));
+        setStackTrace(stackTrace.toArray(new StackTraceElement[stackTrace.size()]));
+    }
+
+    @Override
+    public String getMessage() {
+        return DELIMITER.join(getTitle(), getDetail().orElse(null));
     }
 
     @Override
     public ThrowableProblem getCause() {
         // cast is safe, since the only way to set this is our constructor
         return (ThrowableProblem) super.getCause();
+    }
+
+    @Override
+    public String toString() {
+        return Problem.toString(this);
     }
 
 }

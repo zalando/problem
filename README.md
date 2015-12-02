@@ -1,6 +1,6 @@
 # Problem
 
-[![Bubble Gum on Shoe](https://github.com/zalando/problem/raw/master/docs/bubble-gum.jpg)](https://pixabay.com/en/bubble-gum-shoes-glue-dirt-438404/)
+[![Bubble Gum on Shoe](docs/bubble-gum.jpg)](https://pixabay.com/en/bubble-gum-shoes-glue-dirt-438404/)
 
 [![Build Status](https://img.shields.io/travis/zalando/problem.svg)](https://travis-ci.org/zalando/problem)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/problem.svg)](https://coveralls.io/r/zalando/problem)
@@ -41,10 +41,13 @@ In case you're using Jackson, make sure you register the module.
 ```java
 ObjectMapper mapper = new ObjectMapper();
 
+mapper.registerModule(new Jdk8Module());
 mapper.registerModule(new ProblemModule());
 // or
 mapper.findAndRegisterModules();
 ```
+
+**Note**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
 
 ## Creating problems
 
@@ -220,7 +223,8 @@ If you already have an exception class that you want to extend, you should imple
 public final class OutOfStockProblem extends BusinessException implements Exceptional
 ```
 
-The Jackson support module will recognize this inteface and deal with the inherited properties from `Throwable` accordingly. Note: This interface only exists, because `Throwable` is a concrete class, rather than an interface.
+The Jackson support module will recognize this interface and deal with the inherited properties from `Throwable` 
+accordingly. Note: This interface only exists, because `Throwable` is a concrete class, rather than an interface.
 
 ## Handling problems
 

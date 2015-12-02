@@ -31,6 +31,8 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
@@ -43,6 +45,7 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
@@ -170,6 +173,7 @@ public final class ProblemMixInTest {
         final URL resource = Resources.getResource("cause.json");
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 
+        assertThat(problem, hasFeature("cause", Throwable::getCause, is(notNullValue())));
         final ThrowableProblem cause = problem.getCause();
 
         assertThat(cause, is(notNullValue()));
@@ -182,6 +186,23 @@ public final class ProblemMixInTest {
         assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(cause, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Credit card is expired as of 2015-09-16T00:00:00Z"))));
         assertThat(c, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
+    }
+
+    @Test
+    public void shouldDeserializeWithProcessedStackTrace() throws IOException {
+        final URL resource = Resources.getResource("cause.json");
+        final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
+
+        final String stackTrace = getStackTrace(problem);
+        final String[] stackTraceElements = stackTrace.split("\n");
+
+        assertThat(stackTraceElements[1], startsWith("\tat org.zalando.problem.ProblemMixInTest"));
+    }
+
+    private String getStackTrace(final Throwable throwable) {
+        final StringWriter writer = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
     }
 
 }

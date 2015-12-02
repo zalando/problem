@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 /*
  * ⁣​
- * Jackson-datatype-Problem
+ * Problem
  * ⁣⁣
  * Copyright (C) 2015 Zalando SE
  * ⁣⁣
@@ -20,29 +20,20 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.gag.annotation.remark.Hack;
-import com.google.gag.annotation.remark.OhNoYouDidnt;
-import org.junit.Test;
+import org.zalando.problem.spi.StackTraceProcessor;
 
-import java.net.URI;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
-import static java.util.Optional.empty;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static java.util.stream.Collectors.toList;
 
-@Hack
-@OhNoYouDidnt
-public final class EnforceCoverageTest {
+public final class JunitStackTraceProcessor implements StackTraceProcessor {
 
-    @Test(expected = DefaultProblem.class)
-    public void foo() {
-        new DefaultProblemMixIn(URI.create("http://httpstatus.es/400"), "Bad Request", BAD_REQUEST, empty(), empty(), null) {
-
-            @Override
-            void set(final String key, final Object value) {
-
-            }
-
-        };
+    @Override
+    public Collection<StackTraceElement> process(final Collection<StackTraceElement> elements) {
+        return elements.stream()
+                .filter(element -> !element.getClassName().startsWith("org.junit"))
+                .collect(toList());
     }
 
 }

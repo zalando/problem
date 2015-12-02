@@ -79,7 +79,7 @@ public class ProblemBuilderTest {
 
     @Test
     public void shouldCreateProblemWithParameters() {
-        final DefaultProblem problem = Problem.builder()
+        final ThrowableProblem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
                 .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
