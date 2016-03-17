@@ -97,7 +97,7 @@ Will produce this:
 ### Builder
 
 Most of the time you'll need to define specific problem types, that are unique to your application. And you want to 
-construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It ofers a fluent API 
+construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It offers a fluent API 
 and allows to construct problem instances without the need to create custom classes:
 
 ```java
