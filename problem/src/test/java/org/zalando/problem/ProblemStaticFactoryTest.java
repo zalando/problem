@@ -36,7 +36,7 @@ public final class ProblemStaticFactoryTest {
     public void shouldCreateGenericProblem() {
         final Problem problem = Problem.valueOf(Status.NOT_FOUND);
 
-        assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://httpstatus.es/404")));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Not Found")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(Status.NOT_FOUND)));
     }
@@ -45,7 +45,7 @@ public final class ProblemStaticFactoryTest {
     public void shouldCreateGenericProblemWithDetail() {
         final Problem problem = Problem.valueOf(Status.NOT_FOUND, "Order 123");
 
-        assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://httpstatus.es/404")));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Not Found")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(Status.NOT_FOUND)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Order 123"))));

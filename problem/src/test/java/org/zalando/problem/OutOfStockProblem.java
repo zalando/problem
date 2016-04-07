@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public final class OutOfStockProblem extends ThrowableProblem {
 
-    static final String TYPE_VALUE = "http://example.org/out-of-stock";
+    static final String TYPE_VALUE = "https://example.org/out-of-stock";
     static final URI TYPE = URI.create(TYPE_VALUE);
 
     private final Optional<String> detail;

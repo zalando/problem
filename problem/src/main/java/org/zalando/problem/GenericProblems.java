@@ -27,7 +27,7 @@ import java.net.URI;
 
 final class GenericProblems {
 
-    private static final URI BASE = URI.create("http://httpstatus.es/");
+    static final URI DEFAULT_TYPE = URI.create("about:blank");
 
     @VisibleForTesting
     GenericProblems() throws Exception {
@@ -36,7 +36,7 @@ final class GenericProblems {
 
     static ProblemBuilder create(final StatusType status) {
         return Problem.builder()
-                .withType(BASE.resolve(String.valueOf(status.getStatusCode())))
+                .withType(DEFAULT_TYPE)
                 .withTitle(status.getReasonPhrase())
                 .withStatus(status);
     }

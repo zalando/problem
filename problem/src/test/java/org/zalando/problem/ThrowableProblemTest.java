@@ -41,11 +41,11 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldReturnThrowableProblemCause() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .build())
@@ -57,7 +57,7 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldReturnNullCause() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .build();
@@ -68,7 +68,7 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldReturnTitleAsMessage() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .build();
@@ -79,7 +79,7 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldReturnTitleAndDetailAsMessage() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withDetail("CVC invalid")
@@ -91,11 +91,11 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldReturnCausesMessage() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .build())
@@ -108,11 +108,11 @@ public final class ThrowableProblemTest {
     @Test
     public void shouldPrintStackTrace() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .build())
@@ -121,20 +121,20 @@ public final class ThrowableProblemTest {
         final String stacktrace = getStackTrace(problem);
 
         assertThat(stacktrace,
-                startsWith("http://example.org/preauthorization-failed{422, Preauthorization Failed}"));
+                startsWith("https://example.org/preauthorization-failed{422, Preauthorization Failed}"));
 
         assertThat(stacktrace,
-                containsString("Caused by: http://example.org/expired-credit-card{422, Expired Credit Card}"));
+                containsString("Caused by: https://example.org/expired-credit-card{422, Expired Credit Card}"));
     }
 
     @Test
     public void shouldProcessStackTrace() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .build())

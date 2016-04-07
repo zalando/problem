@@ -95,43 +95,55 @@ public interface Problem {
         return new ProblemBuilder();
     }
 
-    /**
-     * TODO document
-     * @param status
-     * @return
-     * @see <a href="http://httpstatus.es/">http://httpstatus.es/</a>
-     */
     static ThrowableProblem valueOf(final StatusType status) {
         return GenericProblems.create(status).build();
     }
 
-    /**
-     * TODO document
-     * @param status
-     * @param detail
-     * @return
-     * @see <a href="http://httpstatus.es/">http://httpstatus.es/</a>
-     */
     static ThrowableProblem valueOf(final StatusType status, final String detail) {
         return GenericProblems.create(status).withDetail(detail).build();
+    }
+
+    static ThrowableProblem valueOf(final StatusType status, final URI instance) {
+        return GenericProblems.create(status).withInstance(instance).build();
+    }
+
+    static ThrowableProblem valueOf(final StatusType status, final String detail, final URI instance) {
+        return GenericProblems.create(status).withDetail(detail).withInstance(instance).build();
     }
 
     /**
      * Specification by example:
      * <p>
      * <pre>{@code
-     *   // Returns "http://httpstatus.es/404{}"
-     *   Problem.create(NOT_FOUND).toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123}"
-     *   Problem.create(NOT_FOUND, "Order 123").toString();
-     * <p>
-     *   // Returns "http://httpstatus.es/404{Order 123, instance=https://example.org/"}
-     *   Problem.create(NOT_FOUND, "Order 123", URI.create("https://example.org/").toString();
+     *   // Returns "about:blank{404, Not Found}"
+     *   Problem.valueOf(NOT_FOUND).toString();
+     *
+     *   // Returns "about:blank{404, Not Found, Order 123}"
+     *   Problem.valueOf(NOT_FOUND, "Order 123").toString();
+     *
+     *   // Returns "about:blank{404, Not Found, instance=https://example.org/}"
+     *   Problem.valueOf(NOT_FOUND, URI.create("https://example.org/")).toString();
+     *
+     *   // Returns "about:blank{404, Not Found, Order 123, instance=https://example.org/"}
+     *   Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/")).toString();
+     *
+     *   // Returns "https://example.org/problem{422, Oh, oh!, Crap., instance=https://example.org/problem/123}
+     *   Problem.builder()
+     *       .withType(URI.create("https://example.org/problem"))
+     *       .withTitle("Oh, oh!")
+     *       .withStatus(UNPROCESSABLE_ENTITY)
+     *       .withDetail("Crap.")
+     *       .withInstance(URI.create("https://example.org/problem/123"))
+     *       .build()
+     *       .toString();
      * }</pre>
      *
      * @param problem the problem
      * @return a string representation of the problem
+     * @see Problem#valueOf(StatusType)
+     * @see Problem#valueOf(StatusType, String)
+     * @see Problem#valueOf(StatusType, URI)
+     * @see Problem#valueOf(StatusType, String, URI)
      */
     static String toString(final Problem problem) {
         final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(problem.getType().toString())

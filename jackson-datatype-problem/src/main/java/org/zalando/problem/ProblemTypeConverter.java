@@ -4,7 +4,7 @@ package org.zalando.problem;
  * ⁣​
  * Jackson-datatype-Problem
  * ⁣⁣
- * Copyright (C) 2015 Zalando SE
+ * Copyright (C) 2015 - 2016 Zalando SE
  * ⁣⁣
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,29 +20,17 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.gag.annotation.remark.Hack;
-import com.google.gag.annotation.remark.OhNoYouDidnt;
-import org.junit.Test;
+import com.fasterxml.jackson.databind.util.StdConverter;
 
 import java.net.URI;
 
-import static java.util.Optional.empty;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static org.zalando.problem.GenericProblems.DEFAULT_TYPE;
 
-@Hack
-@OhNoYouDidnt
-public final class EnforceCoverageTest {
+final class ProblemTypeConverter extends StdConverter<URI, URI> {
 
-    @Test(expected = DefaultProblem.class)
-    public void foo() {
-        new DefaultProblemMixIn(URI.create("https://example.org"), "Bad Request", BAD_REQUEST, empty(), empty(), null) {
-
-            @Override
-            void set(final String key, final Object value) {
-
-            }
-
-        };
+    @Override
+    public URI convert(final URI value) {
+        return DEFAULT_TYPE.equals(value) ? null : value;
     }
 
 }

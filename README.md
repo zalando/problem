@@ -8,15 +8,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
 
 *Problem* is a library that implements 
-[`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07).
+[`application/problem+json`](https://tools.ietf.org/html/rfc7807).
 It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
 It's decoupled from any JSON library, but contains a separate module for Jackson.
-
-## Note
-
-The term problem in this document, in contrast to the 
-[`application/problem+json`](https://tools.ietf.org/html/draft-nottingham-http-problem-07) spec **requires** the 
-properties `type`, `title` and `status`.
 
 ## Dependency
 
@@ -68,14 +62,21 @@ Will produce this:
 
 ```json
 {
-  "type": "http://httpstatus.es/404",
   "title": "Not Found",
   "status": 404
 }
 ```
 
-[httpstatus.es](http://httpstatus.es/) is a convenient little site that has a unique URI for every status code which 
-includes some information about it. A perfect match for our use case.
+As specified by [Predefined Problem Types](https://tools.ietf.org/html/rfc7807#section-4.2):
+
+> The "about:blank" URI, when used as a problem type,
+> indicates that the problem has no additional semantics beyond that of
+> the HTTP status code.
+  
+> When "about:blank" is used, the title SHOULD be the same as the
+> recommended HTTP status phrase for that code (e.g., "Not Found" for
+> 404, and so on), although it MAY be localized to suit client
+> preferences (expressed with the Accept-Language request header).
 
 But you may also have the need to add some little hint, e.g. as a custom detail of the problem:
 
@@ -87,7 +88,6 @@ Will produce this:
 
 ```json
 {
-  "type": "http://httpstatus.es/503",
   "title": "Service Unavailable",
   "status": 503,
   "detail": "Database not reachable"
@@ -102,7 +102,7 @@ and allows to construct problem instances without the need to create custom clas
 
 ```java
 Problem.builder()
-    .withType(URI.create("http://example.org/out-of-stock"))
+    .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
     .withStatus(UNPROCESSABLE_ENTITY)
     .withDetail("Item B00027Y5QG is no longer available")
@@ -113,7 +113,7 @@ Will produce this:
 
 ```json
 {
-  "type": "http://example.org/out-of-stock",
+  "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
   "status": 422,
   "detail": "Item B00027Y5QG is no longer available"
@@ -124,7 +124,7 @@ Alternatively you can add custom properties, i.e. others than `type`, `title`, `
 
 ```java
 Problem.builder()
-    .withType(URI.create("http://example.org/out-of-stock"))
+    .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
     .withStatus(UNPROCESSABLE_ENTITY)
     .withDetail("Item B00027Y5QG is no longer available")
@@ -136,7 +136,7 @@ Will produce this:
 
 ```json
 {
-  "type": "http://example.org/out-of-stock",
+  "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
   "status": 422,
   "detail": "Item B00027Y5QG is no longer available",
@@ -153,7 +153,7 @@ especially convenient if you refer to it in a lot of places, i.e. it makes it ea
 @Immutable
 public final class OutOfStockProblem implements Problem {
 
-    static final URI TYPE = URI.create("http://example.org/out-of-stock");
+    static final URI TYPE = URI.create("https://example.org/out-of-stock");
 
     private final Optional<String> detail;
     private final String product;
@@ -198,7 +198,7 @@ Will produce this:
 
 ```json
 {
-  "type": "http://example.org/out-of-stock",
+  "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
   "status": 422,
   "detail": "Item B00027Y5QG is no longer available",

@@ -21,7 +21,6 @@ package org.zalando.problem.spi;
  */
 
 import java.util.Collection;
-import java.util.stream.StreamSupport;
 
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;

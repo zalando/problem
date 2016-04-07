@@ -20,13 +20,10 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableMap;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
