@@ -74,6 +74,12 @@ public final class ProblemTest {
     }
 
     @Test
+    public void shouldRenderInstance() {
+        final Problem problem = Problem.valueOf(NOT_FOUND, URI.create("https://example.org/"));
+        assertThat(problem, hasToString("about:blank{404, Not Found, instance=https://example.org/}"));
+    }
+
+    @Test
     public void shouldRenderDetailAndInstance() {
         final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/"));
         assertThat(problem, hasToString("about:blank{404, Not Found, Order 123, instance=https://example.org/}"));
