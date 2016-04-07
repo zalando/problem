@@ -64,39 +64,45 @@ public final class ProblemTest {
     @Test
     public void shouldRenderEmptyProblem() {
         final Problem problem = Problem.valueOf(NOT_FOUND);
-        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found}"));
+        assertThat(problem, hasToString("about:blank{404, Not Found}"));
     }
 
     @Test
     public void shouldRenderDetail() {
         final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123");
-        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123}"));
+        assertThat(problem, hasToString("about:blank{404, Not Found, Order 123}"));
     }
 
     @Test
     public void shouldRenderDetailAndInstance() {
+        final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/"));
+        assertThat(problem, hasToString("about:blank{404, Not Found, Order 123, instance=https://example.org/}"));
+    }
+
+    @Test
+    public void shouldRenderCustomDetailAndInstance() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://httpstatus.es/404"))
+                .withType(URI.create("https://example.org/problem"))
                 .withTitle("Not Found")
                 .withStatus(NOT_FOUND)
                 .withDetail("Order 123")
                 .withInstance(URI.create("https://example.org/"))
                 .build();
 
-        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123, instance=https://example.org/}"));
+        assertThat(problem, hasToString("https://example.org/problem{404, Not Found, Order 123, instance=https://example.org/}"));
     }
 
     @Test
     public void shouldRenderCustomProperties() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://httpstatus.es/404"))
+                .withType(URI.create("https://example.org/problem"))
                 .withTitle("Not Found")
                 .withStatus(NOT_FOUND)
                 .withDetail("Order 123")
                 .with("foo", "bar")
                 .build();
 
-        assertThat(problem, hasToString("http://httpstatus.es/404{404, Not Found, Order 123, foo=bar}"));
+        assertThat(problem, hasToString("https://example.org/problem{404, Not Found, Order 123, foo=bar}"));
     }
 
 }

@@ -71,10 +71,10 @@ public class ProblemBuilderTest {
                 .withType(type)
                 .withTitle("Out of Stock")
                 .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
-                .withInstance(URI.create("http://example.com/"))
+                .withInstance(URI.create("https://example.com/"))
                 .build();
 
-        assertThat(problem, hasFeature("instance", Problem::getInstance, is(Optional.of(URI.create("http://example.com/")))));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(Optional.of(URI.create("https://example.com/")))));
     }
 
     @Test
@@ -92,11 +92,11 @@ public class ProblemBuilderTest {
     @Test
     public void shouldCreateProblemWithCause() {
         final ThrowableProblem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .build())
@@ -105,7 +105,7 @@ public class ProblemBuilderTest {
         assertThat(problem, hasFeature("cause", ThrowableProblem::getCause, notNullValue()));
 
         final ThrowableProblem cause = problem.getCause();
-        assertThat(cause, hasFeature("type", Problem::getType, hasToString("http://example.org/expired-credit-card")));
+        assertThat(cause, hasFeature("type", Problem::getType, hasToString("https://example.org/expired-credit-card")));
         assertThat(cause, hasFeature("title", Problem::getTitle, is("Expired Credit Card")));
         assertThat(cause, hasFeature("status", Problem::getStatus, is(UNPROCESSABLE_ENTITY)));
     }

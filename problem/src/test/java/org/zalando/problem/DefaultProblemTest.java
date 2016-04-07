@@ -36,7 +36,7 @@ import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 @SuppressWarnings("ConstantConditions")
 public final class DefaultProblemTest {
 
-    private final URI type = URI.create("http://example.org/out-of-stock");
+    private final URI type = URI.create("https://example.org/out-of-stock");
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowOnNullType() {
@@ -67,7 +67,7 @@ public final class DefaultProblemTest {
     public void shouldImplementProblem() {
         final Problem problem = new DefaultProblem(type, "Out of Stock", UNPROCESSABLE_ENTITY,
                 Optional.of("Item B00027Y5QG is no longer available"),
-                Optional.of(URI.create("http://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671")));
+                Optional.of(URI.create("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671")));
 
         assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
@@ -77,7 +77,7 @@ public final class DefaultProblemTest {
                 hasValue(equalTo("Item B00027Y5QG is no longer available"))));
         assertThat(problem, hasFeature("instance", Problem::getInstance, isPresent()));
         assertThat(problem, hasFeature("instance", Problem::getInstance,
-                hasValue(hasToString("http://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671"))));
+                hasValue(hasToString("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671"))));
     }
 
     private <T> Matcher<Optional<T>> isPresent() {

@@ -20,7 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -66,8 +65,7 @@ public final class ProblemMixInTest {
         final String json = mapper.writeValueAsString(problem);
 
         with(json)
-                .assertThat("$.*", hasSize(3))
-                .assertThat("$.type", hasToString("http://httpstatus.es/404"))
+                .assertThat("$.*", hasSize(2))
                 .assertThat("$.title", is("Not Found"))
                 .assertThat("$.status", is(404));
     }
@@ -75,7 +73,7 @@ public final class ProblemMixInTest {
     @Test
     public void shouldSerializeCustomProperties() throws JsonProcessingException {
         final Problem problem = Problem.builder()
-                .withType(URI.create("http://example.org/out-of-stock"))
+                .withType(URI.create("https://example.org/out-of-stock"))
                 .withTitle("Out of Stock")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withDetail("Item B00027Y5QG is no longer available")
@@ -92,11 +90,11 @@ public final class ProblemMixInTest {
     @Test
     public void shouldSerializeProblemCause() throws JsonProcessingException {
         final Problem problem = Problem.builder()
-                .withType(URI.create("http://example.org/preauthorization-failed"))
+                .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
                 .withStatus(UNPROCESSABLE_ENTITY)
                 .withCause(Problem.builder()
-                        .withType(URI.create("http://example.org/expired-credit-card"))
+                        .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
                         .withStatus(UNPROCESSABLE_ENTITY)
                         .withDetail("Credit card is expired as of 2015-09-16T00:00:00Z")
@@ -107,7 +105,7 @@ public final class ProblemMixInTest {
         final String json = mapper.writeValueAsString(problem);
         
         with(json)
-                .assertThat("$.cause.type", is("http://example.org/expired-credit-card"))
+                .assertThat("$.cause.type", is("https://example.org/expired-credit-card"))
                 .assertThat("$.cause.title", is("Expired Credit Card"))
                 .assertThat("$.cause.status", is(422))
                 .assertThat("$.cause.detail", is("Credit card is expired as of 2015-09-16T00:00:00Z"))
@@ -122,7 +120,7 @@ public final class ProblemMixInTest {
         assertThat(raw, instanceOf(DefaultProblem.class));
         final DefaultProblem problem = (DefaultProblem) raw;
 
-        assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
@@ -137,7 +135,7 @@ public final class ProblemMixInTest {
         assertThat(exceptional, instanceOf(DefaultProblem.class));
         final DefaultProblem problem = (DefaultProblem) exceptional;
 
-        assertThat(problem, hasFeature("type", Problem::getType, hasToString("http://example.org/out-of-stock")));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
@@ -181,7 +179,7 @@ public final class ProblemMixInTest {
 
         final DefaultProblem c = (DefaultProblem) cause;
 
-        assertThat(cause, hasFeature("type", Problem::getType, hasToString("http://example.org/expired-credit-card")));
+        assertThat(cause, hasFeature("type", Problem::getType, hasToString("https://example.org/expired-credit-card")));
         assertThat(cause, hasFeature("title", Problem::getTitle, equalTo("Expired Credit Card")));
         assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(cause, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Credit card is expired as of 2015-09-16T00:00:00Z"))));

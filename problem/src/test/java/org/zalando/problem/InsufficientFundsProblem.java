@@ -25,7 +25,7 @@ import java.net.URI;
 
 public final class InsufficientFundsProblem extends ThrowableProblem {
 
-    static final String TYPE_VALUE = "http://example.org/insufficient-funds";
+    static final String TYPE_VALUE = "https://example.org/insufficient-funds";
     static final URI TYPE = URI.create(TYPE_VALUE);
 
     private final int balance;

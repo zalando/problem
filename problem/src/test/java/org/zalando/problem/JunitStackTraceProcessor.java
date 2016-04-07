@@ -23,7 +23,6 @@ package org.zalando.problem;
 import org.zalando.problem.spi.StackTraceProcessor;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
