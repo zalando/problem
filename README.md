@@ -12,7 +12,20 @@
 It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
 It's decoupled from any JSON library, but contains a separate module for Jackson.
 
-## Dependency
+## Features
+
+- proposes a common approach for expressing errors in REST API implementations
+- compatible with `application/problem+json`
+
+## Dependencies
+
+- Java 8
+- Any build tool using Maven Central, or direct download
+- Jackson (optional)
+
+## Installation
+
+Add the following dependency to your project:
 
 ```xml
 <dependency>
@@ -20,7 +33,6 @@ It's decoupled from any JSON library, but contains a separate module for Jackson
     <artifactId>problem</artifactId>
     <version>${problem.version}</version>
 </dependency>
-
 <dependency>
     <groupId>org.zalando</groupId>
     <artifactId>jackson-datatype-problem</artifactId>
@@ -28,27 +40,33 @@ It's decoupled from any JSON library, but contains a separate module for Jackson
 </dependency>
 ```
 
-## Usage
+## Configuration
 
-In case you're using Jackson, make sure you register the module.
+In case you're using Jackson, make sure you register the module with your `ObjectMapper`:
 
 ```java
-ObjectMapper mapper = new ObjectMapper();
-
-mapper.registerModule(new Jdk8Module());
-mapper.registerModule(new ProblemModule());
-// or
-mapper.findAndRegisterModules();
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new Jdk8Module())
+    .registerModule(new ProblemModule());
 ```
 
-**Note**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
+Alternatively, you can use the SPI capabilities:
 
-## Creating problems
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .findAndRegisterModules();
+```
+
+**IMPORTANT**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
+
+## Usage
+
+### Creating problems
 
 There are different ways to express problems. Ranging from limited, but easy-to-use to highly flexible and extensible, 
 yet with slightly more effort:
 
-### Generic
+#### Generic
 
 There are cases in which an [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) is basically 
 enough to convey the necessary information. Everything you need is the status you want to respond with and we will 
@@ -94,7 +112,7 @@ Will produce this:
 }
 ```
 
-### Builder
+#### Builder
 
 Most of the time you'll need to define specific problem types, that are unique to your application. And you want to 
 construct problems in a more flexible way. This is where the *Problem Builder* comes into play. It offers a fluent API 
@@ -144,7 +162,7 @@ Will produce this:
 }
 ```
 
-### Custom Problems
+#### Custom Problems
 
 The highest degree of flexibility and customizability is achieved by implementing `Problem` directly. This is 
 especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share.
@@ -226,7 +244,7 @@ public final class OutOfStockProblem extends BusinessException implements Except
 The Jackson support module will recognize this interface and deal with the inherited properties from `Throwable` 
 accordingly. Note: This interface only exists, because `Throwable` is a concrete class, rather than an interface.
 
-## Handling problems
+### Handling problems
 
 Reading problems is very specific to the JSON parser in use. This section assumes you're using Jackson, in which case 
 reading/parsing problems usually boils down to this:
@@ -285,18 +303,16 @@ try {
     ...
 ```
 
-## License
+## Getting help
 
-Copyright [2015] Zalando SE
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+## Getting involved
 
-    http://www.apache.org/licenses/LICENSE-2.0
+To contribute, simply make a pull request and add a brief description (1-2 sentences) of your addition or change. 
+For more details check the [contribution guidelines](CONTRIBUTING.md).
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+## Credits and references
+
+Users of the [Spring Framework] are highly encouraged to check out [Problems for Spring Web MVC]
+(https://github.com/zalando/problem-spring-web), a library that seemlessly integrates problems into Spring.
