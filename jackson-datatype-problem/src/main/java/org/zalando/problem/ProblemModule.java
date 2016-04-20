@@ -22,15 +22,18 @@ package org.zalando.problem;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
-public final class ProblemModule extends SimpleModule {
+public final class ProblemModule extends Module {
 
+    private final boolean stacktraces;
+    private final ImmutableMap<Integer, StatusType> statuses;
+    
     /**
      * TODO document
      *
@@ -44,40 +47,67 @@ public final class ProblemModule extends SimpleModule {
     /**
      * TODO document
      *
-     * @param types
+     * @param types status type enums
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
     @SafeVarargs
     public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types)
             throws IllegalArgumentException {
-        super(ProblemModule.class.getSimpleName(), getVersion());
-
-        setMixInAnnotation(Exceptional.class, ExceptionalMixin.class);
-        setMixInAnnotation(DefaultProblem.class, DefaultProblemMixIn.class);
-        setMixInAnnotation(Problem.class, ProblemMixIn.class);
-
-        addSerializer(StatusType.class, new StatusTypeSerializer());
-        addDeserializer(StatusType.class, new StatusTypeDeserializer(buildIndex(types)));
+     
+        this(false, buildIndex(types));
     }
 
+    public ProblemModule(boolean stacktraces, ImmutableMap<Integer, StatusType> statuses) {
+        this.stacktraces = stacktraces;
+        this.statuses = statuses;
+    }
+
+    
+    @Override
+    public String getModuleName() {
+        return ProblemModule.class.getSimpleName();
+    }
+    
     @SuppressWarnings("deprecation")
-    private static Version getVersion() {
+    @Override
+    public Version version() {
         return VersionUtil.mavenVersionFor(ProblemModule.class.getClassLoader(),
                 "org.zalando", "jackson-datatype-problem");
     }
 
-    @SafeVarargs
-    private final <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(
-            final Class<? extends E>... types) {
-        final Builder<Integer, StatusType> builder = ImmutableMap.builder();
+    @Override
+    public void setupModule(final SetupContext context) {
+        final SimpleModule module = new SimpleModule();
 
-        for (final Class<? extends E> type : types) {
+        module.setMixInAnnotation(Exceptional.class, stacktraces ?
+                ExceptionalWithStacktraceMixin.class :
+                ExceptionalMixin.class);
+
+        module.setMixInAnnotation(DefaultProblem.class, DefaultProblemMixIn.class);
+        module.setMixInAnnotation(Problem.class, ProblemMixIn.class);
+
+        module.addSerializer(StatusType.class, new StatusTypeSerializer());
+        module.addDeserializer(StatusType.class, new StatusTypeDeserializer(statuses));
+        
+        module.setupModule(context);
+    }
+
+    @SafeVarargs
+    private static <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(
+            final Class<? extends E>... types) {
+        final ImmutableMap.Builder<Integer, StatusType> builder = ImmutableMap.builder();
+
+        for (Class<? extends E> type : types) {
             for (final E status : type.getEnumConstants()) {
                 builder.put(status.getStatusCode(), status);
             }
         }
 
         return builder.build();
+    }
+
+    public ProblemModule withStacktraces() {
+        return new ProblemModule(true, statuses);
     }
 
 }

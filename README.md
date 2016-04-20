@@ -50,6 +50,8 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new ProblemModule());
 ```
 
+**IMPORTANT**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
+
 Alternatively, you can use the SPI capabilities:
 
 ```java
@@ -57,7 +59,13 @@ ObjectMapper mapper = new ObjectMapper()
     .findAndRegisterModules();
 ```
 
-**IMPORTANT**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
+Stacktraces are not serialized by default, but this can selective be enabled:
+
+```java
+ObjectMapper mapper = new ObjectMapper()
+    .registerModule(new Jdk8Module())
+    .registerModule(new ProblemModule().withStacktraces());
+```
 
 ## Usage
 
