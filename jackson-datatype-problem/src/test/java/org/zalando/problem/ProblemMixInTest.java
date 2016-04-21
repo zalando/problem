@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 import static com.jayway.jsonassert.JsonAssert.with;
@@ -103,13 +104,56 @@ public final class ProblemMixInTest {
                 .build();
 
         final String json = mapper.writeValueAsString(problem);
-        
+
         with(json)
                 .assertThat("$.cause.type", is("https://example.org/expired-credit-card"))
                 .assertThat("$.cause.title", is("Expired Credit Card"))
                 .assertThat("$.cause.status", is(422))
                 .assertThat("$.cause.detail", is("Credit card is expired as of 2015-09-16T00:00:00Z"))
                 .assertThat("$.cause.since", is("2015-09-16T00:00:00Z"));
+    }
+
+    @Test
+    public void shouldNotSerializeStacktraceByDefault() throws JsonProcessingException {
+        final Problem problem = Problem.builder()
+                .withType(URI.create("about:blank"))
+                .withTitle("Foo")
+                .withStatus(Status.BAD_REQUEST)
+                .withCause(Problem.builder()
+                        .withType(URI.create("about:blank"))
+                        .withTitle("Bar")
+                        .withStatus(Status.BAD_REQUEST)
+                        .build())
+                .build();
+
+        final String json = mapper.writeValueAsString(problem);
+
+        with(json)
+                .assertNotDefined("$.stacktrace");
+    }
+
+    @Test
+    public void shouldSerializeStacktrace() throws JsonProcessingException {
+        final Problem problem = Problem.builder()
+                .withType(URI.create("about:blank"))
+                .withTitle("Foo")
+                .withStatus(Status.BAD_REQUEST)
+                .withCause(Problem.builder()
+                        .withType(URI.create("about:blank"))
+                        .withTitle("Bar")
+                        .withStatus(Status.BAD_REQUEST)
+                        .build())
+                .build();
+
+        final ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new Jdk8Module())
+                .registerModule(new ProblemModule().withStacktraces());
+
+        final String json = mapper.writeValueAsString(problem);
+
+        with(json)
+                .assertThat("$.stacktrace", is(instanceOf(List.class)))
+                .assertThat("$.stacktrace[0]", is(instanceOf(String.class)));
     }
 
     @Test
