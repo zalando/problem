@@ -107,7 +107,11 @@ public final class ProblemModule extends Module {
     }
 
     public ProblemModule withStacktraces() {
-        return new ProblemModule(true, statuses);
+        return withStacktraces(true);
+    }
+    
+    public ProblemModule withStacktraces(final boolean stacktraces) {
+        return new ProblemModule(stacktraces, statuses);
     }
 
 }
