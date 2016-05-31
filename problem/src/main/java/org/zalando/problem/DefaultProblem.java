@@ -20,7 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
 
@@ -28,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -91,8 +91,8 @@ public final class DefaultProblem extends ThrowableProblem {
     }
 
     @Override
-    public ImmutableMap<String, Object> getParameters() {
-        return ImmutableMap.copyOf(parameters);
+    public Map<String, Object> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 
     /**

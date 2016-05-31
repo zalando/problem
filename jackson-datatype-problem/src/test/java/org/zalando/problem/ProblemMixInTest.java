@@ -23,7 +23,6 @@ package org.zalando.problem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.google.common.io.Resources;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
@@ -36,6 +35,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.Objects;
 
 import static com.jayway.jsonassert.JsonAssert.with;
 import static org.hamcrest.Matchers.equalTo;
@@ -158,7 +158,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeDefaultProblem() throws IOException {
-        final URL resource = Resources.getResource("out-of-stock.json");
+        final URL resource = getResource("out-of-stock.json");
         final Problem raw = mapper.readValue(resource, Problem.class);
 
         assertThat(raw, instanceOf(DefaultProblem.class));
@@ -173,7 +173,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeExceptional() throws IOException {
-        final URL resource = Resources.getResource("out-of-stock.json");
+        final URL resource = getResource("out-of-stock.json");
         final Exceptional exceptional = mapper.readValue(resource, Exceptional.class);
 
         assertThat(exceptional, instanceOf(DefaultProblem.class));
@@ -188,7 +188,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeSpecificProblem() throws IOException {
-        final URL resource = Resources.getResource("insufficient-funds.json");
+        final URL resource = getResource("insufficient-funds.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
         assertThat(problem, instanceOf(InsufficientFundsProblem.class));
@@ -200,7 +200,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeUnknownStatus() throws IOException {
-        final URL resource = Resources.getResource("unknown.json");
+        final URL resource = getResource("unknown.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
         final StatusType status = problem.getStatus();
@@ -212,7 +212,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeCause() throws IOException {
-        final URL resource = Resources.getResource("cause.json");
+        final URL resource = getResource("cause.json");
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 
         assertThat(problem, hasFeature("cause", Throwable::getCause, is(notNullValue())));
@@ -232,7 +232,7 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeWithProcessedStackTrace() throws IOException {
-        final URL resource = Resources.getResource("cause.json");
+        final URL resource = getResource("cause.json");
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 
         final String stackTrace = getStackTrace(problem);
@@ -245,6 +245,11 @@ public final class ProblemMixInTest {
         final StringWriter writer = new StringWriter();
         throwable.printStackTrace(new PrintWriter(writer));
         return writer.toString();
+    }
+
+    private static URL getResource(final String name) {
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        return Objects.requireNonNull(loader.getResource(name), () -> "resource " + name + " not found.");
     }
 
 }

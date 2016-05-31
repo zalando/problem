@@ -23,17 +23,17 @@ package org.zalando.problem;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.google.common.collect.ImmutableMap;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
+import java.util.Map;
 
 final class StatusTypeDeserializer extends JsonDeserializer<StatusType> {
 
-    private final ImmutableMap<Integer, StatusType> index;
+    private final Map<Integer, StatusType> index;
 
-    StatusTypeDeserializer(final ImmutableMap<Integer, StatusType> index) {
+    StatusTypeDeserializer(final Map<Integer, StatusType> index) {
         this.index = index;
     }
 

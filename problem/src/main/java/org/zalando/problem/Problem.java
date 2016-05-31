@@ -20,13 +20,17 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableMap;
-
 import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @see <a href="https://tools.ietf.org/html/draft-nottingham-http-problem-07">Problem Details for HTTP APIs</a>
@@ -87,8 +91,8 @@ public interface Problem {
      *
      * @return additional parameters
      */
-    default ImmutableMap<String, Object> getParameters() {
-        return ImmutableMap.of();
+    default Map<String, Object> getParameters() {
+        return Collections.emptyMap();
     }
 
     static ProblemBuilder builder() {
@@ -146,16 +150,19 @@ public interface Problem {
      * @see Problem#valueOf(StatusType, String, URI)
      */
     static String toString(final Problem problem) {
-        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(problem.getType().toString())
-                .omitNullValues()
-                .addValue(problem.getStatus().getStatusCode())
-                .addValue(problem.getTitle())
-                .addValue(problem.getDetail().orElse(null))
-                .add("instance", problem.getInstance().orElse(null));
+        final ArrayList<String> parts = new ArrayList<>(Arrays.asList(
+            Integer.toString(problem.getStatus().getStatusCode()),
+            problem.getTitle(),
+            problem.getDetail().orElse(null),
+            problem.getInstance().map(i -> "instance=" + i).orElse(null)
+        ));
 
-        problem.getParameters().forEach(helper::add);
+        problem.getParameters().forEach((k, v) -> Optional.ofNullable(v).ifPresent(t -> parts.add(k + "=" + t)));
 
-        return helper.toString();
+        return problem.getType().toString()
+            + "{"
+            + parts.stream().filter(Objects::nonNull).collect(joining(", "))
+            + "}";
     }
 
 }

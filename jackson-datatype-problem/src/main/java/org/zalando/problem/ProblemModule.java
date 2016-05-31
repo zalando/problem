@@ -24,7 +24,9 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
@@ -32,8 +34,8 @@ import javax.ws.rs.core.Response.StatusType;
 public final class ProblemModule extends Module {
 
     private final boolean stacktraces;
-    private final ImmutableMap<Integer, StatusType> statuses;
-    
+    private final Map<Integer, StatusType> statuses;
+
     /**
      * TODO document
      *
@@ -53,21 +55,21 @@ public final class ProblemModule extends Module {
     @SafeVarargs
     public <E extends Enum & StatusType> ProblemModule(final Class<? extends E>... types)
             throws IllegalArgumentException {
-     
+
         this(false, buildIndex(types));
     }
 
-    public ProblemModule(boolean stacktraces, ImmutableMap<Integer, StatusType> statuses) {
+    public ProblemModule(boolean stacktraces, Map<Integer, StatusType> statuses) {
         this.stacktraces = stacktraces;
-        this.statuses = statuses;
+        this.statuses = Collections.unmodifiableMap(statuses);
     }
 
-    
+
     @Override
     public String getModuleName() {
         return ProblemModule.class.getSimpleName();
     }
-    
+
     @SuppressWarnings("deprecation")
     @Override
     public Version version() {
@@ -88,28 +90,31 @@ public final class ProblemModule extends Module {
 
         module.addSerializer(StatusType.class, new StatusTypeSerializer());
         module.addDeserializer(StatusType.class, new StatusTypeDeserializer(statuses));
-        
+
         module.setupModule(context);
     }
 
     @SafeVarargs
-    private static <E extends Enum & StatusType> ImmutableMap<Integer, StatusType> buildIndex(
+    private static <E extends Enum & StatusType> Map<Integer, StatusType> buildIndex(
             final Class<? extends E>... types) {
-        final ImmutableMap.Builder<Integer, StatusType> builder = ImmutableMap.builder();
+        final Map<Integer, StatusType> index = new HashMap<>();
 
         for (Class<? extends E> type : types) {
             for (final E status : type.getEnumConstants()) {
-                builder.put(status.getStatusCode(), status);
+                if (index.containsKey(status.getStatusCode())) {
+                    throw new IllegalArgumentException("Duplicate status codes are not allowed");
+                }
+                index.put(status.getStatusCode(), status);
             }
         }
 
-        return builder.build();
+        return index;
     }
 
     public ProblemModule withStacktraces() {
         return withStacktraces(true);
     }
-    
+
     public ProblemModule withStacktraces(final boolean stacktraces) {
         return new ProblemModule(stacktraces, statuses);
     }

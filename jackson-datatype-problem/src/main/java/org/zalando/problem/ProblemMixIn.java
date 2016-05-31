@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.ImmutableMap;
 
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Optional;
+import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
@@ -67,6 +67,6 @@ interface ProblemMixIn extends Problem {
 
     @JsonAnyGetter
     @Override
-    ImmutableMap<String, Object> getParameters();
+    Map<String, Object> getParameters();
 
 }
