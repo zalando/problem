@@ -3,7 +3,12 @@ layout: default
 ---
 <div id="home" class="page-content wc-container">
 	<div class="posts">
-		{% for p in site.pages %}
+		<h3 class="post-title">
+			<a href="{{ '/schema.json' | prepend: site.baseurl | prepend: site.url }}">
+				OpenAPI Schema
+			</a>
+		</h3>
+		{% for p in site.pages | sort:"order" %}
 		  {% if p.layout == 'page' %}
 			<h3 class="post-title">
 				<a href="{{ p.url | prepend: site.baseurl | prepend: site.url }}">
