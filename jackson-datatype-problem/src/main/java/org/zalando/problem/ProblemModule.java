@@ -24,7 +24,6 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,9 +58,9 @@ public final class ProblemModule extends Module {
         this(false, buildIndex(types));
     }
 
-    public ProblemModule(boolean stacktraces, Map<Integer, StatusType> statuses) {
+    private ProblemModule(boolean stacktraces, Map<Integer, StatusType> statuses) {
         this.stacktraces = stacktraces;
-        this.statuses = Collections.unmodifiableMap(statuses);
+        this.statuses = statuses;
     }
 
 
