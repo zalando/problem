@@ -20,19 +20,18 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.base.Joiner;
-
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static org.zalando.problem.spi.StackTraceProcessor.COMPOUND;
 
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
-
-    private static final Joiner DELIMITER = Joiner.on(": ").skipNulls();
 
     public ThrowableProblem() {
         this(null);
@@ -47,7 +46,9 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
     @Override
     public String getMessage() {
-        return DELIMITER.join(getTitle(), getDetail().orElse(null));
+        return Stream.of(getTitle(), getDetail().orElse(null))
+            .filter(Objects::nonNull)
+            .collect(joining(": "));
     }
 
     @Override

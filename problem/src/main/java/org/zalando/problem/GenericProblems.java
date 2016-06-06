@@ -20,8 +20,6 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.annotations.VisibleForTesting;
-
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 
@@ -29,7 +27,6 @@ final class GenericProblems {
 
     static final URI DEFAULT_TYPE = URI.create("about:blank");
 
-    @VisibleForTesting
     GenericProblems() throws Exception {
         throw new IllegalAccessException();
     }

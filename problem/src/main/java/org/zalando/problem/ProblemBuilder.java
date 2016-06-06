@@ -20,20 +20,21 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.common.collect.ImmutableSet;
-
 import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public final class ProblemBuilder {
 
-    static final ImmutableSet<String> RESERVED_PROPERTIES = ImmutableSet.of(
+    private static final Set<String> RESERVED_PROPERTIES = new HashSet<>(Arrays.asList(
             "type", "title", "status", "detail", "instance", "cause"
-    );
+    ));
 
     private URI type;
     private String title;
@@ -75,7 +76,7 @@ public final class ProblemBuilder {
         this.instance = Optional.ofNullable(instance);
         return this;
     }
-    
+
     public ProblemBuilder withCause(@Nullable final ThrowableProblem cause) {
         this.cause = cause;
         return this;
@@ -95,7 +96,7 @@ public final class ProblemBuilder {
         parameters.put(key, value);
         return this;
     }
-    
+
     public ThrowableProblem build() {
         final DefaultProblem problem = new DefaultProblem(type, title, status, detail, instance, cause);
         parameters.forEach(problem::set);
