@@ -1,0 +1,16 @@
+---
+layout: default
+---
+<div id="home" class="page-content wc-container">
+	<div class="posts">
+		{% for p in site.pages %}
+		  {% if p.layout == 'page' %}
+			<h3 class="post-title">
+				<a href="{{ p.url | prepend: site.baseurl | prepend: site.url }}">
+					{{ p.title }}
+				</a>
+			</h3>
+		  {% endif %}
+		{% endfor %}
+	</div>
+</div>
