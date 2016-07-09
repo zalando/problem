@@ -37,7 +37,7 @@ abstract class DefaultProblemMixIn {
             @JsonProperty(value = "status", required = true) final StatusType status,
             @JsonProperty("detail") final Optional<String> detail,
             @JsonProperty("instance") final Optional<URI> instance,
-            @JsonProperty("cause") ThrowableProblem cause) {
+            @JsonProperty("cause") final ThrowableProblem cause) {
         // this is just here to see whether "our" constructor matches the real one
         throw new DefaultProblem(type, title, status, detail, instance, cause);
     }

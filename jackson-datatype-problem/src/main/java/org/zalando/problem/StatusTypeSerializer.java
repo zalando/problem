@@ -31,7 +31,7 @@ import java.io.IOException;
 final class StatusTypeSerializer extends JsonSerializer<StatusType> {
 
     @Override
-    public void serialize(StatusType status, JsonGenerator json, SerializerProvider serializers) throws IOException, JsonProcessingException {
+    public void serialize(final StatusType status, final JsonGenerator json, final SerializerProvider serializers) throws IOException, JsonProcessingException {
         json.writeNumber(status.getStatusCode());
     }
 

@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response.StatusType;
 
 public final class ProblemModule extends Module {
 
-    private final boolean stacktraces;
+    private final boolean stackTraces;
     private final Map<Integer, StatusType> statuses;
 
     /**
@@ -58,8 +58,8 @@ public final class ProblemModule extends Module {
         this(false, buildIndex(types));
     }
 
-    private ProblemModule(boolean stacktraces, Map<Integer, StatusType> statuses) {
-        this.stacktraces = stacktraces;
+    private ProblemModule(final boolean stackTraces, final Map<Integer, StatusType> statuses) {
+        this.stackTraces = stackTraces;
         this.statuses = statuses;
     }
 
@@ -80,7 +80,7 @@ public final class ProblemModule extends Module {
     public void setupModule(final SetupContext context) {
         final SimpleModule module = new SimpleModule();
 
-        module.setMixInAnnotation(Exceptional.class, stacktraces ?
+        module.setMixInAnnotation(Exceptional.class, stackTraces ?
                 ExceptionalWithStacktraceMixin.class :
                 ExceptionalMixin.class);
 
@@ -98,7 +98,7 @@ public final class ProblemModule extends Module {
             final Class<? extends E>... types) {
         final Map<Integer, StatusType> index = new HashMap<>();
 
-        for (Class<? extends E> type : types) {
+        for (final Class<? extends E> type : types) {
             for (final E status : type.getEnumConstants()) {
                 if (index.containsKey(status.getStatusCode())) {
                     throw new IllegalArgumentException("Duplicate status codes are not allowed");
@@ -110,12 +110,12 @@ public final class ProblemModule extends Module {
         return index;
     }
 
-    public ProblemModule withStacktraces() {
-        return withStacktraces(true);
+    public ProblemModule withStackTraces() {
+        return withStackTraces(true);
     }
 
-    public ProblemModule withStacktraces(final boolean stacktraces) {
-        return new ProblemModule(stacktraces, statuses);
+    public ProblemModule withStackTraces(final boolean stackTraces) {
+        return new ProblemModule(stackTraces, statuses);
     }
 
 }
