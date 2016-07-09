@@ -346,7 +346,7 @@ and you don't have direct access to the log files. Serialization of stacktraces 
 ```java
 ObjectMapper mapper = new ObjectMapper()
     .registerModule(new Jdk8Module())
-    .registerModule(new ProblemModule().withStacktraces());
+    .registerModule(new ProblemModule().withStackTraces());
 ```
 
 After enabling stacktraces all problems will contain a `stacktrace` property:

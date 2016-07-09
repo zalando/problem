@@ -147,7 +147,7 @@ public final class ProblemMixInTest {
 
         final ObjectMapper mapper = new ObjectMapper()
                 .registerModule(new Jdk8Module())
-                .registerModule(new ProblemModule().withStacktraces());
+                .registerModule(new ProblemModule().withStackTraces());
 
         final String json = mapper.writeValueAsString(problem);
 
