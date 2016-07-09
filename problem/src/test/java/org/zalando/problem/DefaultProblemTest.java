@@ -38,9 +38,10 @@ public final class DefaultProblemTest {
 
     private final URI type = URI.create("https://example.org/out-of-stock");
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowOnNullType() {
-        throw new DefaultProblem(null, "Out of stock", UNPROCESSABLE_ENTITY, empty(), empty());
+    @Test
+    public void shouldDefaultToAboutBlank() {
+        final DefaultProblem problem = new DefaultProblem(null, "Out of stock", UNPROCESSABLE_ENTITY, empty(), empty());
+        assertThat(problem.getType(), hasToString("about:blank"));
     }
 
     @Test(expected = NullPointerException.class)

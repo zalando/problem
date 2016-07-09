@@ -34,8 +34,8 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.jayway.jsonassert.JsonAssert.with;
 import static org.hamcrest.Matchers.equalTo;
@@ -208,6 +208,16 @@ public final class ProblemMixInTest {
         assertThat(status, hasFeature("status code", StatusType::getStatusCode, equalTo(666)));
         assertThat(status, hasFeature("family", StatusType::getFamily, equalTo(Family.OTHER)));
         assertThat(status, hasFeature("reason phrase", StatusType::getReasonPhrase, equalTo("Unknown")));
+    }
+
+    @Test
+    public void shouldDeserializedUntyped() throws IOException {
+        final URL resource = getResource("untyped.json");
+        final Problem problem = mapper.readValue(resource, Problem.class);
+
+        assertThat(problem.getType(), hasToString("about:blank"));
+        assertThat(problem.getTitle(), is("Something bad"));
+        assertThat(problem.getStatus().getStatusCode(), is(422));
     }
 
     @Test
