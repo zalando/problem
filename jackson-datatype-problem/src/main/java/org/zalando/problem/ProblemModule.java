@@ -98,7 +98,7 @@ public final class ProblemModule extends Module {
             final Class<? extends E>... types) {
         final Map<Integer, StatusType> index = new HashMap<>();
 
-        for (Class<? extends E> type : types) {
+        for (final Class<? extends E> type : types) {
             for (final E status : type.getEnumConstants()) {
                 if (index.containsKey(status.getStatusCode())) {
                     throw new IllegalArgumentException("Duplicate status codes are not allowed");

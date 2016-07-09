@@ -32,7 +32,7 @@ enum CustomStatus implements StatusType {
     private final Family family;
     private final String reasonPhrase;
 
-    CustomStatus(int statusCode, String reasonPhrase) {
+    CustomStatus(final int statusCode, final String reasonPhrase) {
         this.statusCode = statusCode;
         this.family = Family.familyOf(statusCode);
         this.reasonPhrase = reasonPhrase;
