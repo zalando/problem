@@ -20,6 +20,7 @@ package org.zalando.problem;
  * ​⁣
  */
 
+import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
@@ -176,6 +177,22 @@ public enum MoreStatus implements StatusType {
     @Override
     public String getReasonPhrase() {
         return reasonPhrase;
+    }
+
+    /**
+     * Convert a numerical status code into the corresponding Status.
+     *
+     * @param statusCode the numerical status code.
+     * @return the matching Status or null is no matching Status is defined.
+     */
+    @Nullable
+    public static StatusType fromStatusCode(final int statusCode) {
+        for (final StatusType status : values()) {
+            if (status.getStatusCode() == statusCode) {
+                return status;
+            }
+        }
+        return null;
     }
 
 }

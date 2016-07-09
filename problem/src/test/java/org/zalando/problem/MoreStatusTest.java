@@ -56,4 +56,14 @@ public final class MoreStatusTest {
                 assertThat(status, hasFeature("reason phrase", StatusType::getReasonPhrase, not(isEmptyOrNullString()))));
     }
 
+    @Test
+    public void shouldFindByStatusCode() {
+        assertThat(MoreStatus.fromStatusCode(422), is(notNullValue()));
+    }
+
+    @Test
+    public void shouldNotFindByStatusCode() {
+        assertThat(MoreStatus.fromStatusCode(600), is(nullValue()));
+    }
+
 }
