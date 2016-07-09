@@ -58,6 +58,7 @@ public final class ProblemMixInTest {
 
     public ProblemMixInTest() {
         mapper.registerSubtypes(InsufficientFundsProblem.class);
+        mapper.registerSubtypes(OutOfStockException.class);
     }
 
     @Test
@@ -158,13 +159,13 @@ public final class ProblemMixInTest {
 
     @Test
     public void shouldDeserializeDefaultProblem() throws IOException {
-        final URL resource = getResource("out-of-stock.json");
+        final URL resource = getResource("default.json");
         final Problem raw = mapper.readValue(resource, Problem.class);
 
         assertThat(raw, instanceOf(DefaultProblem.class));
         final DefaultProblem problem = (DefaultProblem) raw;
 
-        assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/not-out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
@@ -172,18 +173,31 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeExceptional() throws IOException {
+    public void shouldDeserializeRegisteredExceptional() throws IOException {
         final URL resource = getResource("out-of-stock.json");
         final Exceptional exceptional = mapper.readValue(resource, Exceptional.class);
 
-        assertThat(exceptional, instanceOf(DefaultProblem.class));
-        final DefaultProblem problem = (DefaultProblem) exceptional;
+        assertThat(exceptional, instanceOf(OutOfStockException.class));
+        final OutOfStockException problem = (OutOfStockException) exceptional;
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
-        assertThat(problem, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("product", "B00027Y5QG")));
+    }
+
+    @Test
+    public void shouldDeserializeUnregisteredExceptional() throws IOException {
+        final URL resource = getResource("out-of-stock.json");
+        final Exceptional exceptional = mapper.readValue(resource, IOProblem.class);
+
+        assertThat(exceptional, instanceOf(IOProblem.class));
+        final IOProblem problem = (IOProblem) exceptional;
+
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
+        assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
     }
 
     @Test
@@ -237,7 +251,7 @@ public final class ProblemMixInTest {
         assertThat(cause, hasFeature("title", Problem::getTitle, equalTo("Expired Credit Card")));
         assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
         assertThat(cause, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Credit card is expired as of 2015-09-16T00:00:00Z"))));
-        assertThat(c, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
+        assertThat(c, hasFeature("parameters", Problem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
     }
 
     @Test
