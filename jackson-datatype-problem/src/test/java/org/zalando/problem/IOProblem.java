@@ -4,7 +4,7 @@ package org.zalando.problem;
  * ⁣​
  * Jackson-datatype-Problem
  * ⁣⁣
- * Copyright (C) 2015 Zalando SE
+ * Copyright (C) 2015 - 2016 Zalando SE
  * ⁣⁣
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,41 +22,58 @@ package org.zalando.problem;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-@JsonTypeName(OutOfStockException.TYPE_NAME)
-public class OutOfStockException extends BusinessException implements Exceptional {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+public final class IOProblem extends IOException implements Exceptional {
 
-    public static final String TYPE_NAME = "https://example.org/out-of-stock";
-    public static final URI TYPE = URI.create(TYPE_NAME);
+    private final URI type;
+    private final String title;
+    private final Response.StatusType status;
+    private final Optional<String> detail;
+    private final Optional<URI> instance;
 
     @JsonCreator
-    public OutOfStockException(@JsonProperty("detail") final String detail) {
-        super(detail);
+    public IOProblem(@JsonProperty("type") final URI type,
+            @JsonProperty("title") final String title,
+            @JsonProperty("status") final int status,
+            @JsonProperty("detail") final Optional<String> detail,
+            @JsonProperty("instance") final Optional<URI> instance) {
+        this.type = type;
+        this.title = title;
+        this.status = MoreStatus.fromStatusCode(status);
+        this.detail = detail;
+        this.instance = instance;
     }
 
     @Override
     public URI getType() {
-        return TYPE;
+        return type;
     }
 
     @Override
     public String getTitle() {
-        return "Out of Stock";
+        return title;
     }
 
     @Override
     public Response.StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
+        return status;
     }
 
     @Override
     public Optional<String> getDetail() {
-        return Optional.ofNullable(getMessage());
+        return detail;
+    }
+
+    @Override
+    public Optional<URI> getInstance() {
+        return instance;
     }
 
     @Override
