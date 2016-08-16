@@ -2,8 +2,8 @@
 
 [![Bubble Gum on Shoe](docs/bubble-gum.jpg)](https://pixabay.com/en/bubble-gum-shoes-glue-dirt-438404/)
 
-[![Build Status](https://img.shields.io/travis/zalando/problem.svg)](https://travis-ci.org/zalando/problem)
-[![Coverage Status](https://img.shields.io/coveralls/zalando/problem.svg)](https://coveralls.io/r/zalando/problem)
+[![Build Status](https://img.shields.io/travis/zalando/problem/master.svg)](https://travis-ci.org/zalando/problem)
+[![Coverage Status](https://img.shields.io/coveralls/zalando/problem/master.svg)](https://coveralls.io/r/zalando/problem)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/problem/badge.svg)](http://www.javadoc.io/doc/org.zalando/problem)
 [![Release](https://img.shields.io/github/release/zalando/problem.svg)](https://github.com/zalando/problem/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
