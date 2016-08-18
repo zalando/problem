@@ -26,16 +26,15 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static java.util.Optional.empty;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Hack
 @OhNoYouDidnt
 public final class EnforceCoverageTest {
 
-    @Test(expected = DefaultProblem.class)
-    public void foo() {
-        new DefaultProblemMixIn(URI.create("https://example.org"), "Bad Request", BAD_REQUEST, empty(), empty(), null) {
+    @Test(expected = AbstractThrowableProblem.class)
+    public void shouldUseMixinConstructor() {
+        new AbstractThrowableProblemMixIn(URI.create("https://example.org"), "Bad Request", BAD_REQUEST, null, null, null) {
 
             @Override
             void set(final String key, final Object value) {

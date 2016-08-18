@@ -46,7 +46,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
 
     @Override
     public String getMessage() {
-        return Stream.of(getTitle(), getDetail().orElse(null))
+        return Stream.of(getTitle(), getDetail())
             .filter(Objects::nonNull)
             .collect(joining(": "));
     }

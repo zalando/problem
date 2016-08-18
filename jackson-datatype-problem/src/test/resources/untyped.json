@@ -1,4 +1,4 @@
 {
   "title": "Something bad",
-  "status": 422
+  "status": 400
 }

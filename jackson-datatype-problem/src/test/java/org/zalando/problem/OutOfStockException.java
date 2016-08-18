@@ -26,7 +26,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Optional;
+
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @JsonTypeName(OutOfStockException.TYPE_NAME)
 public class OutOfStockException extends BusinessException implements Exceptional {
@@ -51,12 +52,12 @@ public class OutOfStockException extends BusinessException implements Exceptiona
 
     @Override
     public Response.StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
+        return BAD_REQUEST;
     }
 
     @Override
-    public Optional<String> getDetail() {
-        return Optional.ofNullable(getMessage());
+    public String getDetail() {
+        return getMessage();
     }
 
     @Override

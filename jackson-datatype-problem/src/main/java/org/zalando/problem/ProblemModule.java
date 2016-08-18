@@ -24,11 +24,11 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ProblemModule extends Module {
 
@@ -84,7 +84,7 @@ public final class ProblemModule extends Module {
                 ExceptionalWithStacktraceMixin.class :
                 ExceptionalMixin.class);
 
-        module.setMixInAnnotation(DefaultProblem.class, DefaultProblemMixIn.class);
+        module.setMixInAnnotation(DefaultProblem.class, AbstractThrowableProblemMixIn.class);
         module.setMixInAnnotation(Problem.class, ProblemMixIn.class);
 
         module.addSerializer(StatusType.class, new StatusTypeSerializer());

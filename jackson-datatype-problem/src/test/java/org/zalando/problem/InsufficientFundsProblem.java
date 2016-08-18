@@ -24,11 +24,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 @JsonTypeName(InsufficientFundsProblem.TYPE_VALUE)
-public final class InsufficientFundsProblem extends ThrowableProblem {
+public final class InsufficientFundsProblem extends AbstractThrowableProblem {
 
     static final String TYPE_VALUE = "https://example.org/insufficient-funds";
     static final URI TYPE = URI.create(TYPE_VALUE);
@@ -40,23 +41,9 @@ public final class InsufficientFundsProblem extends ThrowableProblem {
     public InsufficientFundsProblem(
             @JsonProperty("balance") final int balance,
             @JsonProperty("debit") final int debit) {
+        super(TYPE, "Insufficient Funds", BAD_REQUEST);
         this.balance = balance;
         this.debit = debit;
-    }
-
-    @Override
-    public URI getType() {
-        return TYPE;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Insufficient Funds";
-    }
-
-    @Override
-    public StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
     }
 
     public int getBalance() {

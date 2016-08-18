@@ -27,6 +27,8 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 @Hack
 @OhNoYouDidnt
 public class EnforceCoverageTest {
@@ -50,7 +52,7 @@ public class EnforceCoverageTest {
 
         @Override
         public Response.StatusType getStatus() {
-            return MoreStatus.UNPROCESSABLE_ENTITY;
+            return BAD_REQUEST;
         }
 
         @Override

@@ -51,8 +51,6 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new ProblemModule());
 ```
 
-**IMPORTANT**: The `ProblemModule` requires the [`Jdk8Module`](https://github.com/FasterXML/jackson-datatype-jdk8) to work.
-
 Alternatively, you can use the SPI capabilities:
 
 ```java
@@ -123,7 +121,7 @@ and allows to construct problem instances without the need to create custom clas
 Problem.builder()
     .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
-    .withStatus(UNPROCESSABLE_ENTITY)
+    .withStatus(BAD_REQUEST)
     .withDetail("Item B00027Y5QG is no longer available")
     .build();
 ```
@@ -134,7 +132,7 @@ Will produce this:
 {
   "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
-  "status": 422,
+  "status": 400,
   "detail": "Item B00027Y5QG is no longer available"
 }
 ```
@@ -145,7 +143,7 @@ Alternatively you can add custom properties, i.e. others than `type`, `title`, `
 Problem.builder()
     .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
-    .withStatus(UNPROCESSABLE_ENTITY)
+    .withStatus(BAD_REQUEST)
     .withDetail("Item B00027Y5QG is no longer available")
     .with("product", "B00027Y5QG")
     .build();
@@ -157,7 +155,7 @@ Will produce this:
 {
   "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
-  "status": 422,
+  "status": 400,
   "detail": "Item B00027Y5QG is no longer available",
   "product": "B00027Y5QG"
 }
@@ -166,42 +164,22 @@ Will produce this:
 #### Custom Problems
 
 The highest degree of flexibility and customizability is achieved by implementing `Problem` directly. This is 
-especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share.
+especially convenient if you refer to it in a lot of places, i.e. it makes it easier to share. Alternatively you can
+extend `AbstractThrowableProblem`:
 
 ```java
 @Immutable
-public final class OutOfStockProblem implements Problem {
+public final class OutOfStockProblem extends AbstractThrowableProblem {
 
     static final URI TYPE = URI.create("https://example.org/out-of-stock");
 
-    private final Optional<String> detail;
     private final String product;
 
     public OutOfStockProblem(final String product) {
-        this.detail = Optional.of(format("Item %s is no longer available", product));
+        super(TYPE, "Out of Stock", BAD_REQUEST, format("Item %s is no longer available", product));
         this.product = product;
     }
 
-    @Override
-    public URI getType() {
-        return TYPE;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Out of Stock";
-    }
-
-    @Override
-    public StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
-    }
-
-    @Override
-    public Optional<String> getDetail() {
-        return detail;
-    }
-    
     public String getProduct() {
         return product;
     }
@@ -219,7 +197,7 @@ Will produce this:
 {
   "type": "https://example.org/out-of-stock",
   "title": "Out of Stock",
-  "status": 422,
+  "status": 400,
   "detail": "Item B00027Y5QG is no longer available",
   "product": "B00027Y5QG"
 }
@@ -312,11 +290,11 @@ Exceptions in Java can be chained/nested using *causes*. `ThrowableProblem` adap
 ThrowableProblem problem = Problem.builder()
     .withType(URI.create("https://example.org/order-failed"))
     .withTitle("Order failed")
-    .withStatus(UNPROCESSABLE_ENTITY)
+    .withStatus(BAD_REQUEST)
     .withCause(Problem.builder()
       .withType(URI.create("about:blank"))
       .withTitle("Out of Stock")
-      .withStatus(UNPROCESSABLE_ENTITY)
+      .withStatus(BAD_REQUEST)
       .build())
     .build();
     
@@ -329,11 +307,11 @@ Will produce this:
 {
   "type": "https://example.org/order-failed",
   "title": "Order failed",
-  "status": 422,
+  "status": 400,
   "cause": {
     "type": "https://example.org/out-of-stock",
     "title": "Out of Stock",
-    "status": 422,
+    "status": 400,
     "detail": "Item B00027Y5QG is no longer available"
   }
 }
@@ -356,7 +334,7 @@ After enabling stacktraces all problems will contain a `stacktrace` property:
 {
   "type": "about:blank",
   "title": "Unprocessable Entity",
-  "status": 422,
+  "status": 400,
   "stacktrace": [
     "org.example.Example.execute(Example.java:17)",
     "org.example.Example.main(Example.java:11)"

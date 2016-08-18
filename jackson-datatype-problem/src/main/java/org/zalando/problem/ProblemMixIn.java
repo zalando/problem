@@ -28,10 +28,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
-import java.util.Optional;
 import java.util.Map;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -39,10 +37,10 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
         property = "type",
         defaultImpl = DefaultProblem.class,
         visible = true)
+@JsonInclude(NON_EMPTY)
 interface ProblemMixIn extends Problem {
 
     @JsonProperty("type")
-    @JsonInclude(NON_EMPTY)
     @JsonSerialize(converter = ProblemTypeConverter.class)
     @Override
     URI getType();
@@ -56,14 +54,12 @@ interface ProblemMixIn extends Problem {
     StatusType getStatus();
 
     @JsonProperty("detail")
-    @JsonInclude(NON_ABSENT)
     @Override
-    Optional<String> getDetail();
+    String getDetail();
 
     @JsonProperty("instance")
-    @JsonInclude(NON_ABSENT)
     @Override
-    Optional<URI> getInstance();
+    URI getInstance();
 
     @JsonAnyGetter
     @Override

@@ -22,17 +22,18 @@ package org.zalando.problem;
 
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
-import java.util.Optional;
+
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 public final class OutOfStockProblem extends ThrowableProblem {
 
     static final String TYPE_VALUE = "https://example.org/out-of-stock";
     static final URI TYPE = URI.create(TYPE_VALUE);
 
-    private final Optional<String> detail;
+    private final String detail;
 
     public OutOfStockProblem(final String detail) {
-        this.detail = Optional.of(detail);
+        this.detail = detail;
     }
 
     @Override
@@ -47,11 +48,11 @@ public final class OutOfStockProblem extends ThrowableProblem {
 
     @Override
     public StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
+        return BAD_REQUEST;
     }
 
     @Override
-    public Optional<String> getDetail() {
+    public String getDetail() {
         return detail;
     }
 
