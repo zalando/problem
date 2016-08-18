@@ -6,7 +6,7 @@
         "format": "uri",
         "default": "about:blank",
         "description": "An absolute URI that identifies the problem type.  When dereferenced,\nit SHOULD provide human-readable documentation for the problem type\n(e.g., using HTML).",
-        "example": "https://zalando.github.io/problem/constraint-violation",
+        "example": "https://zalando.github.io/problem/constraint-violation"
       },
       "title": {
         "type": "string",
