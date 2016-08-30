@@ -9,6 +9,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/zalando/problem/master/LICENSE)
 
+> **Problem** noun, /ˈpɹɒbləm/: A difficulty that has to be resolved or dealt with.
+
 *Problem* is a library that implements 
 [`application/problem+json`](https://tools.ietf.org/html/rfc7807).
 It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
