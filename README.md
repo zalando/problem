@@ -7,6 +7,7 @@
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/problem/badge.svg)](http://www.javadoc.io/doc/org.zalando/problem)
 [![Release](https://img.shields.io/github/release/zalando/problem.svg)](https://github.com/zalando/problem/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://raw.githubusercontent.com/zalando/problem/master/LICENSE)
 
 *Problem* is a library that implements 
 [`application/problem+json`](https://tools.ietf.org/html/rfc7807).
