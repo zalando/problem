@@ -21,11 +21,8 @@ package org.zalando.problem;
  */
 
 import javax.ws.rs.core.Response.StatusType;
-import java.net.URI;
 
 final class GenericProblems {
-
-    static final URI DEFAULT_TYPE = URI.create("about:blank");
 
     GenericProblems() throws Exception {
         throw new IllegalAccessException();
@@ -33,7 +30,6 @@ final class GenericProblems {
 
     static ProblemBuilder create(final StatusType status) {
         return Problem.builder()
-                .withType(DEFAULT_TYPE)
                 .withTitle(status.getReasonPhrase())
                 .withStatus(status);
     }

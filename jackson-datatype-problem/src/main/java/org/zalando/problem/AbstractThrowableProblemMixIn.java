@@ -24,22 +24,24 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
-import java.util.Optional;
 
-abstract class DefaultProblemMixIn {
+abstract class AbstractThrowableProblemMixIn {
 
     @JsonCreator
-    DefaultProblemMixIn(
-            @JsonProperty("type") final URI type,
-            @JsonProperty(value = "title", required = true) final String title,
-            @JsonProperty(value = "status", required = true) final StatusType status,
-            @JsonProperty("detail") final Optional<String> detail,
-            @JsonProperty("instance") final Optional<URI> instance,
-            @JsonProperty("cause") final ThrowableProblem cause) {
+    AbstractThrowableProblemMixIn(
+            @Nullable @JsonProperty("type") final URI type,
+            @Nullable @JsonProperty("title") final String title,
+            @Nullable @JsonProperty("status") final StatusType status,
+            @Nullable @JsonProperty("detail") final String detail,
+            @Nullable @JsonProperty("instance") final URI instance,
+            @Nullable @JsonProperty("cause") final ThrowableProblem cause) {
         // this is just here to see whether "our" constructor matches the real one
-        throw new DefaultProblem(type, title, status, detail, instance, cause);
+        throw new AbstractThrowableProblem(type, title, status, detail, instance, cause) {
+
+        };
     }
 
     @JsonAnySetter

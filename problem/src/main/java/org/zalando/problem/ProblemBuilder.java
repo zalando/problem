@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public final class ProblemBuilder {
@@ -39,10 +38,9 @@ public final class ProblemBuilder {
     private URI type;
     private String title;
     private StatusType status;
-
-    private Optional<String> detail = Optional.empty();
-    private Optional<URI> instance = Optional.empty();
-    @Nullable private ThrowableProblem cause;
+    private String detail;
+    private URI instance;
+    private ThrowableProblem cause;
     private final Map<String, Object> parameters = new LinkedHashMap<>();
 
     /**
@@ -52,7 +50,7 @@ public final class ProblemBuilder {
 
     }
 
-    public ProblemBuilder withType(final URI type) {
+    public ProblemBuilder withType(@Nullable final URI type) {
         this.type = type;
         return this;
     }
@@ -68,12 +66,12 @@ public final class ProblemBuilder {
     }
 
     public ProblemBuilder withDetail(@Nullable final String detail) {
-        this.detail = Optional.ofNullable(detail);
+        this.detail = detail;
         return this;
     }
 
     public ProblemBuilder withInstance(@Nullable final URI instance) {
-        this.instance = Optional.ofNullable(instance);
+        this.instance = instance;
         return this;
     }
 
@@ -98,9 +96,7 @@ public final class ProblemBuilder {
     }
 
     public ThrowableProblem build() {
-        final DefaultProblem problem = new DefaultProblem(type, title, status, detail, instance, cause);
-        parameters.forEach(problem::set);
-        return problem;
+        return new DefaultProblem(type, title, status, detail, instance, cause, new LinkedHashMap<>(parameters));
     }
 
 }

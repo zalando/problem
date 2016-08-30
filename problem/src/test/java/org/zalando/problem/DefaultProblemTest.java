@@ -20,18 +20,17 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.Optional;
 
-import static java.util.Optional.empty;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 @SuppressWarnings("ConstantConditions")
 public final class DefaultProblemTest {
@@ -40,53 +39,27 @@ public final class DefaultProblemTest {
 
     @Test
     public void shouldDefaultToAboutBlank() {
-        final DefaultProblem problem = new DefaultProblem(null, "Out of stock", UNPROCESSABLE_ENTITY, empty(), empty());
+        final DefaultProblem problem = new DefaultProblem(null, null, null, null, null, null);
         assertThat(problem.getType(), hasToString("about:blank"));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowOnNullTitle() {
-        throw new DefaultProblem(type, null, UNPROCESSABLE_ENTITY, empty(), empty());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowOnNullStatus() {
-        throw new DefaultProblem(type, "Out of Stock", null, empty(), empty());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowOnNullDetail() {
-        throw new DefaultProblem(type, "Out of Stock", UNPROCESSABLE_ENTITY, null, empty());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowOnNullInstance() {
-        throw new DefaultProblem(type, "Out of Stock", UNPROCESSABLE_ENTITY, empty(), null);
     }
 
     @Test
     public void shouldImplementProblem() {
-        final Problem problem = new DefaultProblem(type, "Out of Stock", UNPROCESSABLE_ENTITY,
-                Optional.of("Item B00027Y5QG is no longer available"),
-                Optional.of(URI.create("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671")));
+        final DefaultProblem problem = new DefaultProblem(type, "Out of Stock", BAD_REQUEST,
+                "Item B00027Y5QG is no longer available",
+                URI.create("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671"),
+                null);
+
+        problem.set("foo", "bar");
 
         assertThat(problem, hasFeature("type", Problem::getType, equalTo(type)));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, isPresent()));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(BAD_REQUEST)));
         assertThat(problem, hasFeature("detail", Problem::getDetail,
-                hasValue(equalTo("Item B00027Y5QG is no longer available"))));
-        assertThat(problem, hasFeature("instance", Problem::getInstance, isPresent()));
+                is("Item B00027Y5QG is no longer available")));
         assertThat(problem, hasFeature("instance", Problem::getInstance,
-                hasValue(hasToString("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671"))));
-    }
-
-    private <T> Matcher<Optional<T>> isPresent() {
-        return hasFeature("present", Optional::isPresent, equalTo(true));
-    }
-
-    private <T> Matcher<Optional<T>> hasValue(final Matcher<? super T> matcher) {
-        return hasFeature("value", Optional::get, matcher);
+                hasToString("https://example.org/e7203fd2-463b-11e5-a823-10ddb1ee7671")));
+        assertThat(problem, hasFeature(DefaultProblem::getParameters, hasEntry("foo", "bar")));
     }
 
 }

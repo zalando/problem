@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -34,7 +35,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public final class ThrowableProblemTest {
     
@@ -43,11 +43,11 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
         
@@ -59,7 +59,7 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .build();
         
         assertThat(problem, hasFeature("cause", ThrowableProblem::getCause, nullValue()));
@@ -70,7 +70,7 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .build();
 
         assertThat(problem, hasFeature("message", Throwable::getMessage, is("Preauthorization Failed")));
@@ -81,7 +81,7 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withDetail("CVC invalid")
                 .build();
 
@@ -93,11 +93,11 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
 
@@ -110,21 +110,21 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
 
         final String stacktrace = getStackTrace(problem);
 
         assertThat(stacktrace,
-                startsWith("https://example.org/preauthorization-failed{422, Preauthorization Failed}"));
+                startsWith("https://example.org/preauthorization-failed{400, Preauthorization Failed}"));
 
         assertThat(stacktrace,
-                containsString("Caused by: https://example.org/expired-credit-card{422, Expired Credit Card}"));
+                containsString("Caused by: https://example.org/expired-credit-card{400, Expired Credit Card}"));
     }
 
     @Test
@@ -132,11 +132,11 @@ public final class ThrowableProblemTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
 

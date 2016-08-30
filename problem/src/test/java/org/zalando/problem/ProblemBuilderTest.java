@@ -23,34 +23,44 @@ package org.zalando.problem;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.Optional;
 
-import static java.util.Optional.empty;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public class ProblemBuilderTest {
 
     private final URI type = URI.create("https://example.org/out-of-stock");
 
     @Test
+    public void shouldCreateEmptyProblem() {
+        final Problem problem = Problem.builder().build();
+
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
+        assertThat(problem, hasFeature("title", Problem::getTitle, is(nullValue())));
+        assertThat(problem, hasFeature("status", Problem::getStatus, is(nullValue())));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(nullValue())));
+    }
+
+    @Test
     public void shouldCreateProblem() {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
-                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .build();
 
         assertThat(problem, hasFeature("type", Problem::getType, is(type)));
         assertThat(problem, hasFeature("title", Problem::getTitle, is("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, is(MoreStatus.UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, is(empty())));
-        assertThat(problem, hasFeature("instance", Problem::getInstance, is(empty())));
+        assertThat(problem, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(nullValue())));
     }
 
     @Test
@@ -58,11 +68,11 @@ public class ProblemBuilderTest {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
-                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withDetail("Item B00027Y5QG is no longer available")
                 .build();
 
-        assertThat(problem, hasFeature("detail", Problem::getDetail, is(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
     }
 
     @Test
@@ -70,11 +80,11 @@ public class ProblemBuilderTest {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
-                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withInstance(URI.create("https://example.com/"))
                 .build();
 
-        assertThat(problem, hasFeature("instance", Problem::getInstance, is(Optional.of(URI.create("https://example.com/")))));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(URI.create("https://example.com/"))));
     }
 
     @Test
@@ -82,7 +92,7 @@ public class ProblemBuilderTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
-                .withStatus(MoreStatus.UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .with("foo", "bar")
                 .build();
 
@@ -94,11 +104,11 @@ public class ProblemBuilderTest {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
         
@@ -107,7 +117,7 @@ public class ProblemBuilderTest {
         final ThrowableProblem cause = problem.getCause();
         assertThat(cause, hasFeature("type", Problem::getType, hasToString("https://example.org/expired-credit-card")));
         assertThat(cause, hasFeature("title", Problem::getTitle, is("Expired Credit Card")));
-        assertThat(cause, hasFeature("status", Problem::getStatus, is(UNPROCESSABLE_ENTITY)));
+        assertThat(cause, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
     }
 
     @Test(expected = IllegalArgumentException.class)

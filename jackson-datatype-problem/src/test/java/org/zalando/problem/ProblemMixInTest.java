@@ -22,7 +22,6 @@ package org.zalando.problem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
@@ -35,9 +34,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.jayway.jsonassert.JsonAssert.with;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
@@ -45,15 +44,14 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static org.zalando.problem.MoreStatus.UNPROCESSABLE_ENTITY;
 
 public final class ProblemMixInTest {
 
     private final ObjectMapper mapper = new ObjectMapper()
-            .registerModule(new Jdk8Module())
             .registerModule(new ProblemModule());
 
     public ProblemMixInTest() {
@@ -77,7 +75,7 @@ public final class ProblemMixInTest {
         final Problem problem = Problem.builder()
                 .withType(URI.create("https://example.org/out-of-stock"))
                 .withTitle("Out of Stock")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withDetail("Item B00027Y5QG is no longer available")
                 .with("product", "B00027Y5QG")
                 .build();
@@ -94,11 +92,11 @@ public final class ProblemMixInTest {
         final Problem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
-                .withStatus(UNPROCESSABLE_ENTITY)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("https://example.org/expired-credit-card"))
                         .withTitle("Expired Credit Card")
-                        .withStatus(UNPROCESSABLE_ENTITY)
+                        .withStatus(BAD_REQUEST)
                         .withDetail("Credit card is expired as of 2015-09-16T00:00:00Z")
                         .with("since", "2015-09-16T00:00:00Z")
                         .build())
@@ -109,7 +107,7 @@ public final class ProblemMixInTest {
         with(json)
                 .assertThat("$.cause.type", is("https://example.org/expired-credit-card"))
                 .assertThat("$.cause.title", is("Expired Credit Card"))
-                .assertThat("$.cause.status", is(422))
+                .assertThat("$.cause.status", is(400))
                 .assertThat("$.cause.detail", is("Credit card is expired as of 2015-09-16T00:00:00Z"))
                 .assertThat("$.cause.since", is("2015-09-16T00:00:00Z"));
     }
@@ -119,11 +117,11 @@ public final class ProblemMixInTest {
         final Problem problem = Problem.builder()
                 .withType(URI.create("about:blank"))
                 .withTitle("Foo")
-                .withStatus(Status.BAD_REQUEST)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("about:blank"))
                         .withTitle("Bar")
-                        .withStatus(Status.BAD_REQUEST)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
 
@@ -138,16 +136,15 @@ public final class ProblemMixInTest {
         final Problem problem = Problem.builder()
                 .withType(URI.create("about:blank"))
                 .withTitle("Foo")
-                .withStatus(Status.BAD_REQUEST)
+                .withStatus(BAD_REQUEST)
                 .withCause(Problem.builder()
                         .withType(URI.create("about:blank"))
                         .withTitle("Bar")
-                        .withStatus(Status.BAD_REQUEST)
+                        .withStatus(BAD_REQUEST)
                         .build())
                 .build();
 
         final ObjectMapper mapper = new ObjectMapper()
-                .registerModule(new Jdk8Module())
                 .registerModule(new ProblemModule().withStackTraces());
 
         final String json = mapper.writeValueAsString(problem);
@@ -167,8 +164,8 @@ public final class ProblemMixInTest {
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/not-out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(BAD_REQUEST)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
         assertThat(problem, hasFeature("parameters", DefaultProblem::getParameters, hasEntry("product", "B00027Y5QG")));
     }
 
@@ -182,8 +179,8 @@ public final class ProblemMixInTest {
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(BAD_REQUEST)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
     }
 
     @Test
@@ -196,20 +193,17 @@ public final class ProblemMixInTest {
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("https://example.org/out-of-stock")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Out of Stock")));
-        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Item B00027Y5QG is no longer available"))));
+        assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(BAD_REQUEST)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
     }
 
     @Test
     public void shouldDeserializeSpecificProblem() throws IOException {
         final URL resource = getResource("insufficient-funds.json");
-        final Problem problem = mapper.readValue(resource, Problem.class);
+        final InsufficientFundsProblem problem = (InsufficientFundsProblem) mapper.readValue(resource, Problem.class);
 
-        assertThat(problem, instanceOf(InsufficientFundsProblem.class));
-
-        final InsufficientFundsProblem insufficientFundsProblem = InsufficientFundsProblem.class.cast(problem);
-        assertThat(insufficientFundsProblem, hasFeature("balance", InsufficientFundsProblem::getBalance, equalTo(10)));
-        assertThat(insufficientFundsProblem, hasFeature("debit", InsufficientFundsProblem::getDebit, equalTo(-20)));
+        assertThat(problem, hasFeature("balance", InsufficientFundsProblem::getBalance, equalTo(10)));
+        assertThat(problem, hasFeature("debit", InsufficientFundsProblem::getDebit, equalTo(-20)));
     }
 
     @Test
@@ -225,13 +219,27 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializedUntyped() throws IOException {
+    public void shouldDeserializeUntyped() throws IOException {
         final URL resource = getResource("untyped.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
         assertThat(problem.getType(), hasToString("about:blank"));
         assertThat(problem.getTitle(), is("Something bad"));
-        assertThat(problem.getStatus().getStatusCode(), is(422));
+        assertThat(problem.getStatus(), hasFeature(StatusType::getStatusCode, is(400)));
+        assertThat(problem.getDetail(), is(nullValue()));
+        assertThat(problem.getInstance(), is(nullValue()));
+    }
+
+    @Test
+    public void shouldDeserializeEmpty() throws IOException {
+        final URL resource = getResource("empty.json");
+        final Problem problem = mapper.readValue(resource, Problem.class);
+
+        assertThat(problem.getType(), hasToString("about:blank"));
+        assertThat(problem.getTitle(), is(nullValue()));
+        assertThat(problem.getStatus(), is(nullValue()));
+        assertThat(problem.getDetail(), is(nullValue()));
+        assertThat(problem.getInstance(), is(nullValue()));
     }
 
     @Test
@@ -240,18 +248,16 @@ public final class ProblemMixInTest {
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 
         assertThat(problem, hasFeature("cause", Throwable::getCause, is(notNullValue())));
-        final ThrowableProblem cause = problem.getCause();
+        final DefaultProblem cause = (DefaultProblem) problem.getCause();
 
         assertThat(cause, is(notNullValue()));
         assertThat(cause, instanceOf(DefaultProblem.class));
 
-        final DefaultProblem c = (DefaultProblem) cause;
-
         assertThat(cause, hasFeature("type", Problem::getType, hasToString("https://example.org/expired-credit-card")));
         assertThat(cause, hasFeature("title", Problem::getTitle, equalTo("Expired Credit Card")));
-        assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(UNPROCESSABLE_ENTITY)));
-        assertThat(cause, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Credit card is expired as of 2015-09-16T00:00:00Z"))));
-        assertThat(c, hasFeature("parameters", Problem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
+        assertThat(cause, hasFeature("status", Problem::getStatus, equalTo(BAD_REQUEST)));
+        assertThat(cause, hasFeature("detail", Problem::getDetail, is("Credit card is expired as of 2015-09-16T00:00:00Z")));
+        assertThat(cause, hasFeature("parameters", Problem::getParameters, hasEntry("since", "2015-09-16T00:00:00Z")));
     }
 
     @Test

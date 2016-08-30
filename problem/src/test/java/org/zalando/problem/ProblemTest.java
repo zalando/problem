@@ -20,57 +20,98 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.Optional;
 
 import static java.util.Collections.emptyMap;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
 public final class ProblemTest {
 
     @Test
-    public void shouldUseDefaultDetail() {
-        final Problem problem = new InsufficientFundsProblem(10, -20);
+    public void shouldUseDefaultType() {
+        final Problem problem = new EmptyProblem();
 
-        assertThat(problem, hasFeature("detail", Problem::getDetail, isAbsent()));
+        assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
+    }
+
+    @Test
+    public void shouldUseDefaultTitle() {
+        final Problem problem = new EmptyProblem();
+
+        assertThat(problem, hasFeature("title", Problem::getTitle, is(nullValue())));
+    }
+
+    @Test
+    public void shouldUseDefaultStatus() {
+        final Problem problem = new EmptyProblem();
+
+        assertThat(problem, hasFeature("status", Problem::getStatus, is(nullValue())));
+    }
+
+    @Test
+    public void shouldUseDefaultDetail() {
+        final Problem problem = new EmptyProblem();
+
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
     }
 
     @Test
     public void shouldUseDefaultInstance() {
-        final Problem problem = new InsufficientFundsProblem(10, -20);
+        final Problem problem = new EmptyProblem();
 
-        assertThat(problem, hasFeature("instance", Problem::getInstance, isAbsent()));
+        assertThat(problem, hasFeature("instance", Problem::getInstance, is(nullValue())));
     }
 
     @Test
     public void shouldUseDefaultParameters() {
-        final Problem problem = new InsufficientFundsProblem(10, -20);
+        final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("parameters", Problem::getParameters, is(emptyMap())));
     }
 
-    private <T> Matcher<Optional<T>> isAbsent() {
-        return hasFeature("present", Optional::isPresent, equalTo(false));
+    @Test
+    public void simpleAbstractThrowableProblemShouldBeEmpty() {
+        final Problem problem = new AbstractThrowableProblem() {
+        };
+
+        assertThat(problem, hasFeature(Problem::getType, hasToString("about:blank")));
     }
 
     @Test
     public void shouldRenderEmptyProblem() {
-        final Problem problem = Problem.valueOf(NOT_FOUND);
-        assertThat(problem, hasToString("about:blank{404, Not Found}"));
+        final Problem problem = Problem.builder().build();
+        assertThat(problem, hasToString("about:blank{}"));
+    }
+
+    @Test
+    public void shouldRenderType() {
+        final Problem problem = Problem.builder().withType(URI.create("my-problem")).build();
+        assertThat(problem, hasToString("my-problem{}"));
+    }
+
+    @Test
+    public void shouldRenderTitle() {
+        final Problem problem = Problem.builder().withTitle("Not Found").build();
+        assertThat(problem, hasToString("about:blank{Not Found}"));
+    }
+
+    @Test
+    public void shouldRenderStatus() {
+        final Problem problem = Problem.builder().withStatus(NOT_FOUND).build();
+        assertThat(problem, hasToString("about:blank{404}"));
     }
 
     @Test
     public void shouldRenderDetail() {
-        final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123");
-        assertThat(problem, hasToString("about:blank{404, Not Found, Order 123}"));
+        final Problem problem = Problem.builder().withDetail("Order 123").build();
+        assertThat(problem, hasToString("about:blank{Order 123}"));
     }
 
     @Test
@@ -80,7 +121,7 @@ public final class ProblemTest {
     }
 
     @Test
-    public void shouldRenderDetailAndInstance() {
+    public void shouldRenderFully() {
         final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/"));
         assertThat(problem, hasToString("about:blank{404, Not Found, Order 123, instance=https://example.org/}"));
     }

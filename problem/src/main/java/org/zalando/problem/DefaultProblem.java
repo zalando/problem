@@ -20,93 +20,30 @@ package org.zalando.problem;
  * ​⁣
  */
 
-import com.google.gag.annotation.remark.Hack;
-import com.google.gag.annotation.remark.OhNoYouDidnt;
-
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
-@Immutable // TODO kind of a lie until we remove set(String, Object)
-public final class DefaultProblem extends ThrowableProblem {
+public final class DefaultProblem extends AbstractThrowableProblem {
 
-    private final URI type;
-    private final String title;
-    private final StatusType status;
-    private final Optional<String> detail;
-    private final Optional<URI> instance;
-    private final Map<String, Object> parameters = new HashMap<>();
-
-    DefaultProblem(final URI type,
-            final String title,
-            final StatusType status,
-            final Optional<String> detail,
-            final Optional<URI> instance) {
-        this(type, title, status, detail, instance, null);
+    // TODO needed for jackson
+    DefaultProblem(@Nullable final URI type,
+            @Nullable final String title,
+            @Nullable final StatusType status,
+            @Nullable final String detail,
+            @Nullable final URI instance,
+            @Nullable final ThrowableProblem cause) {
+        super(type, title, status, detail, instance, cause);
     }
 
     DefaultProblem(@Nullable final URI type,
-            final String title,
-            final StatusType status,
-            final Optional<String> detail,
-            final Optional<URI> instance,
-            @Nullable final ThrowableProblem cause) {
-        super(cause);
-        this.type = Optional.ofNullable(type).orElse(GenericProblems.DEFAULT_TYPE);
-        this.title = Objects.requireNonNull(title, "title must not be null");
-        this.status = Objects.requireNonNull(status, "status must not be null");
-        this.detail = Objects.requireNonNull(detail, "detail must not be null");
-        this.instance = Objects.requireNonNull(instance, "instance must not be null");
+            @Nullable final String title,
+            @Nullable final StatusType status,
+            @Nullable final String detail,
+            @Nullable final URI instance,
+            @Nullable final ThrowableProblem cause,
+            @Nullable final Map<String, Object> parameters) {
+        super(type, title, status, detail, instance, cause, parameters);
     }
-
-    @Override
-    public URI getType() {
-        return type;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public StatusType getStatus() {
-        return status;
-    }
-
-    @Override
-    public Optional<String> getDetail() {
-        return detail;
-    }
-
-    @Override
-    public Optional<URI> getInstance() {
-        return instance;
-    }
-
-    @Override
-    public Map<String, Object> getParameters() {
-        return Collections.unmodifiableMap(parameters);
-    }
-
-    /**
-     * This is required to workaround missing support for {@link com.fasterxml.jackson.annotation.JsonAnySetter} on
-     * constructors annotated with {@link com.fasterxml.jackson.annotation.JsonCreator}.
-     *
-     * @param key   the custom key
-     * @param value the custom value
-     * @see <a href="https://github.com/FasterXML/jackson-databind/issues/562">Jackson Issue 562</a>
-     */
-    @Hack
-    @OhNoYouDidnt
-    void set(final String key, final Object value) {
-        parameters.put(key, value);
-    }
-
 }

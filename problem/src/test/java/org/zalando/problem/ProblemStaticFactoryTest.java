@@ -23,10 +23,10 @@ package org.zalando.problem;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response.Status;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.is;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 
@@ -48,7 +48,7 @@ public final class ProblemStaticFactoryTest {
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
         assertThat(problem, hasFeature("title", Problem::getTitle, equalTo("Not Found")));
         assertThat(problem, hasFeature("status", Problem::getStatus, equalTo(Status.NOT_FOUND)));
-        assertThat(problem, hasFeature("detail", Problem::getDetail, equalTo(Optional.of("Order 123"))));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Order 123")));
     }
 
 }

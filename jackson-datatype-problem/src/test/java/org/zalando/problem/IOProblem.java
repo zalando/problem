@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Optional;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public final class IOProblem extends IOException implements Exceptional {
@@ -35,18 +34,18 @@ public final class IOProblem extends IOException implements Exceptional {
     private final URI type;
     private final String title;
     private final Response.StatusType status;
-    private final Optional<String> detail;
-    private final Optional<URI> instance;
+    private final String detail;
+    private final URI instance;
 
     @JsonCreator
     public IOProblem(@JsonProperty("type") final URI type,
             @JsonProperty("title") final String title,
-            @JsonProperty("status") final int status,
-            @JsonProperty("detail") final Optional<String> detail,
-            @JsonProperty("instance") final Optional<URI> instance) {
+            @JsonProperty("status") final Response.StatusType status,
+            @JsonProperty("detail") final String detail,
+            @JsonProperty("instance") final URI instance) {
         this.type = type;
         this.title = title;
-        this.status = MoreStatus.fromStatusCode(status);
+        this.status = status;
         this.detail = detail;
         this.instance = instance;
     }
@@ -67,12 +66,12 @@ public final class IOProblem extends IOException implements Exceptional {
     }
 
     @Override
-    public Optional<String> getDetail() {
+    public String getDetail() {
         return detail;
     }
 
     @Override
-    public Optional<URI> getInstance() {
+    public URI getInstance() {
         return instance;
     }
 

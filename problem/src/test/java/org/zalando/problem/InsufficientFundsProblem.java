@@ -23,6 +23,8 @@ package org.zalando.problem;
 import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 public final class InsufficientFundsProblem extends ThrowableProblem {
 
     static final String TYPE_VALUE = "https://example.org/insufficient-funds";
@@ -48,7 +50,7 @@ public final class InsufficientFundsProblem extends ThrowableProblem {
 
     @Override
     public StatusType getStatus() {
-        return MoreStatus.UNPROCESSABLE_ENTITY;
+        return BAD_REQUEST;
     }
 
     public int getBalance() {
