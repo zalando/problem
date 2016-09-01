@@ -25,19 +25,6 @@
         <developerConnection>scm:git:git@github.com:zalando/problem.git</developerConnection>
     </scm>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.ning.maven.plugins</groupId>
-                <artifactId>maven-duplicate-finder-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
