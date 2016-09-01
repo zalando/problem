@@ -58,19 +58,38 @@
     <build>
         <pluginManagement>
             <plugins>
-
                 <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                    <groupId>com.ning.maven.plugins</groupId>
+                    <artifactId>maven-duplicate-finder-plugin</artifactId>
+                    <version>1.0.9</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict>
+                                <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+                                <ignoredResources>
+                                    <ignoredResource>.*</ignoredResource>
+                                </ignoredResources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>2.7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.5.1</version>
                     <configuration>
                         <compilerArgs>
-                            <compilerArg>-Xlint:unchecked</compilerArg>
+                            <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
                             <compilerArg>-Werror</compilerArg>
                             <compilerArg>-parameters</compilerArg>
                         </compilerArgs>
@@ -79,7 +98,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.16</version>
+                    <version>2.19.1</version>
                     <configuration>
                         <parallel>classesAndMethods</parallel>
                         <threadCount>1</threadCount>
@@ -89,7 +108,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.5.201505241946</version>
+                    <version>0.7.6.201602180812</version>
                     <executions>
                         <execution>
                             <id>prepare-agent</id>
@@ -133,7 +152,7 @@
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>4.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -174,7 +193,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -187,7 +206,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>2.10.3</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -214,7 +233,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.5</version>
+                        <version>1.6.7</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
