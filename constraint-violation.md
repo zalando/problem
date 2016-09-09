@@ -3,7 +3,7 @@ layout: page
 title: Constraint Violation
 ---
 
-A problems that indicates a syntactically correct, yet semantically illegal request. It's **not** meant to be used for end-user input validation, but for client developer convenience. Any constraint violation problem happening in production should be considered a bug.
+A problem that indicates a syntactically correct, yet semantically illegal request. It's **not** meant to be used for end-user input validation, but for client developer convenience. Any constraint violation problem happening in production should be considered a bug.
 
 ```yaml
 {
