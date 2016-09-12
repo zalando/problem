@@ -285,7 +285,7 @@ try {
     ...
 ```
 
-### Stacktraces and causal chains
+### Stack traces and causal chains
 
 Exceptions in Java can be chained/nested using *causes*. `ThrowableProblem` adapts the pattern seamlessly to problems:
 
@@ -320,10 +320,10 @@ Will produce this:
 }
 ```
 
-Another important aspect of exceptions are stacktraces, but since they leak implementation details to the outside world, 
+Another important aspect of exceptions are stack traces, but since they leak implementation details to the outside world, 
 [**we strongly advise against exposing them**](http://zalando.github.io/restful-api-guidelines/common-data-objects/CommonDataObjects.html#must-an-error-message-must-not-contain-the-stack-trace)
 in problems. That being said, there is a legitimate use case when you're debugging an issue on an integration environment
-and you don't have direct access to the log files. Serialization of stacktraces can be enabled on the problem module:
+and you don't have direct access to the log files. Serialization of stack traces can be enabled on the problem module:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
@@ -331,7 +331,7 @@ ObjectMapper mapper = new ObjectMapper()
     .registerModule(new ProblemModule().withStackTraces());
 ```
 
-After enabling stacktraces all problems will contain a `stacktrace` property:
+After enabling stack traces all problems will contain a `stacktrace` property:
 
 ```json
 {
@@ -346,11 +346,11 @@ After enabling stacktraces all problems will contain a `stacktrace` property:
 ```
 
 Since we discourage the  serialization of them, there is currently, by design, no way deserialize them from JSON.
-Nevertheless the runtime will fill in the stacktrace when the problem instance is created. That stacktrace is usually
+Nevertheless the runtime will fill in the stack trace when the problem instance is created. That stack trace is usually
 not 100% correct, since it looks like the exception originated inside your deserialization framework. *Problem* comes
 with a special service provider interface `StackTraceProcessor` that can be registered using the 
 [`ServiceLoader` capabilities](http://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html). It can be used
-to modify the stacktrace, e.g. remove all lines before your own client code, e.g. Jackson/HTTP client/etc.
+to modify the stack trace, e.g. remove all lines before your own client code, e.g. Jackson/HTTP client/etc.
 
 ```java
 public interface StackTraceProcessor {
