@@ -22,33 +22,33 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
     private final URI instance;
     private final Map<String, Object> parameters;
 
-    AbstractThrowableProblem() {
+    protected AbstractThrowableProblem() {
         this(null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type) {
+    protected AbstractThrowableProblem(@Nullable final URI type) {
         this(type, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title) {
         this(type, title, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
             @Nullable final Response.StatusType status) {
         this(type, title, status, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
             @Nullable final Response.StatusType status,
             @Nullable final String detail) {
         this(type, title, status, detail, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
             @Nullable final Response.StatusType status,
             @Nullable final String detail,
@@ -56,7 +56,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
         this(type, title, status, detail, instance, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
             @Nullable final Response.StatusType status,
             @Nullable final String detail,
@@ -65,7 +65,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
         this(type, title, status, detail, instance, cause, null);
     }
 
-    AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
             @Nullable final Response.StatusType status,
             @Nullable final String detail,
