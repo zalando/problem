@@ -13,11 +13,11 @@ import static org.zalando.problem.spi.StackTraceProcessor.COMPOUND;
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
 
-    public ThrowableProblem() {
+    protected ThrowableProblem() {
         this(null);
     }
 
-    public ThrowableProblem(@Nullable final ThrowableProblem cause) {
+    protected ThrowableProblem(@Nullable final ThrowableProblem cause) {
         super(cause);
 
         final Collection<StackTraceElement> stackTrace = COMPOUND.process(asList(getStackTrace()));
