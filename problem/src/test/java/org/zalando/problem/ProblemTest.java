@@ -2,10 +2,13 @@ package org.zalando.problem;
 
 import org.junit.Test;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 
 import static java.util.Collections.emptyMap;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -130,6 +133,20 @@ public final class ProblemTest {
                 .build();
 
         assertThat(problem, hasToString("https://example.org/problem{404, Not Found, Order 123, foo=bar}"));
+    }
+
+    @Test
+    public void shouldRenderCustomPropertiesWhenPrintingStackTrace() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(URI.create("https://example.org/problem"))
+                .withStatus(NOT_FOUND)
+                .with("foo", "bar")
+                .build();
+
+        final StringWriter writer = new StringWriter();
+        problem.printStackTrace(new PrintWriter(writer));
+
+        assertThat(writer, hasToString(containsString("https://example.org/problem{404, foo=bar}")));
     }
 
 }
