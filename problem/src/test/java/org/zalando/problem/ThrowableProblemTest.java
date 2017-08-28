@@ -1,6 +1,6 @@
 package org.zalando.problem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,12 +14,12 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public final class ThrowableProblemTest {
+final class ThrowableProblemTest {
     
     @Test
-    public void shouldReturnThrowableProblemCause() {
+    void shouldReturnThrowableProblemCause() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -35,7 +35,7 @@ public final class ThrowableProblemTest {
     }
     
     @Test
-    public void shouldReturnNullCause() {
+    void shouldReturnNullCause() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -46,7 +46,7 @@ public final class ThrowableProblemTest {
     }
 
     @Test
-    public void shouldReturnTitleAsMessage() {
+    void shouldReturnTitleAsMessage() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -57,7 +57,7 @@ public final class ThrowableProblemTest {
     }
 
     @Test
-    public void shouldReturnTitleAndDetailAsMessage() {
+    void shouldReturnTitleAndDetailAsMessage() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -69,7 +69,7 @@ public final class ThrowableProblemTest {
     }
 
     @Test
-    public void shouldReturnCausesMessage() {
+    void shouldReturnCausesMessage() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -86,7 +86,7 @@ public final class ThrowableProblemTest {
     }
 
     @Test
-    public void shouldPrintStackTrace() {
+    void shouldPrintStackTrace() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -108,7 +108,7 @@ public final class ThrowableProblemTest {
     }
 
     @Test
-    public void shouldProcessStackTrace() {
+    void shouldProcessStackTrace() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")

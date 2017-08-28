@@ -1,16 +1,16 @@
 package org.zalando.problem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public final class ExceptionalTest {
+final class ExceptionalTest {
 
     @Test
-    public void shouldBeAbleToThrowAndCatchThrowableProblem() {
+    void shouldBeAbleToThrowAndCatchThrowableProblem() {
         try {
             throw unit().propagate();
         } catch (final InsufficientFundsProblem problem) {

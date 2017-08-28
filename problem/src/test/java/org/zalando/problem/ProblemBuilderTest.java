@@ -1,24 +1,25 @@
 package org.zalando.problem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ProblemBuilderTest {
+class ProblemBuilderTest {
 
     private final URI type = URI.create("https://example.org/out-of-stock");
 
     @Test
-    public void shouldCreateEmptyProblem() {
+    void shouldCreateEmptyProblem() {
         final Problem problem = Problem.builder().build();
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
@@ -29,7 +30,7 @@ public class ProblemBuilderTest {
     }
 
     @Test
-    public void shouldCreateProblem() {
+    void shouldCreateProblem() {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
@@ -44,7 +45,7 @@ public class ProblemBuilderTest {
     }
 
     @Test
-    public void shouldCreateProblemWithDetail() {
+    void shouldCreateProblemWithDetail() {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
@@ -56,7 +57,7 @@ public class ProblemBuilderTest {
     }
 
     @Test
-    public void shouldCreateProblemWithInstance() {
+    void shouldCreateProblemWithInstance() {
         final Problem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
@@ -68,7 +69,7 @@ public class ProblemBuilderTest {
     }
 
     @Test
-    public void shouldCreateProblemWithParameters() {
+    void shouldCreateProblemWithParameters() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(type)
                 .withTitle("Out of Stock")
@@ -80,7 +81,7 @@ public class ProblemBuilderTest {
     }
     
     @Test
-    public void shouldCreateProblemWithCause() {
+    void shouldCreateProblemWithCause() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -100,34 +101,34 @@ public class ProblemBuilderTest {
         assertThat(cause, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomType() {
-        Problem.builder().with("type", "foo");
+    @Test
+    void shouldThrowOnCustomType() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("type", "foo"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomTitle() {
-        Problem.builder().with("title", "foo");
+    @Test
+    void shouldThrowOnCustomTitle() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("title", "foo"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomStatus() {
-        Problem.builder().with("status", "foo");
+    @Test
+    void shouldThrowOnCustomStatus() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("status", "foo"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomDetail() {
-        Problem.builder().with("detail", "foo");
+    @Test
+    void shouldThrowOnCustomDetail() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("detail", "foo"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomInstance() {
-        Problem.builder().with("instance", "foo");
+    @Test
+    void shouldThrowOnCustomInstance() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("instance", "foo"));
     }
     
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowOnCustomCause() {
-        Problem.builder().with("cause", "foo");
+    @Test
+    void shouldThrowOnCustomCause() {
+        assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("cause", "foo"));
     }
 
 }

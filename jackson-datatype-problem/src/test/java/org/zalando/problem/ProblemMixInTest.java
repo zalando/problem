@@ -2,7 +2,7 @@ package org.zalando.problem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.Status.Family;
@@ -27,20 +27,20 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public final class ProblemMixInTest {
+final class ProblemMixInTest {
 
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new ProblemModule());
 
-    public ProblemMixInTest() {
+    ProblemMixInTest() {
         mapper.registerSubtypes(InsufficientFundsProblem.class);
         mapper.registerSubtypes(OutOfStockException.class);
     }
 
     @Test
-    public void shouldSerializeDefaultProblem() throws JsonProcessingException {
+    void shouldSerializeDefaultProblem() throws JsonProcessingException {
         final Problem problem = Problem.valueOf(Status.NOT_FOUND);
         final String json = mapper.writeValueAsString(problem);
 
@@ -51,7 +51,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldSerializeCustomProperties() throws JsonProcessingException {
+    void shouldSerializeCustomProperties() throws JsonProcessingException {
         final Problem problem = Problem.builder()
                 .withType(URI.create("https://example.org/out-of-stock"))
                 .withTitle("Out of Stock")
@@ -68,7 +68,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldSerializeProblemCause() throws JsonProcessingException {
+    void shouldSerializeProblemCause() throws JsonProcessingException {
         final Problem problem = Problem.builder()
                 .withType(URI.create("https://example.org/preauthorization-failed"))
                 .withTitle("Preauthorization Failed")
@@ -93,7 +93,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldNotSerializeStacktraceByDefault() throws JsonProcessingException {
+    void shouldNotSerializeStacktraceByDefault() throws JsonProcessingException {
         final Problem problem = Problem.builder()
                 .withType(URI.create("about:blank"))
                 .withTitle("Foo")
@@ -112,7 +112,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldSerializeStacktrace() throws JsonProcessingException {
+    void shouldSerializeStacktrace() throws JsonProcessingException {
         final Problem problem = Problem.builder()
                 .withType(URI.create("about:blank"))
                 .withTitle("Foo")
@@ -135,7 +135,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeDefaultProblem() throws IOException {
+    void shouldDeserializeDefaultProblem() throws IOException {
         final URL resource = getResource("default.json");
         final Problem raw = mapper.readValue(resource, Problem.class);
 
@@ -150,7 +150,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeRegisteredExceptional() throws IOException {
+    void shouldDeserializeRegisteredExceptional() throws IOException {
         final URL resource = getResource("out-of-stock.json");
         final Exceptional exceptional = mapper.readValue(resource, Exceptional.class);
 
@@ -164,7 +164,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeUnregisteredExceptional() throws IOException {
+    void shouldDeserializeUnregisteredExceptional() throws IOException {
         final URL resource = getResource("out-of-stock.json");
         final Exceptional exceptional = mapper.readValue(resource, IOProblem.class);
 
@@ -178,7 +178,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeSpecificProblem() throws IOException {
+    void shouldDeserializeSpecificProblem() throws IOException {
         final URL resource = getResource("insufficient-funds.json");
         final InsufficientFundsProblem problem = (InsufficientFundsProblem) mapper.readValue(resource, Problem.class);
 
@@ -187,7 +187,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeUnknownStatus() throws IOException {
+    void shouldDeserializeUnknownStatus() throws IOException {
         final URL resource = getResource("unknown.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
@@ -199,7 +199,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeUntyped() throws IOException {
+    void shouldDeserializeUntyped() throws IOException {
         final URL resource = getResource("untyped.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
@@ -211,7 +211,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeEmpty() throws IOException {
+    void shouldDeserializeEmpty() throws IOException {
         final URL resource = getResource("empty.json");
         final Problem problem = mapper.readValue(resource, Problem.class);
 
@@ -223,7 +223,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeCause() throws IOException {
+    void shouldDeserializeCause() throws IOException {
         final URL resource = getResource("cause.json");
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 
@@ -241,7 +241,7 @@ public final class ProblemMixInTest {
     }
 
     @Test
-    public void shouldDeserializeWithProcessedStackTrace() throws IOException {
+    void shouldDeserializeWithProcessedStackTrace() throws IOException {
         final URL resource = getResource("cause.json");
         final ThrowableProblem problem = mapper.readValue(resource, ThrowableProblem.class);
 

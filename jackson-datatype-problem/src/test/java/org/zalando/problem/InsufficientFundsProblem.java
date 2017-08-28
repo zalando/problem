@@ -12,7 +12,7 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 public final class InsufficientFundsProblem extends AbstractThrowableProblem {
 
     static final String TYPE_VALUE = "https://example.org/insufficient-funds";
-    static final URI TYPE = URI.create(TYPE_VALUE);
+    private static final URI TYPE = URI.create(TYPE_VALUE);
 
     private final int balance;
     private final int debit;
@@ -26,11 +26,11 @@ public final class InsufficientFundsProblem extends AbstractThrowableProblem {
         this.debit = debit;
     }
 
-    public int getBalance() {
+    int getBalance() {
         return balance;
     }
 
-    public int getDebit() {
+    int getDebit() {
         return debit;
     }
 
