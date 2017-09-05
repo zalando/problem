@@ -7,8 +7,8 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 public final class OutOfStockProblem extends ThrowableProblem {
 
-    static final String TYPE_VALUE = "https://example.org/out-of-stock";
-    static final URI TYPE = URI.create(TYPE_VALUE);
+    private static final String TYPE_VALUE = "https://example.org/out-of-stock";
+    private static final URI TYPE = URI.create(TYPE_VALUE);
 
     private final String detail;
 

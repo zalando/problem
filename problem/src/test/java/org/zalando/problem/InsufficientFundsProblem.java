@@ -13,7 +13,7 @@ public final class InsufficientFundsProblem extends ThrowableProblem {
     private final int balance;
     private final int debit;
 
-    public InsufficientFundsProblem(final int balance, final int debit) {
+    InsufficientFundsProblem(final int balance, final int debit) {
         this.balance = balance;
         this.debit = debit;
     }
@@ -33,11 +33,11 @@ public final class InsufficientFundsProblem extends ThrowableProblem {
         return BAD_REQUEST;
     }
 
-    public int getBalance() {
+    int getBalance() {
         return balance;
     }
 
-    public int getDebit() {
+    int getDebit() {
         return debit;
     }
 

@@ -1,12 +1,14 @@
 package org.zalando.problem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public final class GenericProblemsTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    @Test(expected = Exception.class)
-    public void shouldNotBeInstantiable() throws Exception {
-        new GenericProblems();
+final class GenericProblemsTest {
+
+    @Test
+    void shouldNotBeInstantiable() throws Exception {
+        assertThrows(Exception.class, GenericProblems::new);
     }
 
 }

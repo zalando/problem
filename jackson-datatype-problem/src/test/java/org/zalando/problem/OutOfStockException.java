@@ -12,8 +12,8 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 @JsonTypeName(OutOfStockException.TYPE_NAME)
 public class OutOfStockException extends BusinessException implements Exceptional {
 
-    public static final String TYPE_NAME = "https://example.org/out-of-stock";
-    public static final URI TYPE = URI.create(TYPE_NAME);
+    static final String TYPE_NAME = "https://example.org/out-of-stock";
+    private static final URI TYPE = URI.create(TYPE_NAME);
 
     @JsonCreator
     public OutOfStockException(@JsonProperty("detail") final String detail) {

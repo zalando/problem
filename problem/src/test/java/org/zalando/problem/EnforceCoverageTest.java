@@ -2,20 +2,23 @@ package org.zalando.problem;
 
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Hack
 @OhNoYouDidnt
-public class EnforceCoverageTest {
+class EnforceCoverageTest {
 
-    @Test(expected = FakeProblem.class)
-    public void shouldCoverUnreachableThrowStatement() throws Exception {
-        throw new FakeProblem().propagate();
+    @Test
+    void shouldCoverUnreachableThrowStatement() throws Exception {
+        assertThrows(FakeProblem.class, () -> {
+            throw new FakeProblem().propagate();
+        });
     }
 
     static final class FakeProblem extends Exception implements Exceptional {

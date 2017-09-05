@@ -1,6 +1,6 @@
 package org.zalando.problem;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -13,54 +13,54 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public final class ProblemTest {
+final class ProblemTest {
 
     @Test
-    public void shouldUseDefaultType() {
+    void shouldUseDefaultType() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("type", Problem::getType, hasToString("about:blank")));
     }
 
     @Test
-    public void shouldUseDefaultTitle() {
+    void shouldUseDefaultTitle() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("title", Problem::getTitle, is(nullValue())));
     }
 
     @Test
-    public void shouldUseDefaultStatus() {
+    void shouldUseDefaultStatus() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("status", Problem::getStatus, is(nullValue())));
     }
 
     @Test
-    public void shouldUseDefaultDetail() {
+    void shouldUseDefaultDetail() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
     }
 
     @Test
-    public void shouldUseDefaultInstance() {
+    void shouldUseDefaultInstance() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("instance", Problem::getInstance, is(nullValue())));
     }
 
     @Test
-    public void shouldUseDefaultParameters() {
+    void shouldUseDefaultParameters() {
         final Problem problem = new EmptyProblem();
 
         assertThat(problem, hasFeature("parameters", Problem::getParameters, is(emptyMap())));
     }
 
     @Test
-    public void simpleAbstractThrowableProblemShouldBeEmpty() {
+    void simpleAbstractThrowableProblemShouldBeEmpty() {
         final Problem problem = new AbstractThrowableProblem() {
         };
 
@@ -68,49 +68,49 @@ public final class ProblemTest {
     }
 
     @Test
-    public void shouldRenderEmptyProblem() {
+    void shouldRenderEmptyProblem() {
         final Problem problem = Problem.builder().build();
         assertThat(problem, hasToString("about:blank{}"));
     }
 
     @Test
-    public void shouldRenderType() {
+    void shouldRenderType() {
         final Problem problem = Problem.builder().withType(URI.create("my-problem")).build();
         assertThat(problem, hasToString("my-problem{}"));
     }
 
     @Test
-    public void shouldRenderTitle() {
+    void shouldRenderTitle() {
         final Problem problem = Problem.builder().withTitle("Not Found").build();
         assertThat(problem, hasToString("about:blank{Not Found}"));
     }
 
     @Test
-    public void shouldRenderStatus() {
+    void shouldRenderStatus() {
         final Problem problem = Problem.builder().withStatus(NOT_FOUND).build();
         assertThat(problem, hasToString("about:blank{404}"));
     }
 
     @Test
-    public void shouldRenderDetail() {
+    void shouldRenderDetail() {
         final Problem problem = Problem.builder().withDetail("Order 123").build();
         assertThat(problem, hasToString("about:blank{Order 123}"));
     }
 
     @Test
-    public void shouldRenderInstance() {
+    void shouldRenderInstance() {
         final Problem problem = Problem.valueOf(NOT_FOUND, URI.create("https://example.org/"));
         assertThat(problem, hasToString("about:blank{404, Not Found, instance=https://example.org/}"));
     }
 
     @Test
-    public void shouldRenderFully() {
+    void shouldRenderFully() {
         final Problem problem = Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/"));
         assertThat(problem, hasToString("about:blank{404, Not Found, Order 123, instance=https://example.org/}"));
     }
 
     @Test
-    public void shouldRenderCustomDetailAndInstance() {
+    void shouldRenderCustomDetailAndInstance() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/problem"))
                 .withTitle("Not Found")
@@ -123,7 +123,7 @@ public final class ProblemTest {
     }
 
     @Test
-    public void shouldRenderCustomProperties() {
+    void shouldRenderCustomProperties() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/problem"))
                 .withTitle("Not Found")
@@ -136,7 +136,7 @@ public final class ProblemTest {
     }
 
     @Test
-    public void shouldRenderCustomPropertiesWhenPrintingStackTrace() {
+    void shouldRenderCustomPropertiesWhenPrintingStackTrace() {
         final ThrowableProblem problem = Problem.builder()
                 .withType(URI.create("https://example.org/problem"))
                 .withStatus(NOT_FOUND)
