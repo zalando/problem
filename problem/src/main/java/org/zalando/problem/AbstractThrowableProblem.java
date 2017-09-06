@@ -5,7 +5,6 @@ import com.google.gag.annotation.remark.OhNoYouDidnt;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,7 +16,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
     private final URI type;
     private final String title;
-    private final Response.StatusType status;
+    private final StatusType status;
     private final String detail;
     private final URI instance;
     private final Map<String, Object> parameters;
@@ -37,20 +36,20 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
     protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
-            @Nullable final Response.StatusType status) {
+            @Nullable final StatusType status) {
         this(type, title, status, null);
     }
 
     protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
-            @Nullable final Response.StatusType status,
+            @Nullable final StatusType status,
             @Nullable final String detail) {
         this(type, title, status, detail, null);
     }
 
     protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
-            @Nullable final Response.StatusType status,
+            @Nullable final StatusType status,
             @Nullable final String detail,
             @Nullable final URI instance) {
         this(type, title, status, detail, instance, null);
@@ -58,7 +57,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
     protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
-            @Nullable final Response.StatusType status,
+            @Nullable final StatusType status,
             @Nullable final String detail,
             @Nullable final URI instance,
             @Nullable final ThrowableProblem cause) {
@@ -67,7 +66,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
     protected AbstractThrowableProblem(@Nullable final URI type,
             @Nullable final String title,
-            @Nullable final Response.StatusType status,
+            @Nullable final StatusType status,
             @Nullable final String detail,
             @Nullable final URI instance,
             @Nullable final ThrowableProblem cause,
@@ -92,7 +91,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
     }
 
     @Override
-    public Response.StatusType getStatus() {
+    public StatusType getStatus() {
         return status;
     }
 

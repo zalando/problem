@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
 import java.util.Map;
 

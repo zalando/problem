@@ -1,7 +1,6 @@
 package org.zalando.problem;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;

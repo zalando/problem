@@ -4,11 +4,10 @@ import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 @Hack
 @OhNoYouDidnt
@@ -34,7 +33,7 @@ class EnforceCoverageTest {
         }
 
         @Override
-        public Response.StatusType getStatus() {
+        public StatusType getStatus() {
             return BAD_REQUEST;
         }
 

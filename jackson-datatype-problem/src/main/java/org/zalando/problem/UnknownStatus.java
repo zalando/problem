@@ -1,11 +1,9 @@
 package org.zalando.problem;
 
 import javax.annotation.concurrent.Immutable;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
 
 @Immutable
-final class UnknownStatus implements Response.StatusType {
+final class UnknownStatus implements StatusType {
 
     private final int statusCode;
 
@@ -16,11 +14,6 @@ final class UnknownStatus implements Response.StatusType {
     @Override
     public int getStatusCode() {
         return statusCode;
-    }
-
-    @Override
-    public Family getFamily() {
-        return Family.OTHER;
     }
 
     @Override

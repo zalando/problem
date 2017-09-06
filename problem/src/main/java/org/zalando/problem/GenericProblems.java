@@ -1,7 +1,5 @@
 package org.zalando.problem;
 
-import javax.ws.rs.core.Response.StatusType;
-
 final class GenericProblems {
 
     GenericProblems() throws Exception {

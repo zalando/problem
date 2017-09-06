@@ -1,9 +1,8 @@
 package org.zalando.problem;
 
-import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 public final class InsufficientFundsProblem extends ThrowableProblem {
 
