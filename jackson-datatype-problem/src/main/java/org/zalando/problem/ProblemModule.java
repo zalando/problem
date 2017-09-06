@@ -5,8 +5,6 @@ import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.Response.StatusType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +17,9 @@ public final class ProblemModule extends Module {
      * TODO document
      *
      * @see Status
-     * @see MoreStatus
      */
     public ProblemModule() {
-        this(Status.class, MoreStatus.class);
+        this(Status.class);
     }
 
     /**

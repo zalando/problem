@@ -2,8 +2,6 @@ package org.zalando.problem;
 
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response.Status;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;

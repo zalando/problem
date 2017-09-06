@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 @JsonTypeName(InsufficientFundsProblem.TYPE_VALUE)
 public final class InsufficientFundsProblem extends AbstractThrowableProblem {

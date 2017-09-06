@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 @Hack
 @OhNoYouDidnt

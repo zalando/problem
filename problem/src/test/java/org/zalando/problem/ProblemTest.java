@@ -7,13 +7,13 @@ import java.io.StringWriter;
 import java.net.URI;
 
 import static java.util.Collections.emptyMap;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.zalando.problem.Status.NOT_FOUND;
 
 final class ProblemTest {
 

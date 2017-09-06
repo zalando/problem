@@ -4,9 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.Response.Status.Family;
-import javax.ws.rs.core.Response.StatusType;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.jayway.jsonassert.JsonAssert.with;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
@@ -28,6 +24,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 final class ProblemMixInTest {
 
@@ -194,7 +191,6 @@ final class ProblemMixInTest {
         final StatusType status = problem.getStatus();
 
         assertThat(status, hasFeature("status code", StatusType::getStatusCode, equalTo(666)));
-        assertThat(status, hasFeature("family", StatusType::getFamily, equalTo(Family.OTHER)));
         assertThat(status, hasFeature("reason phrase", StatusType::getReasonPhrase, equalTo("Unknown")));
     }
 

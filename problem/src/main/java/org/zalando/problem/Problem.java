@@ -2,7 +2,6 @@ package org.zalando.problem;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-import javax.ws.rs.core.Response.StatusType;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
