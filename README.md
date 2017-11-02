@@ -4,7 +4,7 @@
 
 [![Build Status](https://img.shields.io/travis/zalando/problem/master.svg)](https://travis-ci.org/zalando/problem)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/problem/master.svg)](https://coveralls.io/r/zalando/problem)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.zalando/problem/badge.svg)](http://www.javadoc.io/doc/org.zalando/problem)
+[![Javadoc](http://javadoc.io/badge/org.zalando/problem.svg)](http://www.javadoc.io/doc/org.zalando/problem)
 [![Release](https://img.shields.io/github/release/zalando/problem.svg)](https://github.com/zalando/problem/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/org.zalando/problem.svg)](https://maven-badges.herokuapp.com/maven-central/org.zalando/problem)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zalando/problem/master/LICENSE)
