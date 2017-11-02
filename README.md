@@ -50,7 +50,6 @@ In case you're using Jackson, make sure you register the module with your `Objec
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new Jdk8Module())
     .registerModule(new ProblemModule());
 ```
 
@@ -211,10 +210,12 @@ Will produce this:
 *Problems* have a loose, yet direct connection to *Exceptions*. Most of the time you'll find yourself transforming one 
 into the other. To make this a little bit easier there is an abstract `Problem` implementation that subclasses 
 `RuntimeException`: the `ThrowableProblem`. It allows to throw problems and is already in use by all default 
-implementations. Instead of implementing the `Problem` interface, just inherit from `ThrowableProblem`:
+implementations. Instead of implementing the `Problem` interface, just inherit from `AbstractThrowableProblem`:
 
 ```java
-public final class OutOfStockProblem extends ThrowableProblem
+public final class OutOfStockProblem extends AbstractThrowableProblem {
+    // constructor
+}
 ```
 
 If you already have an exception class that you want to extend, you should implement the "marker" interface `Exceptional`:
@@ -321,13 +322,12 @@ Will produce this:
 ```
 
 Another important aspect of exceptions are stack traces, but since they leak implementation details to the outside world, 
-[**we strongly advise against exposing them**](http://zalando.github.io/restful-api-guidelines/common-data-objects/CommonDataObjects.html#must-an-error-message-must-not-contain-the-stack-trace)
+[**we strongly advise against exposing them**](http://zalando.github.io/restful-api-guidelines/#177)
 in problems. That being said, there is a legitimate use case when you're debugging an issue on an integration environment
 and you don't have direct access to the log files. Serialization of stack traces can be enabled on the problem module:
 
 ```java
 ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new Jdk8Module())
     .registerModule(new ProblemModule().withStackTraces());
 ```
 
