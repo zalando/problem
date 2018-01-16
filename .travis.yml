@@ -14,7 +14,16 @@ cache:
   directories:
     - $HOME/.m2
 
-script: ./mvnw clean verify
+env:
+  matrix:
+    - # as specified in pom.xml
+    - SUFFIX='-D jackson.version=2.5.5'
+    - SUFFIX='-D jackson.version=2.6.7'
+    - SUFFIX='-D jackson.version=2.7.9'
+    - SUFFIX='-D jackson.version=2.8.11'
+    - SUFFIX='-D jackson.version=2.9.3'
+
+script: ./mvnw clean verify $SUFFIX
 
 after_success:
   - ./mvnw coveralls:report
