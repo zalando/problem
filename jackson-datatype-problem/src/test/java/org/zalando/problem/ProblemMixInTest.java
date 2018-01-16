@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.jayway.jsonassert.JsonAssert.with;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
@@ -23,7 +24,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
 final class ProblemMixInTest {
@@ -105,7 +105,8 @@ final class ProblemMixInTest {
         final String json = mapper.writeValueAsString(problem);
 
         with(json)
-                .assertNotDefined("$.stacktrace");
+                .assertNotDefined("$.stacktrace")
+                .assertNotDefined("$.stackTrace"); // default name, just in case our renaming didn't apply
     }
 
     @Test
