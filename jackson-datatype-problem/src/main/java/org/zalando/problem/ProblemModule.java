@@ -58,8 +58,8 @@ public final class ProblemModule extends Module {
         final SimpleModule module = new SimpleModule();
 
         module.setMixInAnnotation(Exceptional.class, stackTraces ?
-                ExceptionalWithStacktraceMixin.class :
-                ExceptionalMixin.class);
+                ExceptionalMixin.class :
+                ExceptionalWithoutStacktraceMixin.class);
 
         module.setMixInAnnotation(DefaultProblem.class, AbstractThrowableProblemMixIn.class);
         module.setMixInAnnotation(Problem.class, ProblemMixIn.class);
