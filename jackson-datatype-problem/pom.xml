@@ -22,7 +22,7 @@
     </scm>
 
     <properties>
-        <jackson.version>2.5.0</jackson.version>
+        <jackson.version>2.9.4</jackson.version>
     </properties>
 
     <dependencies>
