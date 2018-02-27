@@ -47,6 +47,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit-platform.version>1.0.0-RC2</junit-platform.version>
@@ -106,7 +107,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                        <failBuildOnAnyVulnerability>${failBuildOnAnyVulnerability}</failBuildOnAnyVulnerability>
                     </configuration>
                 </plugin>
                 <plugin>
