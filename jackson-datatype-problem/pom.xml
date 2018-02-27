@@ -10,10 +10,6 @@
         <version>0.21.0-SNAPSHOT</version>
     </parent>
 
-    <prerequisites>
-        <maven>3.0.4</maven>
-    </prerequisites>
-
     <artifactId>jackson-datatype-problem</artifactId>
 
     <name>Jackson-datatype-Problem</name>
