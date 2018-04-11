@@ -61,9 +61,9 @@ public final class ProblemBuilder {
 
     /**
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key property name
+     * @param value property value
+     * @return this for chaining
      * @throws IllegalArgumentException if key is any of type, title, status, detail or instance
      */
     public ProblemBuilder with(final String key, final Object value) throws IllegalArgumentException {

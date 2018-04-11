@@ -106,7 +106,6 @@ public interface Problem {
 
     /**
      * Specification by example:
-     * <p>
      * <pre>{@code
      *   // Returns "about:blank{404, Not Found}"
      *   Problem.valueOf(NOT_FOUND).toString();
