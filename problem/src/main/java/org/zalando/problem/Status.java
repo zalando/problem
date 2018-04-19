@@ -1,6 +1,9 @@
 package org.zalando.problem;
 
-import javax.annotation.Nullable;
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Commonly used status codes defined by HTTP, see
@@ -8,6 +11,7 @@ import javax.annotation.Nullable;
  * for the complete list. Additional status codes can be added by applications
  * by creating an implementation of StatusType.
  */
+@API(status = MAINTAINED)
 public enum Status implements StatusType {
 
     /**

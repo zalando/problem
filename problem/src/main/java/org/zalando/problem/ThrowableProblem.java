@@ -1,5 +1,7 @@
 package org.zalando.problem;
 
+import org.apiguardian.api.API;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.Collection;
@@ -8,8 +10,10 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.zalando.problem.spi.StackTraceProcessor.COMPOUND;
 
+@API(status = STABLE)
 @Immutable
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
 

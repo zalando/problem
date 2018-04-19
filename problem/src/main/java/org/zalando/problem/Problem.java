@@ -1,5 +1,7 @@
 package org.zalando.problem;
 
+import org.apiguardian.api.API;
+
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.net.URI;
@@ -9,10 +11,12 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * @see <a href="https://tools.ietf.org/html/rfc7807">RFC 7807: Problem Details for HTTP APIs</a>
  */
+@API(status = STABLE)
 @Immutable
 public interface Problem {
 

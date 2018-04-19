@@ -4,10 +4,14 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.apiguardian.api.API;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = STABLE)
 public final class ProblemModule extends Module {
 
     private final boolean stackTraces;
