@@ -1,9 +1,14 @@
 package org.zalando.problem;
 
+import org.apiguardian.api.API;
+
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.Map;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = STABLE)
 public final class DefaultProblem extends AbstractThrowableProblem {
 
     // TODO needed for jackson

@@ -1,5 +1,9 @@
 package org.zalando.problem;
 
+import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.STABLE;
+
 /**
  * An extension of the {@link Problem} interface for problems that extend {@link Exception}. Since {@link Exception}
  * is a concrete type any class can only extend one exception type. {@link ThrowableProblem} is one choice, but we
@@ -14,6 +18,7 @@ package org.zalando.problem;
  * @see Problem
  * @see ThrowableProblem
  */
+@API(status = STABLE)
 public interface Exceptional extends Problem {
 
     Exceptional getCause();

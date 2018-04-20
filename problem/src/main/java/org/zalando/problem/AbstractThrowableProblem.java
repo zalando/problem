@@ -2,6 +2,7 @@ package org.zalando.problem;
 
 import com.google.gag.annotation.remark.Hack;
 import com.google.gag.annotation.remark.OhNoYouDidnt;
+import org.apiguardian.api.API;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -11,6 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.STABLE;
+
+@API(status = STABLE)
 @Immutable // TODO kind of a lie until we remove set(String, Object)
 public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
@@ -118,6 +123,7 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
      * @param value the custom value
      * @see <a href="https://github.com/FasterXML/jackson-databind/issues/562">Jackson Issue 562</a>
      */
+    @API(status = INTERNAL)
     @Hack
     @OhNoYouDidnt
     void set(final String key, final Object value) {
