@@ -3,7 +3,6 @@ package org.zalando.problem;
 import org.apiguardian.api.API;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
-import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Commonly used status codes defined by HTTP, see

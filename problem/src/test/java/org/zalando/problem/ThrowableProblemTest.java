@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -13,7 +14,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
 final class ThrowableProblemTest {

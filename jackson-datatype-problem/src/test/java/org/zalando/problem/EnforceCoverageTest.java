@@ -16,14 +16,12 @@ final class EnforceCoverageTest {
     @Test
     void shouldUseMixinConstructor() {
         assertThrows(AbstractThrowableProblem.class, () -> {
-            new AbstractThrowableProblemMixIn(URI.create("https://example.org"), "Bad Request", BAD_REQUEST, null, null,
-                    null) {
-
+            final URI type = URI.create("https://example.org");
+            new AbstractThrowableProblemMixIn(type, "Bad Request", BAD_REQUEST, null, null, null) {
                 @Override
                 void set(final String key, final Object value) {
-
+                    // not used within this test
                 }
-
             };
         });
     }
