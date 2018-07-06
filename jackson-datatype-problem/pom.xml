@@ -40,6 +40,7 @@
             <groupId>com.google.gag</groupId>
             <artifactId>gag</artifactId>
             <version>1.0.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.zalando</groupId>
