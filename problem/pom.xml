@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.zalando</groupId>
         <artifactId>problem-parent</artifactId>
         <version>0.22.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>problem</artifactId>
-
     <name>Problem</name>
     <description>An implementation of the application/problem+json draft.</description>
-
     <scm>
         <url>https://github.com/zalando/problem</url>
         <connection>scm:git:git@github.com:zalando/problem.git</connection>
         <developerConnection>scm:git:git@github.com:zalando/problem.git</developerConnection>
     </scm>
-
     <dependencies>
         <dependency>
             <groupId>org.apiguardian</groupId>
@@ -81,5 +74,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>
