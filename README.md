@@ -2,6 +2,7 @@
 
 [![Bubble Gum on Shoe](docs/bubble-gum.jpg)](https://pixabay.com/en/bubble-gum-shoes-glue-dirt-438404/)
 
+[![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
 [![Build Status](https://img.shields.io/travis/zalando/problem/master.svg)](https://travis-ci.org/zalando/problem)
 [![Coverage Status](https://img.shields.io/coveralls/zalando/problem/master.svg)](https://coveralls.io/r/zalando/problem)
 [![Code Quality](https://img.shields.io/codacy/grade/fff557c57a9345d1afba5cc234cfbbd7/master.svg)](https://www.codacy.com/app/whiskeysierra/problem)
