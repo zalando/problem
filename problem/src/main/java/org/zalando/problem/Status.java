@@ -2,6 +2,8 @@ package org.zalando.problem;
 
 import org.apiguardian.api.API;
 
+import javax.annotation.Nonnull;
+
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
@@ -278,8 +280,18 @@ public enum Status implements StatusType {
      * @return the reason phrase.
      */
     @Override
+    @Nonnull
     public String getReasonPhrase() {
         return reason;
     }
 
+    /**
+     * Get the Status String representation.
+     *
+     * @return the status code and reason.
+     */
+    @Override
+    public String toString() {
+        return getStatusCode() + " " + getReasonPhrase();
+    }
 }
