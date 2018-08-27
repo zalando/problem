@@ -209,6 +209,10 @@ public enum Status implements StatusType {
      */
     REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
     /**
+     * @see <a href="https://tools.ietf.org/html/rfc7725#section-3">415 Unavailable For Legal Reasons</a>
+     */
+    UNAVAILABLE_FOR_LEGAL_REASONS(451, "Unavailable For Legal Reasons"),
+    /**
      * 500 Internal Server Error, see <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1">HTTP/1.1 documentation</a>.
      */
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
