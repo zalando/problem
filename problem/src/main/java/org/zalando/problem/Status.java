@@ -209,7 +209,7 @@ public enum Status implements StatusType {
      */
     REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
     /**
-     * @see <a href="https://tools.ietf.org/html/rfc7725#section-3">415 Unavailable For Legal Reasons</a>
+     * @see <a href="https://tools.ietf.org/html/rfc7725#section-3">Unavailable For Legal Reasons</a>
      */
     UNAVAILABLE_FOR_LEGAL_REASONS(451, "Unavailable For Legal Reasons"),
     /**
