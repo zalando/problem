@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.zalando</groupId>
         <artifactId>problem-parent</artifactId>
-        <version>0.22.0</version>
+        <version>0.23.0-SNAPSHOT</version>
     </parent>
     <artifactId>jackson-datatype-problem</artifactId>
     <name>Jackson-datatype-Problem</name>
