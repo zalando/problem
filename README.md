@@ -239,7 +239,7 @@ Problem problem = mapper.readValue(.., Problem.class);
 ```
 
 If you're using Jackson, please make sure you understand its 
-[Polymorphic Deserialization](http://wiki.fasterxml.com/JacksonPolymorphicDeserialization) feature. The supplied 
+[Polymorphic Deserialization](https://github.com/FasterXML/jackson-docs/wiki/JacksonPolymorphicDeserialization) feature. The supplied 
 Jackson module makes heavy use of it. Considering you have a custom problem type `OutOfStockProblem`, you'll need to 
 register it as a subtype:
 
