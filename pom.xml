@@ -89,6 +89,9 @@
                     </executions>
                     <configuration>
                         <failBuildOnAnyVulnerability>${failBuildOnAnyVulnerability}</failBuildOnAnyVulnerability>
+                        <suppressionFiles>
+                            <suppressionFile>cve-suppressions.xml</suppressionFile>
+                        </suppressionFiles>
                     </configuration>
                 </plugin>
                 <plugin>
