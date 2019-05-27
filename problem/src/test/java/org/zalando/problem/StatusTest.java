@@ -1,6 +1,5 @@
 package org.zalando.problem;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -8,11 +7,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 final class StatusTest {
@@ -25,9 +25,7 @@ final class StatusTest {
 
     @Test
     void shouldHaveMeaningfulToString() {
-        Status notFound = Status.NOT_FOUND;
-
-        assertThat(notFound.toString(), equalTo("404 Not Found"));
+        assertThat(Status.NOT_FOUND.toString(), equalTo("404 Not Found"));
     }
 
     @ParameterizedTest
@@ -37,17 +35,16 @@ final class StatusTest {
             "200, OK",
             "500, Internal Server Error"
     })
-    void shouldHaveCorrectValueFromCode(int code, String line) {
-        Status statusFromCode = Status.ofCode(code);
+    void shouldHaveCorrectValueFromCode(final int statusCode, final String reasonPhrase) {
+        final Status status = Status.valueOf(statusCode);
 
-        assertThat(statusFromCode.getStatusCode(), equalTo(code));
-        assertThat(statusFromCode.getReasonPhrase(), equalTo(line));
+        assertThat(status.getStatusCode(), equalTo(statusCode));
+        assertThat(status.getReasonPhrase(), equalTo(reasonPhrase));
     }
 
     @Test
     void shouldThrowOnNonExistingCode() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Status.ofCode(111);
-        });
+        assertThrows(IllegalArgumentException.class, () -> Status.valueOf(111));
     }
+
 }
