@@ -3,6 +3,7 @@ package org.zalando.problem;
 import org.apiguardian.api.API;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -266,6 +267,20 @@ public enum Status implements StatusType {
     Status(final int statusCode, final String reasonPhrase) {
         this.code = statusCode;
         this.reason = reasonPhrase;
+    }
+
+    /**
+     * Creates a Status instance from the given code.
+     *
+     * @param code the HTTP code as a number
+     * @return the correct enum value for this status code.
+     * @throws IllegalArgumentException if the given code does not correspond to a known HTTP status.
+     */
+    public static Status ofCode(int code) {
+        return Arrays.stream(Status.values())
+                .filter(status -> status.getStatusCode() == code)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("There is no known status for this code (" + code + ")."));
     }
 
     /**
