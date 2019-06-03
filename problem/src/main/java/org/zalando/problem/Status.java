@@ -3,8 +3,14 @@ package org.zalando.problem;
 import org.apiguardian.api.API;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 /**
@@ -261,26 +267,18 @@ public enum Status implements StatusType {
      * @see <a href="http://tools.ietf.org/html/rfc6585#section-6">Additional HTTP Status Codes</a>
      */
     NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
+
+    private static final Map<Integer, Status> STATUSES = Arrays.stream(values())
+            .collect(collectingAndThen(
+                    toMap(Status::getStatusCode, identity()),
+                    Collections::unmodifiableMap));
+
     private final int code;
     private final String reason;
 
     Status(final int statusCode, final String reasonPhrase) {
         this.code = statusCode;
         this.reason = reasonPhrase;
-    }
-
-    /**
-     * Creates a Status instance from the given code.
-     *
-     * @param code the HTTP code as a number
-     * @return the correct enum value for this status code.
-     * @throws IllegalArgumentException if the given code does not correspond to a known HTTP status.
-     */
-    public static Status ofCode(int code) {
-        return Arrays.stream(Status.values())
-                .filter(status -> status.getStatusCode() == code)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("There is no known status for this code (" + code + ")."));
     }
 
     /**
@@ -313,4 +311,22 @@ public enum Status implements StatusType {
     public String toString() {
         return getStatusCode() + " " + getReasonPhrase();
     }
+
+    /**
+     * Creates a Status instance from the given code.
+     *
+     * @param code the HTTP code as a number
+     * @return the correct enum value for this status code.
+     * @throws IllegalArgumentException if the given code does not correspond to a known HTTP status.
+     */
+    public static Status valueOf(final int code) {
+        @Nullable final Status status = STATUSES.get(code);
+
+        if (status == null) {
+            throw new IllegalArgumentException("There is no known status for this code (" + code + ").");
+        }
+
+        return status;
+    }
+
 }

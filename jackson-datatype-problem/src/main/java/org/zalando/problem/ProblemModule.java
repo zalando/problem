@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apiguardian.api.API;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public final class ProblemModule extends Module {
             }
         }
 
-        return index;
+        return Collections.unmodifiableMap(index);
     }
 
     public ProblemModule withStackTraces() {
