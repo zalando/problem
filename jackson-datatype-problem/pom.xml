@@ -15,7 +15,7 @@
         <developerConnection>scm:git:git@github.com:zalando/problem.git</developerConnection>
     </scm>
     <properties>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.9.9.2</jackson.version>
     </properties>
     <dependencies>
         <dependency>
