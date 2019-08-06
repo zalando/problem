@@ -9,16 +9,7 @@ cache:
   directories:
     - $HOME/.m2
 
-env:
-  matrix:
-    - SUFFIX='-D jackson.version=2.5.0 -D failBuildOnAnyVulnerability=false'
-    - SUFFIX='-D jackson.version=2.5.5 -D failBuildOnAnyVulnerability=false'
-    - SUFFIX='-D jackson.version=2.6.7.1 -D failBuildOnAnyVulnerability=false'
-    - SUFFIX='-D jackson.version=2.7.9.3 -D failBuildOnAnyVulnerability=false'
-    - SUFFIX='-D jackson.version=2.8.11 -D failBuildOnAnyVulnerability=false'
-    - # as specified in pom.xml
-
-script: ./mvnw clean verify $SUFFIX
+script: ./mvnw clean verify
 
 after_success:
   - ./mvnw coveralls:report
