@@ -15,7 +15,7 @@
         <developerConnection>scm:git:git@github.com:zalando/problem.git</developerConnection>
     </scm>
     <properties>
-        <jackson.version>2.9.9.2</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
