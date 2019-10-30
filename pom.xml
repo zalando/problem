@@ -29,6 +29,7 @@
     <modules>
         <module>problem</module>
         <module>jackson-datatype-problem</module>
+        <module>problem-gson</module>
     </modules>
     <scm>
         <url>https://github.com/zalando/problem</url>

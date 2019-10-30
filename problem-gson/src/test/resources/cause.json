@@ -1,0 +1,14 @@
+{
+  "type": "https://example.org/preauthorization-failed",
+  "title": "Preauthorization Failed",
+  "status": 400,
+  "instance": "https://example.org",
+  "cause": {
+    "type": "https://example.org/expired-credit-card",
+    "title": "Expired Credit Card",
+    "status": 400,
+    "detail": "Credit card is expired as of 2015-09-16T00:00:00Z",
+    "since": "2015-09-16T00:00:00Z",
+    "instance": "https://example.org"
+  }
+}
