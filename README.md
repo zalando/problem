@@ -347,7 +347,7 @@ After enabling stack traces all problems will contain a `stacktrace` property:
 }
 ```
 
-Since we discourage the  serialization of them, there is currently, by design, no way deserialize them from JSON.
+Since we discourage the  serialization of them, there is currently, by design, no way to deserialize them from JSON.
 Nevertheless the runtime will fill in the stack trace when the problem instance is created. That stack trace is usually
 not 100% correct, since it looks like the exception originated inside your deserialization framework. *Problem* comes
 with a special service provider interface `StackTraceProcessor` that can be registered using the 
