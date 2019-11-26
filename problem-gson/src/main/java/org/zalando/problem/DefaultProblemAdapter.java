@@ -7,61 +7,78 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static com.google.gson.internal.bind.TypeAdapters.STRING;
 import static com.google.gson.internal.bind.TypeAdapters.URI;
+import static java.util.Arrays.stream;
+import static lombok.AccessLevel.PRIVATE;
 
-final class DefaultProblemAdapter extends BaseAdapter<DefaultProblem> {
+@AllArgsConstructor(access = PRIVATE)
+final class DefaultProblemAdapter extends TypeAdapter<ThrowableProblem> {
 
-    private static final TypeToken<Map<String, Object>> MAP_TYPE = new TypeToken<Map<String, Object>>() {};
+    private final Gson gson;
+    private final boolean stackTraces;
+    private final TypeAdapter<java.net.URI> type = URITypeAdapter.TYPE;
+    private final TypeAdapter<Map<String, Object>> parameters;
+    private final TypeAdapter<StatusType> status;
+    private final TypeAdapter<ThrowableProblem> cause;
 
-    private final TypeAdapter<Map<String, Object>> mapAdapter;
-    private final TypeAdapter<StatusType> statusAdapter;
-    private final TypeAdapter<ThrowableProblem> throwableProblemAdapter;
-
-    DefaultProblemAdapter(Gson gson, boolean stacktrace) {
-        super(gson, stacktrace);
-        this.mapAdapter = gson.getAdapter(MAP_TYPE);
-        this.statusAdapter = gson.getAdapter(StatusType.class);
-        this.throwableProblemAdapter = gson.getAdapter(ThrowableProblem.class).nullSafe();
+    DefaultProblemAdapter(final Gson gson, final boolean stackTraces) {
+        this(
+                gson,
+                stackTraces,
+                gson.getAdapter(new TypeToken<Map<String, Object>>() {
+                    // nothing to do here
+                }),
+                gson.getAdapter(StatusType.class),
+                gson.getAdapter(ThrowableProblem.class).nullSafe());
     }
 
     @Override
-    public void write(JsonWriter out, DefaultProblem problem) throws IOException {
-        JsonObject jsonObject = new JsonObject();
+    public void write(final JsonWriter out, final ThrowableProblem problem) throws IOException {
+        final JsonObject object = new JsonObject();
 
-        serializeType(jsonObject, problem.getType());
-        jsonObject.add("title", STRING.toJsonTree(problem.getTitle()));
-        jsonObject.add("status", statusAdapter.toJsonTree(problem.getStatus()));
-        jsonObject.add("detail", STRING.toJsonTree(problem.getDetail()));
-        jsonObject.add("instance", URI.toJsonTree(problem.getInstance()));
-        jsonObject.add("cause", throwableProblemAdapter.toJsonTree(problem.getCause()));
-        JsonObject paramsField = mapAdapter.toJsonTree(problem.getParameters()).getAsJsonObject();
-        paramsField.entrySet().forEach(e -> jsonObject.add(e.getKey(), e.getValue()));
-        serializeStackTrace(jsonObject, problem);
+        object.add("type", type.toJsonTree(problem.getType()));
+        object.add("title", STRING.toJsonTree(problem.getTitle()));
+        object.add("status", status.toJsonTree(problem.getStatus()));
+        object.add("detail", STRING.toJsonTree(problem.getDetail()));
+        object.add("instance", URI.toJsonTree(problem.getInstance()));
+        object.add("cause", cause.toJsonTree(problem.getCause()));
 
-        gson.getAdapter(JsonElement.class).write(out, jsonObject);
+        parameters.toJsonTree(problem.getParameters()).getAsJsonObject()
+                .entrySet().forEach(entry ->
+                object.add(entry.getKey(), entry.getValue()));
+
+        if (stackTraces) {
+            object.add("stacktrace", gson.getAdapter(String[].class)
+                    .toJsonTree(stream(problem.getStackTrace())
+                            .map(Object::toString)
+                            .toArray(String[]::new)));
+        }
+
+        gson.getAdapter(JsonElement.class).write(out, object);
     }
 
     @Override
-    public DefaultProblem read(JsonReader in) throws IOException {
-        ProblemBuilder builder = new ProblemBuilder();
+    public ThrowableProblem read(final JsonReader in) throws IOException {
+        final ProblemBuilder builder = new ProblemBuilder();
 
         in.beginObject();
         while (in.hasNext()) {
-            String name = in.nextName();
+            final String name = in.nextName();
             switch (name) {
                 case "type":
-                    builder.withType(TYPE.read(in));
+                    builder.withType(URITypeAdapter.TYPE.read(in));
                     break;
                 case "title":
                     builder.withTitle(STRING.read(in));
                     break;
                 case "status":
-                    builder.withStatus(statusAdapter.read(in));
+                    builder.withStatus(status.read(in));
                     break;
                 case "detail":
                     builder.withDetail(STRING.read(in));
@@ -70,7 +87,7 @@ final class DefaultProblemAdapter extends BaseAdapter<DefaultProblem> {
                     builder.withInstance(URI.read(in));
                     break;
                 case "cause":
-                    builder.withCause(throwableProblemAdapter.read(in));
+                    builder.withCause(cause.read(in));
                     break;
                 default:
                     builder.with(name, gson.fromJson(in, Object.class));
@@ -79,7 +96,7 @@ final class DefaultProblemAdapter extends BaseAdapter<DefaultProblem> {
         }
         in.endObject();
 
-        return (DefaultProblem) builder.build();
+        return builder.build();
     }
 
 }

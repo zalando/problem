@@ -4,33 +4,36 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import lombok.AllArgsConstructor;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+@AllArgsConstructor
 final class StatusTypeAdapter extends TypeAdapter<StatusType> {
 
     private Map<Integer, StatusType> index;
 
-    StatusTypeAdapter(Map<Integer, StatusType> statuses) {
-        this.index = statuses;
-    }
-
     @Override
-    public void write(JsonWriter out, @Nullable StatusType status) throws IOException {
+    public void write(
+            final JsonWriter out,
+            @Nullable final StatusType status) throws IOException {
+
         if (Objects.isNull(status)) {
             out.nullValue();
             return;
         }
+
         out.value(status.getStatusCode());
     }
 
     @Override
-    public StatusType read(JsonReader in) throws IOException {
-        JsonToken peek = in.peek();
-        if (JsonToken.NULL == peek) {
+    public StatusType read(final JsonReader in) throws IOException {
+        final JsonToken peek = in.peek();
+
+        if (peek == JsonToken.NULL) {
             in.nextNull();
             return null;
         }

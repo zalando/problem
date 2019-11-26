@@ -5,52 +5,62 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.internal.Streams;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import lombok.AllArgsConstructor;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-final class CustomProblemAdapter<T> extends BaseAdapter<T> {
+import static java.util.Arrays.stream;
 
-    private TypeAdapter<T> delegate;
+@AllArgsConstructor
+final class CustomProblemAdapter<T> extends TypeAdapter<T> {
 
-    CustomProblemAdapter(Gson gson, ProblemAdapterFactory parent, Class<T> type, boolean stackTraces) {
-        super(gson, stackTraces);
-        this.delegate = gson.getDelegateAdapter(parent, TypeToken.get(type));
-    }
+    private final Gson gson;
+    private final TypeAdapter<T> delegate;
+    private final boolean stackTraces;
 
     @Override
-    public void write(JsonWriter out, T value) throws IOException {
-        JsonElement element = delegate.toJsonTree(value);
-        JsonObject jsonObject = element.getAsJsonObject();
+    public void write(final JsonWriter out, final T value) throws IOException {
+        final JsonElement element = delegate.toJsonTree(value);
+        final JsonObject object = element.getAsJsonObject();
 
-        // Handle `type` field.
-        URI problemType = TYPE.fromJsonTree(jsonObject.remove("type"));
-        serializeType(jsonObject, problemType);
+        final URI problemType = URITypeAdapter.TYPE.fromJsonTree(object.remove("type"));
+        object.add("type", URITypeAdapter.TYPE.toJsonTree(problemType));
 
         if (value instanceof AbstractThrowableProblem) {
-            // Flatten `parameters` field if AbstractThrowableProblem.
-            Optional.ofNullable(jsonObject.remove("parameters"))
-                    .map(JsonElement::getAsJsonObject)
-                    .ifPresent(params -> params.entrySet().forEach(e -> jsonObject.add(e.getKey(), e.getValue())));
+            flattenParameters(object);
         }
 
         if (value instanceof Throwable) {
             // Get rid of unwanted fields.
-            jsonObject.remove("detailMessage");
-            jsonObject.remove("suppressedExceptions");
-            jsonObject.remove("stackTrace");
-            serializeStackTrace(jsonObject, (Throwable) value);
+            object.remove("detailMessage");
+            object.remove("suppressedExceptions");
+            object.remove("stackTrace");
+
+            if (stackTraces) {
+                object.add("stacktrace", gson.getAdapter(String[].class)
+                        .toJsonTree(stream(((Throwable) value).getStackTrace())
+                                .map(Object::toString)
+                                .toArray(String[]::new)));
+            }
         }
 
         Streams.write(element, out);
     }
 
+    private void flattenParameters(final JsonObject object) {
+        Optional.ofNullable(object.remove("parameters"))
+                .map(JsonElement::getAsJsonObject)
+                .ifPresent(params -> params.entrySet().forEach(e ->
+                        object.add(e.getKey(), e.getValue())));
+    }
+
     @Override
-    public T read(JsonReader in) throws IOException {
+    public T read(final JsonReader in) throws IOException {
         return delegate.read(in);
     }
+
 }

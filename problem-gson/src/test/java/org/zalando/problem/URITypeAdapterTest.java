@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TypeURIAdapterTest {
+class URITypeAdapterTest {
 
     private static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(URI.class, TypeURIAdapter.INSTANCE)
+            .registerTypeAdapter(URI.class, URITypeAdapter.TYPE)
             .create();
 
     @Test
@@ -50,8 +50,8 @@ class TypeURIAdapterTest {
 
     @Test
     void shouldThrowErrorOnInvalidURI() {
-        final JsonPrimitive invalidInput = new JsonPrimitive("http://example.org/{date}/article");
-        assertThrows(JsonIOException.class, () -> gson.fromJson(invalidInput, URI.class));
+        assertThrows(IllegalArgumentException.class, () ->
+                gson.fromJson(new JsonPrimitive("http://example.org/{date}/article"), URI.class));
     }
 
 }
