@@ -23,8 +23,8 @@ class ProblemAdapterFactoryTest {
     void shouldNotThrowForDuplicateSubtype() {
         assertDoesNotThrow(() -> {
             ProblemAdapterFactory factory = new ProblemAdapterFactory();
-            factory.registerSubtype(OutOfStockException.class, OutOfStockException.TYPE)
-                    .registerSubtype(OutOfStockException.class, InsufficientFundsProblem.TYPE);
+            factory.registerSubtype(OutOfStockException.TYPE, OutOfStockException.class)
+                    .registerSubtype(InsufficientFundsProblem.TYPE, OutOfStockException.class);
         });
     }
 
@@ -33,8 +33,8 @@ class ProblemAdapterFactoryTest {
     void shouldThrowForDuplicateURI() {
         assertThrows(IllegalArgumentException.class, () -> {
             ProblemAdapterFactory factory = new ProblemAdapterFactory();
-            factory.registerSubtype(OutOfStockException.class, OutOfStockException.TYPE)
-                    .registerSubtype(InsufficientFundsProblem.class, OutOfStockException.TYPE);
+            factory.registerSubtype(OutOfStockException.TYPE, OutOfStockException.class)
+                    .registerSubtype(OutOfStockException.TYPE, InsufficientFundsProblem.class);
         });
     }
 }

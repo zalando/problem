@@ -32,15 +32,15 @@ import static org.zalando.problem.Status.BAD_REQUEST;
 
 class GsonProblemTest {
 
-    private static Gson gson = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapterFactory(new ProblemAdapterFactory()
-                    .registerSubtype(InsufficientFundsProblem.class, InsufficientFundsProblem.TYPE)
-                    .registerSubtype(OutOfStockException.class, OutOfStockException.TYPE))
+                    .registerSubtype(InsufficientFundsProblem.TYPE, InsufficientFundsProblem.class)
+                    .registerSubtype(OutOfStockException.TYPE, OutOfStockException.class))
             .create();
 
     private static JsonReader getReader(final String name) throws FileNotFoundException {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL resource = Objects.requireNonNull(loader.getResource(name), () -> "resource " + name + " not found.");
+        final URL resource = Objects.requireNonNull(loader.getResource(name), () -> "resource " + name + " not found.");
         return new JsonReader(new FileReader(new File(resource.getPath())));
     }
 
@@ -147,8 +147,8 @@ class GsonProblemTest {
         final int debit = 100;
         final Problem problem = new InsufficientFundsProblem(balance, debit);
 
-        ProblemAdapterFactory factory = new ProblemAdapterFactory().withStacktraces();
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(factory).create();
+        final ProblemAdapterFactory factory = new ProblemAdapterFactory().withStackTraces();
+        final Gson gson = new GsonBuilder().registerTypeAdapterFactory(factory).create();
 
         final String json = gson.toJson(problem);
         assertThat("json", Objects.nonNull(json));
@@ -220,7 +220,7 @@ class GsonProblemTest {
                         .build())
                 .build();
 
-        ProblemAdapterFactory factory = new ProblemAdapterFactory().withStacktraces();
+        final ProblemAdapterFactory factory = new ProblemAdapterFactory().withStackTraces();
         final Gson gson = new GsonBuilder()
                 .registerTypeAdapterFactory(factory)
                 .create();

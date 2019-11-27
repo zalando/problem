@@ -25,7 +25,7 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
         super(cause);
 
         final Collection<StackTraceElement> stackTrace = COMPOUND.process(asList(getStackTrace()));
-        setStackTrace(stackTrace.toArray(new StackTraceElement[stackTrace.size()]));
+        setStackTrace(stackTrace.toArray(new StackTraceElement[0]));
     }
 
     @Override
