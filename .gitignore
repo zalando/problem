@@ -2,6 +2,13 @@
 *.iml
 .idea/
 
+### VS Code ###
+.vscode
+.project
+.settings
+.classpath
+.factorypath
+
 ### Maven ###
 target/
 /.mvn/wrapper/*.jar
