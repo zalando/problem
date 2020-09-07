@@ -61,21 +61,25 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.gag</groupId>
-                <artifactId>gag</artifactId>
-                <version>1.0.1</version>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>3.6.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.18.12</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- 
+                Only needed because lombok has a weird dependency to it.
+                https://medium.com/@Leejjon_net/youll-have-this-problems-when-you-add-lombok-to-a-modular-java-11-micro-service-832f55911bc5
+            -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>1.4.0.CR1</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -154,16 +158,16 @@
             <artifactId>apiguardian-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gag</groupId>
-            <artifactId>gag</artifactId>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -259,9 +263,68 @@
                     <version>3.2.0</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.moditect</groupId>
+                    <artifactId>moditect-maven-plugin</artifactId>
+                    <version>1.0.0.RC1</version>
+                    <!-- 
+                        This plugin provides most of the heavy lifting to support Java 9+,
+                        until we move away from Java 8 (in favor of 11 or a newer LTS).
+
+                        The plugin does:
+                          - generate module descriptor sources (module-info)
+                          - resolve module dependencies via Maven
+                          - generate Java 9 compatible module-info.class (without a 2- or 3-pass compile step)
+                          - put module-info.class within META-INF/versions/9 (Multi-Release JAR),
+                            to maximize backwards compatibility with Java 8
+
+                        The plugin doesn't:
+                          - detect split package situations
+                          - warn about typos in package names
+
+                        Once we move to Java 9 (or higher) we should:
+                          - get rid of this plugin
+                          - write module-info files by hand
+                          - carefully craft and vet module dependencies
+                    -->
+                    <executions>
+                        <execution>
+                            <id>add-module-infos</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>add-module-info</goal>
+                            </goals>
+                            <configuration>
+                                <jvmVersion>9</jvmVersion>
+                                <module>
+                                    <moduleInfo>
+                                        <name>${module.name}</name>
+                                        <exports>
+                                            ${module.exports}
+                                        </exports>
+                                        <requires>
+                                            static org.apiguardian.api;
+                                        </requires>
+                                    </moduleInfo>
+                                </module>
+                                <jdepsExtraArgs>
+                                    <!-- 
+                                        JDeps prior to Java 12 doesn't support mixed multi-release and
+                                        non-multi-release jars. Hence why we require JDK 12 to
+                                        build the project.
+
+                                        See https://bugs.openjdk.java.net/browse/JDK-8210502
+                                    -->
+                                    <arg>--multi-release=9</arg>
+                                </jdepsExtraArgs> 
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
+                    <!-- TODO compile once with Java 9 to check modules -->
                     <configuration>
                         <compilerArgs>
                             <compilerArg>-Xlint:unchecked,deprecation</compilerArg>
@@ -338,6 +401,11 @@
                         <generateBackupPoms>false</generateBackupPoms>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -352,6 +420,14 @@
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

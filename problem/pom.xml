@@ -10,4 +10,11 @@
     </parent>
     <artifactId>problem</artifactId>
     <description>An implementation of the application/problem+json draft.</description>
+    <properties>
+        <module.name>org.zalando.problem</module.name>
+        <module.exports>
+            org.zalando.problem;
+            org.zalando.problem.spi;
+        </module.exports>
+    </properties>
 </project>

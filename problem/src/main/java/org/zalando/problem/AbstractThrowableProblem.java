@@ -1,11 +1,8 @@
 package org.zalando.problem;
 
-import com.google.gag.annotation.remark.Hack;
-import com.google.gag.annotation.remark.OhNoYouDidnt;
 import org.apiguardian.api.API;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -15,8 +12,6 @@ import java.util.Optional;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
-@API(status = STABLE)
-@Immutable // TODO kind of a lie until we remove set(String, Object)
 public abstract class AbstractThrowableProblem extends ThrowableProblem {
 
     private final URI type;
@@ -30,29 +25,34 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
         this(null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type) {
+    protected AbstractThrowableProblem(
+            @Nullable final URI type) {
         this(type, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title) {
         this(type, title, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title,
             @Nullable final StatusType status) {
         this(type, title, status, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title,
             @Nullable final StatusType status,
             @Nullable final String detail) {
         this(type, title, status, detail, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title,
             @Nullable final StatusType status,
             @Nullable final String detail,
@@ -60,7 +60,8 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
         this(type, title, status, detail, instance, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title,
             @Nullable final StatusType status,
             @Nullable final String detail,
@@ -69,7 +70,8 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
         this(type, title, status, detail, instance, cause, null);
     }
 
-    protected AbstractThrowableProblem(@Nullable final URI type,
+    protected AbstractThrowableProblem(
+            @Nullable final URI type,
             @Nullable final String title,
             @Nullable final StatusType status,
             @Nullable final String detail,
@@ -124,8 +126,6 @@ public abstract class AbstractThrowableProblem extends ThrowableProblem {
      * @see <a href="https://github.com/FasterXML/jackson-databind/issues/562">Jackson Issue 562</a>
      */
     @API(status = INTERNAL)
-    @Hack
-    @OhNoYouDidnt
     void set(final String key, final Object value) {
         parameters.put(key, value);
     }
