@@ -1,10 +1,10 @@
 package org.zalando.problem.gson;
 
+import org.zalando.problem.AbstractThrowableProblem;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
-
-import org.zalando.problem.AbstractThrowableProblem;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 

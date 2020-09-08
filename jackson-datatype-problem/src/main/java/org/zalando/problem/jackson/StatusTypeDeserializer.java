@@ -3,7 +3,6 @@ package org.zalando.problem.jackson;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.zalando.problem.StatusType;
 

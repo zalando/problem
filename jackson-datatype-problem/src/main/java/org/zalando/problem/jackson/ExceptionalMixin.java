@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-
 import org.zalando.problem.ThrowableProblem;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;

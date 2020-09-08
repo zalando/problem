@@ -1,8 +1,8 @@
 package org.zalando.problem;
 
 import org.apiguardian.api.API;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 public abstract class AbstractThrowableProblem extends ThrowableProblem {
 

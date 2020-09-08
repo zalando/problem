@@ -3,6 +3,7 @@ package org.zalando.problem;
 import org.apiguardian.api.API;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;

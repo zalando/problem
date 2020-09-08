@@ -11,9 +11,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import lombok.AllArgsConstructor;
 import org.apiguardian.api.API;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
