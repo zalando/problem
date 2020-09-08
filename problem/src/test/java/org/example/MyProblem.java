@@ -1,10 +1,10 @@
 package org.example;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import java.net.URI;
 import java.util.Map;
 

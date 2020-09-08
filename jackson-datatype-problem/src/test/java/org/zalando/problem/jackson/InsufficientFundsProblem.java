@@ -3,7 +3,6 @@ package org.zalando.problem.jackson;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import org.zalando.problem.AbstractThrowableProblem;
 
 import java.net.URI;

@@ -1,8 +1,8 @@
 package org.zalando.problem;
 
 import org.apiguardian.api.API;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;

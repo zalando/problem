@@ -1,11 +1,11 @@
 package org.zalando.problem.gson;
 
-import java.io.IOException;
-import java.net.URI;
-
 import org.zalando.problem.Exceptional;
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
+
+import java.io.IOException;
+import java.net.URI;
 
 final class IOProblem extends IOException implements Exceptional {
 

@@ -2,7 +2,6 @@ package org.zalando.problem.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.Test;
 import org.zalando.problem.Problem;

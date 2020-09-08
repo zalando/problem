@@ -1,9 +1,9 @@
 package org.zalando.problem.gson;
 
-import java.net.URI;
-
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
+
+import java.net.URI;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 

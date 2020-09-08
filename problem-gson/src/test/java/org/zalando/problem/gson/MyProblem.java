@@ -1,10 +1,10 @@
 package org.zalando.problem.gson;
 
 import com.google.gson.annotations.SerializedName;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.zalando.problem.Problem;
 import org.zalando.problem.StatusType;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import java.net.URI;
 
 class MyProblem implements Problem {

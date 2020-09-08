@@ -3,7 +3,6 @@ package org.zalando.problem.jackson;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.StatusType;

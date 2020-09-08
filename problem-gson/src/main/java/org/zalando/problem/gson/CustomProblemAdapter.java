@@ -8,7 +8,6 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import lombok.AllArgsConstructor;
-
 import org.zalando.problem.AbstractThrowableProblem;
 
 import java.io.IOException;
