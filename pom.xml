@@ -297,7 +297,9 @@
                                 <jvmVersion>9</jvmVersion>
                                 <module>
                                     <moduleInfo>
+                                        <!--suppress MavenModelInspection -->
                                         <name>${module.name}</name>
+                                        <!--suppress MavenModelInspection -->
                                         <exports>
                                             ${module.exports}
                                         </exports>
@@ -392,6 +394,18 @@
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>4.3.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                            <version>2.3.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.glassfish.jaxb</groupId>
+                            <artifactId>jaxb-runtime</artifactId>
+                            <version>2.3.3</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
