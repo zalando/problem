@@ -24,8 +24,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v1
       with:
-        # See comment on moditect-maven-plugin in pom.xml
-        java-version: 12
+        java-version: 1.8
     - name: Compile
       run: ./mvnw clean test-compile -B
     - name: Test
