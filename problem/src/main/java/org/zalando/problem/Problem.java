@@ -13,9 +13,9 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.STABLE;
 
 /**
- * @see <a href="https://tools.ietf.org/html/rfc7807">RFC 7807: Problem Details for HTTP APIs</a>
- * 
  * {@link Problem} instances are required to be immutable.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc7807">RFC 7807: Problem Details for HTTP APIs</a>
  */
 @API(status = STABLE)
 public interface Problem {

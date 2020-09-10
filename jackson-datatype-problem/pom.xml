@@ -11,10 +11,6 @@
     <artifactId>jackson-datatype-problem</artifactId>
     <properties>
         <jackson.version>2.10.1</jackson.version>
-        <module.name>org.zalando.problem.jackson</module.name>
-        <module.exports>
-            org.zalando.problem.jackson;
-        </module.exports>
     </properties>
     <dependencies>
         <dependency>

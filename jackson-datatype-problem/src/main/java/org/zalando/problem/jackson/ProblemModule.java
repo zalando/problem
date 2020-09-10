@@ -35,6 +35,7 @@ public final class ProblemModule extends Module {
     /**
      * TODO document
      *
+     * @param <E> generic enum type
      * @param types status type enums
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
