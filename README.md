@@ -394,5 +394,10 @@ For more details check the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ## Credits and references
 
-Users of the [Spring Framework] are highly encouraged to check out [Problems for Spring Web MVC]
-(https://github.com/zalando/problem-spring-web), a library that seemlessly integrates problems into Spring.
+### Spring Framework
+
+Users of the [Spring Framework](https://spring.io) are highly encouraged to check out [Problems for Spring Web MVC](https://github.com/zalando/problem-spring-web), a library that seemlessly integrates problems into Spring.
+
+### Micronaut Framework
+Users of the [Micronaut Framework](https://micronaut.io) are highly encouraged to check out [Micronaut Problem JSON
+](https://micronaut-projects.github.io/micronaut-problem-json/snapshot/guide/), a library that seemlessly integrates problems into Micronaut error processing.
