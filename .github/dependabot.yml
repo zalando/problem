@@ -1,0 +1,13 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.owasp:dependency-check-maven
+    versions:
+    - 6.1.0
+    - 6.1.2
