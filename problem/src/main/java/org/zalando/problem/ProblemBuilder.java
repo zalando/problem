@@ -71,7 +71,7 @@ public final class ProblemBuilder {
      * @return this for chaining
      * @throws IllegalArgumentException if key is any of type, title, status, detail or instance
      */
-    public ProblemBuilder with(final String key, final Object value) throws IllegalArgumentException {
+    public ProblemBuilder with(final String key, @Nullable final Object value) throws IllegalArgumentException {
         if (RESERVED_PROPERTIES.contains(key)) {
             throw new IllegalArgumentException("Property " + key + " is reserved");
         }

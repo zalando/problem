@@ -79,6 +79,19 @@ class ProblemBuilderTest {
 
         assertThat(problem.getParameters(), hasEntry("foo", "bar"));
     }
+
+    @Test
+    void shouldCreateProblemWithNullParameter() {
+        final ThrowableProblem problem = Problem.builder()
+                .withType(type)
+                .withTitle("Out of Stock")
+                .withStatus(BAD_REQUEST)
+                .with("foo", "will-be-overridden")
+                .with("foo", null)
+                .build();
+
+        assertThat(problem.getParameters(), hasEntry("foo", null));
+    }
     
     @Test
     void shouldCreateProblemWithCause() {
