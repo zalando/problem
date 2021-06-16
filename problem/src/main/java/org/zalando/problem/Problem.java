@@ -96,15 +96,17 @@ public interface Problem {
         return GenericProblems.create(status).build();
     }
 
-    static ThrowableProblem valueOf(final StatusType status, final String detail) {
+    static ThrowableProblem valueOf(final StatusType status, @Nullable final String detail) {
         return GenericProblems.create(status).withDetail(detail).build();
     }
 
-    static ThrowableProblem valueOf(final StatusType status, final URI instance) {
+    static ThrowableProblem valueOf(final StatusType status, @Nullable final URI instance) {
         return GenericProblems.create(status).withInstance(instance).build();
     }
 
-    static ThrowableProblem valueOf(final StatusType status, final String detail, final URI instance) {
+    static ThrowableProblem valueOf(final StatusType status,
+                                    @Nullable final String detail,
+                                    @Nullable final URI instance) {
         return GenericProblems.create(status).withDetail(detail).withInstance(instance).build();
     }
 
