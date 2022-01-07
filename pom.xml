@@ -265,7 +265,7 @@
                 <plugin>
                     <groupId>org.moditect</groupId>
                     <artifactId>moditect-maven-plugin</artifactId>
-                    <version>1.0.0.RC1</version>
+                    <version>1.0.0.RC2</version>
                     <!-- 
                         This plugin provides most of the heavy lifting to support Java 9+,
                         until we move away from Java 8 (in favor of 11 or a newer LTS).
