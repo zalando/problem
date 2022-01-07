@@ -4,7 +4,7 @@
 
 ./mvnw scm:check-local-modification
 
-current=$({ echo 0.0.0; git tag --list --sort=version:refname; } | tail -n1)
+current=$({ echo 0.0.0; git tag | tr - \~ | sort -V | tr \~ -; } | tail -n1)
 release=$(semver "${current}" -i "$1" --preid RC)
 next=$(semver "${release}" -i minor)
 
