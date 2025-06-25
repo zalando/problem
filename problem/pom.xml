@@ -9,5 +9,6 @@
         <version>0.28.0-SNAPSHOT</version>
     </parent>
     <artifactId>problem</artifactId>
+    <name>${artifactId}</name>
     <description>An implementation of the application/problem+json draft.</description>
 </project>
