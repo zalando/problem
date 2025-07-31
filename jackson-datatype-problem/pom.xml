@@ -9,6 +9,7 @@
         <version>0.28.0-SNAPSHOT</version>
     </parent>
     <artifactId>jackson-datatype-problem</artifactId>
+    <name>${artifactId}</name>
     <properties>
         <jackson.version>2.13.4.1</jackson.version>
     </properties>
