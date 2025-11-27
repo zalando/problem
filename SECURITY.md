@@ -4,4 +4,4 @@ We are trying to deal with it responsibly and provide patches as quickly as  pos
 us please use any of the following channels:
 
 - open an [issue](../../issues)
-- use our [security form](https://corporate.zalando.com/en/services-and-contact#security-form)
+- use our [security form](https://zeng.page.link/open-source-report-vulnerability)
