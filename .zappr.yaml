@@ -1,3 +1,5 @@
+X-Zalando-Team: zcpe
+X-Zalando-Type: code
 approvals:
   pattern: "^(:\\+1:|👍|\\+1|:thumbsup:|[Ll][Gg][Tt][Mm])$"
   minimum: 1
