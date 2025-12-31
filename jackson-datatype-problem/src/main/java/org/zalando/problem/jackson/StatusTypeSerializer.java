@@ -1,16 +1,16 @@
 package org.zalando.problem.jackson;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
 import org.zalando.problem.StatusType;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
 
-final class StatusTypeSerializer extends JsonSerializer<StatusType> {
+final class StatusTypeSerializer extends ValueSerializer<StatusType> {
 
     @Override
-    public void serialize(final StatusType status, final JsonGenerator json, final SerializerProvider serializers) throws IOException {
+    public void serialize(final StatusType status, final JsonGenerator json, final SerializationContext ctx) throws JacksonException {
         json.writeNumber(status.getStatusCode());
     }
 

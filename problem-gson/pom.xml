@@ -11,7 +11,7 @@
     <artifactId>problem-gson</artifactId>
     <name>${artifactId}</name>
     <properties>
-        <gson.version>2.9.0</gson.version>
+        <gson.version>2.10.1</gson.version>
     </properties>
     <dependencies>
         <dependency>
@@ -28,4 +28,29 @@
             <artifactId>json-path-assert</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs combine.children="append">
+                        <arg>--add-reads</arg>
+                        <arg>org.zalando.problem.gson=com.google.gson</arg>
+                        <arg>--add-exports</arg>
+                        <arg>com.google.gson/com.google.gson.internal=org.zalando.problem.gson</arg>
+                        <arg>--add-exports</arg>
+                        <arg>com.google.gson/com.google.gson.internal.bind=org.zalando.problem.gson</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

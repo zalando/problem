@@ -1,6 +1,6 @@
 package org.zalando.problem.jackson;
 
-import com.fasterxml.jackson.databind.util.StdConverter;
+import tools.jackson.databind.util.StdConverter;
 import org.zalando.problem.Problem;
 
 import java.net.URI;
