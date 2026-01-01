@@ -11,9 +11,12 @@ import org.zalando.problem.Status;
 import org.zalando.problem.StatusType;
 import tools.jackson.databind.JacksonModule;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -35,7 +38,7 @@ public final class ProblemModule extends JacksonModule {
     /**
      * TODO document
      *
-     * @param <E> generic enum type
+     * @param <E>   generic enum type
      * @param types status type enums
      * @throws IllegalArgumentException if there are duplicate status codes across all status types
      */
@@ -57,12 +60,16 @@ public final class ProblemModule extends JacksonModule {
         return ProblemModule.class.getSimpleName();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Version version() {
-//        return VersionUtil.mavenVersionFor(ProblemModule.class.getClassLoader(),
-//                "org.zalando", "jackson-datatype-problem");
-        return Version.unknownVersion();
+        Properties p = loadProps();
+        String version = p.getProperty("module.version");
+        String groupId = p.getProperty("module.groupId");
+        String artifactId = p.getProperty("module.name");
+
+        return (version != null)
+                ? VersionUtil.parseVersion(version, groupId, artifactId)
+                : Version.unknownVersion();
     }
 
     @Override
@@ -105,6 +112,21 @@ public final class ProblemModule extends JacksonModule {
 
     public ProblemModule withStackTraces(final boolean stackTraces) {
         return new ProblemModule(stackTraces, statuses);
+    }
+
+    private static final String VERSION_RESOURCE =
+            "/META-INF/org.zalando.problem.jackson/problem-module.properties";
+
+    private static Properties loadProps() {
+        Properties props = new Properties();
+        try (InputStream in =
+                     ProblemModule.class.getResourceAsStream(VERSION_RESOURCE)) {
+            if (in != null) {
+                props.load(in);
+            }
+        } catch (IOException ignored) {
+        }
+        return props;
     }
 
 }

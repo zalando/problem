@@ -9,7 +9,17 @@
         <version>0.28.0-SNAPSHOT</version>
     </parent>
     <artifactId>jackson-datatype-problem</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.zalando</groupId>
