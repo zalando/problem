@@ -55,7 +55,7 @@ Add the following dependency to your project:
 
 ### Java Modules
 
-Even though the minimum requirement is still Java 8, all modules are Java 9 compatible:
+All modules are fully compatible with the Java Platform Module System (JPMS):
 
 ```java
 module org.example {
