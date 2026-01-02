@@ -4,7 +4,7 @@
     <groupId>org.zalando</groupId>
     <artifactId>problem-parent</artifactId>
     <name>problem</name>
-    <version>0.28.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <description>library that implements application/problem+json</description>
     <packaging>pom</packaging>
     <url>https://github.com/zalando/problem</url>
