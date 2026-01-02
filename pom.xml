@@ -29,7 +29,8 @@
     </developers>
     <modules>
         <module>problem</module>
-        <module>jackson-datatype-problem</module>
+        <module>problem-jackson2</module>
+        <module>problem-jackson3</module>
         <module>problem-gson</module>
     </modules>
     <scm>

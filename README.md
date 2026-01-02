@@ -27,6 +27,7 @@ It's decoupled from any JSON library, but contains a separate module for Jackson
 
 - Java 17
 - Any build tool using Maven Central, or direct download
+- Jackson2 (optional)
 - Jackson3 (optional)
 - Gson (optional)
 
@@ -42,7 +43,7 @@ Add the following dependency to your project:
 </dependency>
 <dependency>
     <groupId>org.zalando</groupId>
-    <artifactId>jackson-datatype-problem</artifactId>
+    <artifactId>problem-jackson3</artifactId>
     <version>${problem.version}</version>
 </dependency>
 <dependency>
