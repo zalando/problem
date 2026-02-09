@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.STABLE;
 
-@API(status = DEPRECATED)
+@API(status = STABLE)
 public final class ProblemModule extends JacksonModule {
 
     private final boolean stackTraces;
