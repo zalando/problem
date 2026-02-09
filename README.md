@@ -396,7 +396,7 @@ For more details check the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ### Spring Framework
 
-Users of the [Spring Framework](https://spring.io) are highly encouraged to check out [Problems for Spring Web MVC](https://github.com/zalando/problem-spring-web), a library that seamlessly integrates problems into Spring.
+Users of the [Spring Framework](https://spring.io) are highly encouraged to check out Spring support for of [RFC 9457 (ProblemDetail)](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html).
 
 ### Micronaut Framework
 Users of the [Micronaut Framework](https://micronaut.io) are highly encouraged to check out [Micronaut Problem JSON
