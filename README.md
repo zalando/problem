@@ -15,7 +15,7 @@
 
 *Problem* is a library that implements 
 [`application/problem+json`](https://tools.ietf.org/html/rfc7807).
-It comes with an extensible set of interfaces/implementations as well as convenient functions for every day use.
+It comes with an extensible set of interfaces/implementations as well as convenient functions for everyday use.
 It's decoupled from any JSON library, but contains a separate module for Jackson.
 
 ## Features
@@ -25,9 +25,10 @@ It's decoupled from any JSON library, but contains a separate module for Jackson
 
 ## Dependencies
 
-- Java 8
+- Java 17
 - Any build tool using Maven Central, or direct download
-- Jackson (optional)
+- Jackson2 (optional)
+- Jackson3 (optional)
 - Gson (optional)
 
 ## Installation
@@ -42,7 +43,7 @@ Add the following dependency to your project:
 </dependency>
 <dependency>
     <groupId>org.zalando</groupId>
-    <artifactId>jackson-datatype-problem</artifactId>
+    <artifactId>problem-jackson3</artifactId>
     <version>${problem.version}</version>
 </dependency>
 <dependency>
@@ -54,7 +55,7 @@ Add the following dependency to your project:
 
 ### Java Modules
 
-Even though the minimum requirement is still Java 8, all modules are Java 9 compatible:
+All modules are fully compatible with the Java Platform Module System (JPMS):
 
 ```java
 module org.example {
@@ -67,18 +68,16 @@ module org.example {
 
 ## Configuration
 
-In case you're using Jackson, make sure you register the module with your `ObjectMapper`:
+In case you're using Jackson, make sure you register the module with your `JsonMapper`:
 
 ```java
-ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new ProblemModule());
+JsonMapper mapper = JsonMapper.builder().addModule(new ProblemModule()).build();
 ```
 
 Alternatively, you can use the SPI capabilities:
 
 ```java
-ObjectMapper mapper = new ObjectMapper()
-    .findAndRegisterModules();
+JsonMapper mapper = JsonMapper.builder().findAndAddModules().build();
 ```
 
 ## Usage
@@ -95,7 +94,7 @@ enough to convey the necessary information. Everything you need is the status yo
 create a problem from it:
 
 ```java
-Problem.valueOf(Status.NOT_FOUND);
+var problem = Problem.valueOf(Status.NOT_FOUND);
 ```
 
 Will produce this:
@@ -121,7 +120,7 @@ As specified by [Predefined Problem Types](https://tools.ietf.org/html/rfc7807#s
 But you may also have the need to add some little hint, e.g. as a custom detail of the problem:
 
 ```java
-Problem.valueOf(Status.SERVICE_UNAVAILABLE, "Database not reachable");
+var problem = Problem.valueOf(Status.SERVICE_UNAVAILABLE, "Database not reachable");
 ```
 
 Will produce this:
@@ -141,7 +140,7 @@ construct problems in a more flexible way. This is where the *Problem Builder* c
 and allows to construct problem instances without the need to create custom classes:
 
 ```java
-Problem.builder()
+var problem = Problem.builder()
     .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
     .withStatus(BAD_REQUEST)
@@ -163,7 +162,7 @@ Will produce this:
 Alternatively you can add custom properties, i.e. others than `type`, `title`, `status`, `detail` and `instance`:
 
 ```java
-Problem.builder()
+var problem = Problem.builder()
     .withType(URI.create("https://example.org/out-of-stock"))
     .withTitle("Out of Stock")
     .withStatus(BAD_REQUEST)
@@ -211,7 +210,7 @@ public final class OutOfStockProblem extends AbstractThrowableProblem {
 ```
 
 ```java
-new OutOfStockProblem("B00027Y5QG");
+var problem = new OutOfStockProblem("B00027Y5QG");
 ```
 
 Will produce this:
@@ -263,7 +262,7 @@ Jackson module makes heavy use of it. Considering you have a custom problem type
 register it as a subtype:
 
 ```java
-mapper.registerSubtypes(OutOfStockProblem.class);
+mapper.builder().registerSubtypes(OutOfStockProblem.class);
 ```
 You also need to make sure you assign a `@JsonTypeName` to it and declare a `@JsonCreator`:
 
@@ -276,7 +275,7 @@ public final class OutOfStockProblem implements Problem {
 ```
 
 Jackson is now able to deserialize specific problems into their respective types. By default, e.g. if a type is not 
-associated with a class, it will fallback to a `DefaultProblem`. 
+associated with a class, it will fall back to a `DefaultProblem`. 
 
 ### Catching problems
 
@@ -344,12 +343,13 @@ Will produce this:
 
 Another important aspect of exceptions are stack traces, but since they leak implementation details to the outside world, 
 [**we strongly advise against exposing them**](http://zalando.github.io/restful-api-guidelines/#177)
-in problems. That being said, there is a legitimate use case when you're debugging an issue on an integration environment
+in problems. That being said, there is a legitimate use case when you're debugging an issue on an integration environment,
 and you don't have direct access to the log files. Serialization of stack traces can be enabled on the problem module:
 
 ```java
-ObjectMapper mapper = new ObjectMapper()
-    .registerModule(new ProblemModule().withStackTraces());
+JsonMapper mapper = JsonMapper.builder()
+        .addModule(new ProblemModule().withStackTraces())
+        .build();
 ```
 
 After enabling stack traces all problems will contain a `stacktrace` property:
@@ -381,7 +381,7 @@ public interface StackTraceProcessor {
 }
 ```
 
-By default no processing takes place.
+By default, no processing takes place.
 
 ## Getting help
 
@@ -396,11 +396,11 @@ For more details check the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ### Spring Framework
 
-Users of the [Spring Framework](https://spring.io) are highly encouraged to check out [Problems for Spring Web MVC](https://github.com/zalando/problem-spring-web), a library that seemlessly integrates problems into Spring.
+Users of the [Spring Framework](https://spring.io) are highly encouraged to check out Spring support for of [RFC 9457 (ProblemDetail)](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html).
 
 ### Micronaut Framework
 Users of the [Micronaut Framework](https://micronaut.io) are highly encouraged to check out [Micronaut Problem JSON
-](https://micronaut-projects.github.io/micronaut-problem-json/snapshot/guide/), a library that seemlessly integrates problems into Micronaut error processing.
+](https://micronaut-projects.github.io/micronaut-problem-json/snapshot/guide/), a library that seamlessly integrates problems into Micronaut error processing.
 
 ### Quarkus Framework
 Users of the [Quarkus Framework](https://quarkus.io/) are highly encouraged to check out [Quarkus RESTeasy Problem Extension](https://github.com/TietoEVRY/quarkus-resteasy-problem/), a library that seemlessly integrates problems into Quarkus RESTeasy/JaxRS error processing. It also handles Problem-family exceptions from `org.zalando:problem` library.

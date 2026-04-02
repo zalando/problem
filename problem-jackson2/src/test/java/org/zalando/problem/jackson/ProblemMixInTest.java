@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
+@SuppressWarnings("deprecation")
 final class ProblemMixInTest {
 
     private final ObjectMapper mapper = new ObjectMapper()

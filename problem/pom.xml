@@ -6,9 +6,9 @@
     <parent>
         <groupId>org.zalando</groupId>
         <artifactId>problem-parent</artifactId>
-        <version>0.28.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>problem</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
     <description>An implementation of the application/problem+json draft.</description>
 </project>
