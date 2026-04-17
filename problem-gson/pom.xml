@@ -38,7 +38,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.30</version>
+                            <version>1.18.44</version>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs combine.children="append">
