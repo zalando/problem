@@ -1,29 +1,5 @@
 package org.zalando.problem.gson;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-import org.junit.jupiter.api.Test;
-import org.zalando.problem.DefaultProblem;
-import org.zalando.problem.Exceptional;
-import org.zalando.problem.Problem;
-import org.zalando.problem.ProblemBuilder;
-import org.zalando.problem.Status;
-import org.zalando.problem.StatusType;
-import org.zalando.problem.ThrowableProblem;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 import static com.jayway.jsonassert.JsonAssert.with;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -38,6 +14,27 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.zalando.problem.Status.BAD_REQUEST;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
+
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import org.junit.jupiter.api.Test;
+import org.zalando.problem.DefaultProblem;
+import org.zalando.problem.Exceptional;
+import org.zalando.problem.Problem;
+import org.zalando.problem.ProblemBuilder;
+import org.zalando.problem.Status;
+import org.zalando.problem.StatusType;
+import org.zalando.problem.ThrowableProblem;
+
 class GsonProblemTest {
 
     private final Gson gson = new GsonBuilder()
@@ -49,7 +46,7 @@ class GsonProblemTest {
     private static JsonReader getReader(final String name) throws FileNotFoundException {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         final URL resource = Objects.requireNonNull(loader.getResource(name), () -> "resource " + name + " not found.");
-        return new JsonReader(new FileReader(new File(resource.getPath())));
+        return new JsonReader(new FileReader(resource.getPath()));
     }
 
     private String getStackTrace(final Throwable throwable) {
@@ -365,4 +362,28 @@ class GsonProblemTest {
         }
     }
 
+    @Test
+    void shouldHandleEmptyJsonReader() throws IOException {
+        // Test the EOFException handling when JsonReader is at EOF immediately
+        // This tests the isEmpty=true path in the parse method
+        try (var reader = new JsonReader(new StringReader(""))) {
+            reader.setLenient(true);
+            final Problem problem = gson.fromJson(reader, Problem.class);
+
+            assertThat(problem, is(nullValue()));
+        }
+    }
+
+    @Test
+    void shouldThrowOnIncompleteJson() throws IOException {
+        // Test the EOFException handling when input is incomplete (non-empty but EOF encountered)
+        // This tests the isEmpty=false path in the parse method where JsonSyntaxException is thrown
+        try (var reader = new JsonReader(new StringReader("{\"type\":\"https://example.org/test\","))) {
+            gson.fromJson(reader, Problem.class);
+
+            assertThat("Expected JsonSyntaxException", false);
+        } catch (final JsonSyntaxException e) {
+            assertThat(e.getMessage(), notNullValue());
+        }
+    }
 }

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
-import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import lombok.AllArgsConstructor;
@@ -49,7 +48,7 @@ final class CustomProblemAdapter<T> extends TypeAdapter<T> {
             }
         }
 
-        Streams.write(element, out);
+        gson.getAdapter(JsonElement.class).write(out, element);
     }
 
     private void flattenParameters(final JsonObject object) {
@@ -63,5 +62,4 @@ final class CustomProblemAdapter<T> extends TypeAdapter<T> {
     public T read(final JsonReader in) throws IOException {
         return delegate.read(in);
     }
-
 }

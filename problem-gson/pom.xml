@@ -44,10 +44,6 @@
                     <compilerArgs combine.children="append">
                         <arg>--add-reads</arg>
                         <arg>org.zalando.problem.gson=com.google.gson</arg>
-                        <arg>--add-exports</arg>
-                        <arg>com.google.gson/com.google.gson.internal=org.zalando.problem.gson</arg>
-                        <arg>--add-exports</arg>
-                        <arg>com.google.gson/com.google.gson.internal.bind=org.zalando.problem.gson</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
