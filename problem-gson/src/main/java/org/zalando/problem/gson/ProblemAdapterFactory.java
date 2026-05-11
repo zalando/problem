@@ -2,10 +2,11 @@ package org.zalando.problem.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -18,6 +19,7 @@ import org.zalando.problem.Status;
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -134,9 +136,10 @@ public final class ProblemAdapterFactory implements TypeAdapterFactory {
         private final Gson gson;
         private final TypeToken<T> type;
         private final TypeAdapter<ThrowableProblem> defaultAdapter;
+        private final TypeAdapter<JsonElement> jsonElementAdapter;
 
         ProblemTypeAdapter(final Gson gson, final TypeToken<T> type) {
-            this(gson, type, new DefaultProblemAdapter(gson, stackTraces));
+            this(gson, type, new DefaultProblemAdapter(gson, stackTraces), gson.getAdapter(JsonElement.class));
         }
 
         @Override
@@ -156,10 +159,24 @@ public final class ProblemAdapterFactory implements TypeAdapterFactory {
         }
 
         @Override
-        public T read(final JsonReader in) {
-            final JsonElement element = Streams.parse(in);
+        public T read(final JsonReader in) throws IOException {
+            final JsonElement element = parse(in);
             final JsonObject problem = element.getAsJsonObject();
             return selectAdapter(problem).fromJsonTree(element);
+        }
+
+        private JsonElement parse(final JsonReader reader) throws IOException {
+            boolean isEmpty = true;
+            try {
+                reader.peek();
+                isEmpty = false;
+                return jsonElementAdapter.read(reader);
+            } catch (final EOFException e) {
+                if (isEmpty) {
+                    return JsonNull.INSTANCE;
+                }
+                throw new JsonSyntaxException(e);
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -194,5 +211,4 @@ public final class ProblemAdapterFactory implements TypeAdapterFactory {
         }
 
     }
-
 }
