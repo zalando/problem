@@ -44,6 +44,23 @@ final class ProblemMixInTest {
     }
 
     @Test
+    void shouldDeserializeConcreteThrowableProblemSubtype() throws Exception {
+        final ResourceNotFoundProblem original =
+                new ResourceNotFoundProblem("123", "Resource not found");
+
+        final String json = mapper.writeValueAsString(original);
+
+        final ResourceNotFoundProblem deserialized =
+                mapper.readValue(json, ResourceNotFoundProblem.class);
+
+        assertThat(deserialized.getType(), equalTo(original.getType()));
+        assertThat(deserialized.getTitle(), equalTo(original.getTitle()));
+        assertThat(deserialized.getStatus(), equalTo(original.getStatus()));
+        assertThat(deserialized.getDetail(), equalTo(original.getDetail()));
+        assertThat(deserialized.getId(), equalTo(original.getId()));
+    }
+
+    @Test
     void shouldSerializeDefaultProblem() throws JsonProcessingException {
         final Problem problem = Problem.valueOf(Status.NOT_FOUND);
         final String json = mapper.writeValueAsString(problem);
