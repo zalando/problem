@@ -277,6 +277,16 @@ public final class OutOfStockProblem implements Problem {
 Jackson is now able to deserialize specific problems into their respective types. By default, e.g. if a type is not 
 associated with a class, it will fall back to a `DefaultProblem`. 
 
+When deserializing directly into a concrete custom subtype of
+`AbstractThrowableProblem`, disable polymorphic type resolution on that subtype:
+
+```java
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+public final class OutOfStockProblem extends AbstractThrowableProblem {
+    // ...
+}
+```
+
 ### Catching problems
 
 If you read about [Throwing problems](#throwing-problems) already, you should be familiar with `ThrowableProblem`. 
