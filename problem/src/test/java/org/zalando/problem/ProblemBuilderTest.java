@@ -144,4 +144,84 @@ class ProblemBuilderTest {
         assertThrows(IllegalArgumentException.class, () -> Problem.builder().with("cause", "foo"));
     }
 
+    @Test
+    void shouldCreateBuilderFromExistingProblem() {
+        final Problem original = Problem.builder()
+                .withType(type)
+                .withTitle("Out of Stock")
+                .withStatus(BAD_REQUEST)
+                .withDetail("Item B00027Y5QG is no longer available")
+                .withInstance(URI.create("https://example.com/"))
+                .build();
+
+        final Problem copy = original.toBuilder().build();
+
+        assertThat(copy, hasFeature("type", Problem::getType, is(type)));
+        assertThat(copy, hasFeature("title", Problem::getTitle, is("Out of Stock")));
+        assertThat(copy, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
+        assertThat(copy, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
+        assertThat(copy, hasFeature("instance", Problem::getInstance, is(URI.create("https://example.com/"))));
+    }
+
+    @Test
+    void shouldCopyParametersFromExistingProblem() {
+        final Problem original = Problem.builder()
+                .withType(type)
+                .withStatus(BAD_REQUEST)
+                .with("traceId", "abc-123")
+                .with("region", "eu-west-1")
+                .build();
+
+        final Problem copy = original.toBuilder().build();
+
+        assertThat(copy.getParameters(), hasEntry("traceId", "abc-123"));
+        assertThat(copy.getParameters(), hasEntry("region", "eu-west-1"));
+    }
+
+    @Test
+    void shouldAllowAddingNewParametersViaToBuilder() {
+        final Problem original = Problem.builder()
+                .withType(type)
+                .withStatus(BAD_REQUEST)
+                .with("existingKey", "existingValue")
+                .build();
+
+        // primary use case — add a trace ID to any problem response
+        final Problem enriched = original.toBuilder()
+                .with("traceId", "xyz-789")
+                .build();
+
+        assertThat(enriched.getParameters(), hasEntry("existingKey", "existingValue"));
+        assertThat(enriched.getParameters(), hasEntry("traceId", "xyz-789"));
+    }
+
+    @Test
+    void shouldAllowOverridingFieldsViaToBuilder() {
+        final Problem original = Problem.builder()
+                .withType(type)
+                .withStatus(BAD_REQUEST)
+                .withDetail("original detail")
+                .build();
+
+        final Problem modified = original.toBuilder()
+                .withDetail("updated detail")
+                .build();
+
+        assertThat(modified, hasFeature("detail", Problem::getDetail, is("updated detail")));
+        assertThat(modified, hasFeature("type", Problem::getType, is(type)));
+        assertThat(modified, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
+    }
+
+    @Test
+    void toBuilderOnEmptyProblemShouldProduceEquivalentProblem() {
+        final Problem original = Problem.builder().build();
+        final Problem copy = original.toBuilder().build();
+
+        assertThat(copy, hasFeature("type", Problem::getType, hasToString("about:blank")));
+        assertThat(copy, hasFeature("title", Problem::getTitle, is(nullValue())));
+        assertThat(copy, hasFeature("status", Problem::getStatus, is(nullValue())));
+        assertThat(copy, hasFeature("detail", Problem::getDetail, is(nullValue())));
+        assertThat(copy, hasFeature("instance", Problem::getInstance, is(nullValue())));
+    }
+
 }
