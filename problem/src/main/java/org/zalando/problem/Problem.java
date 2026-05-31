@@ -92,6 +92,28 @@ public interface Problem {
         return new ProblemBuilder();
     }
 
+    /**
+     * Creates a new {@link ProblemBuilder} pre-populated with all fields from this problem instance.
+     * This allows you to clone a problem and add or override fields while retaining the original
+     * standard fields and any custom parameters.
+     *
+     * <p>Note: type-specific fields from subclasses (e.g. {@code violations} on
+     * {@code ConstraintViolationProblem}) that are not exposed via {@link #getParameters()}
+     * will not be carried over.</p>
+     *
+     * @return a pre-populated builder based on this problem
+     */
+    default ProblemBuilder toBuilder() {
+        final ProblemBuilder builder = Problem.builder()
+                .withType(getType())
+                .withTitle(getTitle())
+                .withStatus(getStatus())
+                .withDetail(getDetail())
+                .withInstance(getInstance());
+        getParameters().forEach(builder::with);
+        return builder;
+    }
+
     static ThrowableProblem valueOf(final StatusType status) {
         return GenericProblems.create(status).build();
     }
