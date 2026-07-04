@@ -58,9 +58,9 @@ public interface Problem {
     }
 
     /**
-     * A human readable explanation specific to this occurrence of the problem.
+     * A human-readable explanation specific to this occurrence of the problem.
      *
-     * @return A human readable explaination of this problem
+     * @return a human-readable explanation of this problem
      */
     @Nullable
     default String getDetail() {
@@ -107,7 +107,10 @@ public interface Problem {
     static ThrowableProblem valueOf(final StatusType status,
                                     @Nullable final String detail,
                                     @Nullable final URI instance) {
-        return GenericProblems.create(status).withDetail(detail).withInstance(instance).build();
+        return GenericProblems.create(status)
+                .withDetail(detail)
+                .withInstance(instance)
+                .build();
     }
 
     /**
@@ -122,10 +125,10 @@ public interface Problem {
      *   // Returns "about:blank{404, Not Found, instance=https://example.org/}"
      *   Problem.valueOf(NOT_FOUND, URI.create("https://example.org/")).toString();
      *
-     *   // Returns "about:blank{404, Not Found, Order 123, instance=https://example.org/"}
+     *   // Returns "about:blank{404, Not Found, Order 123, instance=https://example.org/}"
      *   Problem.valueOf(NOT_FOUND, "Order 123", URI.create("https://example.org/")).toString();
      *
-     *   // Returns "https://example.org/problem{422, Oh, oh!, Crap., instance=https://example.org/problem/123}
+     *   // Returns "https://example.org/problem{422, Oh, oh!, Crap., instance=https://example.org/problem/123}"
      *   Problem.builder()
      *       .withType(URI.create("https://example.org/problem"))
      *       .withTitle("Oh, oh!")
@@ -144,18 +147,32 @@ public interface Problem {
      * @see Problem#valueOf(StatusType, String, URI)
      */
     static String toString(final Problem problem) {
-        final Stream<String> parts = Stream.concat(
-                Stream.of(
-                        problem.getStatus() == null ? null : String.valueOf(problem.getStatus().getStatusCode()),
-                        problem.getTitle(),
-                        problem.getDetail(),
-                        problem.getInstance() == null ? null : "instance=" + problem.getInstance()),
-                problem.getParameters()
-                        .entrySet().stream()
-                        .map(Map.Entry::toString))
-                .filter(Objects::nonNull);
 
-        return problem.getType().toString() + "{" + parts.collect(joining(", ")) + "}";
+        final String statusCode = problem.getStatus() == null
+                ? null
+                : String.valueOf(problem.getStatus().getStatusCode());
+
+        final String instancePart = problem.getInstance() == null
+                ? null
+                : "instance=" + problem.getInstance();
+
+        final Stream<String> standardParts = Stream.of(
+                statusCode,
+                problem.getTitle(),
+                problem.getDetail(),
+                instancePart
+        );
+
+        final Stream<String> customParts = problem.getParameters()
+                .entrySet()
+                .stream()
+                .map(Map.Entry::toString);
+
+        final String body = Stream.concat(standardParts, customParts)
+                .filter(Objects::nonNull)
+                .collect(joining(", "));
+
+        return problem.getType() + "{" + body + "}";
     }
 
 }

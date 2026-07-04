@@ -13,8 +13,9 @@ import static org.apiguardian.api.API.Status.STABLE;
 import static org.zalando.problem.spi.StackTraceProcessor.COMPOUND;
 
 /**
- * 
- * {@link Problem} instances are required to be immutable.
+ * Base class for exceptions implementing {@link Problem}.
+ *
+ * <p>{@link Problem} instances are required to be immutable.</p>
  */
 @API(status = STABLE)
 public abstract class ThrowableProblem extends RuntimeException implements Problem, Exceptional {
@@ -33,13 +34,22 @@ public abstract class ThrowableProblem extends RuntimeException implements Probl
     @Override
     public String getMessage() {
         return Stream.of(getTitle(), getDetail())
-            .filter(Objects::nonNull)
-            .collect(joining(": "));
+                .filter(Objects::nonNull)
+                .collect(joining(": "));
     }
 
+    /**
+     * Returns the cause of this problem as a {@link ThrowableProblem}.
+     *
+     * <p>The cast is safe because the only constructor that accepts a cause
+     * requires it to already be a {@code ThrowableProblem}. Therefore,
+     * {@code super.getCause()} cannot return any other exception type.</p>
+     *
+     * @return the cause of this problem, or {@code null} if no cause exists
+     */
     @Override
+    @SuppressWarnings("unchecked")
     public ThrowableProblem getCause() {
-        // cast is safe, since the only way to set this is our constructor
         return (ThrowableProblem) super.getCause();
     }
 

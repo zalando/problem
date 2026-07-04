@@ -4,8 +4,8 @@ import org.apiguardian.api.API;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,9 +15,23 @@ import static org.apiguardian.api.API.Status.STABLE;
 @API(status = STABLE)
 public final class ProblemBuilder {
 
-    private static final Set<String> RESERVED_PROPERTIES = new HashSet<>(Arrays.asList(
-            "type", "title", "status", "detail", "instance", "cause"
-    ));
+    private static final String PROP_TYPE = "type";
+    private static final String PROP_TITLE = "title";
+    private static final String PROP_STATUS = "status";
+    private static final String PROP_DETAIL = "detail";
+    private static final String PROP_INSTANCE = "instance";
+    private static final String PROP_CAUSE = "cause";
+
+    private static final Set<String> RESERVED_PROPERTIES =
+            Collections.unmodifiableSet(
+                    new LinkedHashSet<>(java.util.Arrays.asList(
+                            PROP_TYPE,
+                            PROP_TITLE,
+                            PROP_STATUS,
+                            PROP_DETAIL,
+                            PROP_INSTANCE,
+                            PROP_CAUSE
+                    )));
 
     private URI type;
     private String title;

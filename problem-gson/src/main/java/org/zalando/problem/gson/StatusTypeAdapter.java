@@ -15,7 +15,11 @@ import java.util.Objects;
 @AllArgsConstructor
 final class StatusTypeAdapter extends TypeAdapter<StatusType> {
 
-    private Map<Integer, StatusType> index;
+    /**
+     * Lookup table mapping HTTP status codes to StatusType instances.
+     * Immutable after construction.
+     */
+    private final Map<Integer, StatusType> index;
 
     @Override
     public void write(
@@ -41,7 +45,10 @@ final class StatusTypeAdapter extends TypeAdapter<StatusType> {
 
         final int statusCode = in.nextInt();
         @Nullable final StatusType status = index.get(statusCode);
-        return status == null ? new UnknownStatus(statusCode) : status;
+
+        return status == null
+                ? new UnknownStatus(statusCode)
+                : status;
     }
 
 }
