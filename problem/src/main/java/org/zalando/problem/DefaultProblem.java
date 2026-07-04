@@ -11,23 +11,29 @@ import static org.apiguardian.api.API.Status.STABLE;
 @API(status = STABLE)
 public final class DefaultProblem extends AbstractThrowableProblem {
 
-    // TODO needed for jackson
+    /**
+     * Constructor used by Jackson during JSON deserialization.
+     * <p>
+     * This constructor matches the property-based binding required by Jackson.
+     * For programmatic creation of {@link Problem} instances, prefer using
+     * {@link Problem#builder()}.
+     */
     DefaultProblem(@Nullable final URI type,
-            @Nullable final String title,
-            @Nullable final StatusType status,
-            @Nullable final String detail,
-            @Nullable final URI instance,
-            @Nullable final ThrowableProblem cause) {
+                   @Nullable final String title,
+                   @Nullable final StatusType status,
+                   @Nullable final String detail,
+                   @Nullable final URI instance,
+                   @Nullable final ThrowableProblem cause) {
         super(type, title, status, detail, instance, cause);
     }
 
     DefaultProblem(@Nullable final URI type,
-            @Nullable final String title,
-            @Nullable final StatusType status,
-            @Nullable final String detail,
-            @Nullable final URI instance,
-            @Nullable final ThrowableProblem cause,
-            @Nullable final Map<String, Object> parameters) {
+                   @Nullable final String title,
+                   @Nullable final StatusType status,
+                   @Nullable final String detail,
+                   @Nullable final URI instance,
+                   @Nullable final ThrowableProblem cause,
+                   @Nullable final Map<String, Object> parameters) {
         super(type, title, status, detail, instance, cause, parameters);
     }
 }
