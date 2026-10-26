@@ -36,7 +36,7 @@ final class DefaultProblemAdapter extends TypeAdapter<ThrowableProblem> {
                 gson,
                 stackTraces,
                 gson.getAdapter(String.class),
-                URITypeAdapter.TYPE,
+                URITypeAdapter.INSTANCE,
                 gson.getAdapter(new TypeToken<Map<String, Object>>() {
                     // nothing to do here
                 }),
@@ -48,7 +48,7 @@ final class DefaultProblemAdapter extends TypeAdapter<ThrowableProblem> {
     public void write(final JsonWriter out, final ThrowableProblem problem) throws IOException {
         final JsonObject object = new JsonObject();
 
-        object.add("type", uriAdapter.toJsonTree(problem.getType()));
+        object.add("type", URITypeAdapter.TYPE.toJsonTree(problem.getType()));
         object.add("title", stringAdapter.toJsonTree(problem.getTitle()));
         object.add("status", status.toJsonTree(problem.getStatus()));
         object.add("detail", stringAdapter.toJsonTree(problem.getDetail()));
@@ -78,7 +78,7 @@ final class DefaultProblemAdapter extends TypeAdapter<ThrowableProblem> {
             final String name = in.nextName();
             switch (name) {
                 case "type":
-                    builder.withType(uriAdapter.read(in));
+                    builder.withType(URITypeAdapter.TYPE.read(in));
                     break;
                 case "title":
                     builder.withTitle(stringAdapter.read(in));

@@ -12,15 +12,19 @@ import java.net.URI;
 
 final class URITypeAdapter extends TypeAdapter<URI> {
 
-    static final TypeAdapter<URI> TYPE = new URITypeAdapter();
+    static final TypeAdapter<URI> TYPE = new URITypeAdapter(Problem.DEFAULT_TYPE);
+    static final TypeAdapter<URI> INSTANCE = new URITypeAdapter(null);
 
-    private URITypeAdapter() {
-        // Singleton.
+    @Nullable
+    private final URI defaultValue;
+
+    private URITypeAdapter(@Nullable final URI defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     @Override
     public void write(final JsonWriter out, @Nullable final URI value) throws IOException {
-        if (value == null || value.equals(Problem.DEFAULT_TYPE)) {
+        if (value == null || value.equals(defaultValue)) {
             out.nullValue();
         } else {
             out.value(value.toASCIIString());
@@ -28,10 +32,11 @@ final class URITypeAdapter extends TypeAdapter<URI> {
     }
 
     @Override
+    @Nullable
     public URI read(final JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
             in.nextNull();
-            return Problem.DEFAULT_TYPE;
+            return defaultValue;
         }
 
         return URI.create(in.nextString());
